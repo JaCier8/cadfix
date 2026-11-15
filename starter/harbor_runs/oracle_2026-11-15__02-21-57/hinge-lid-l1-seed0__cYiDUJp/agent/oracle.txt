@@ -1,0 +1,49 @@
+Processing request of type CallToolRequest
+Processing request of type ListToolsRequest
+Processing request of type CallToolRequest
+original: S1 holds up to 45.0 deg, first failing step {'angle': 46.0, 'gap': 0.2842, 'overlap': 0.0, 'pair': ['lid', 'enclosure']}
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+3 colliding region(s) along the hinge at s = -59.95, -42.75, -25.55
+Processing request of type CallToolRequest
+edge E: [85.5, 58.2, 31.5] -> [0.0, 58.2, 31.5], top normal [0.0, 0.0, 1.0], outward normal [0.0, 1.0, 0.0]
+Processing request of type CallToolRequest
+lid segments (s along the hinge): [-64.050, -55.850], [-46.850, -38.650], [-29.650, -21.450]
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+  wall top width 2.730, top <= 0.93, side <= 3.45
+segment [-64.050, -55.850]: relief top x side = (0.9, 2.15)
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+  wall top width 2.730, top <= 0.93, side <= 3.45
+segment [-46.850, -38.650]: relief top x side = (0.9, 2.15)
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+  wall top width 2.730, top <= 0.93, side <= 3.45
+segment [-29.650, -21.450]: relief top x side = (0.9, 2.15)
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+Processing request of type CallToolRequest
+round 0: S1 met (min clearance 0.3076 mm)
+Processing request of type CallToolRequest
+Warning: RuntimeWarning: divide by zero encountered in buffer
+Warning: RuntimeWarning: invalid value encountered in buffer
+test_fit: gates_ok=True failed=[] printability=1.0
+Processing request of type CallToolRequest
+{"ok": true, "ops": [{"part": "enclosure", "origin": [55.5, 58.2, 31.5], "normal": [1.0, -0.0, -0.0], "x_dir": [0.0, 1.0, 0.0], "polygon_2d": [[-0.9, 0.0], [-0.9, 0.01], [0.01, 0.01], [0.01, -2.15], [0.0, -2.15]], "depth_from": 0.0, "depth_to": 8.9}, {"part": "enclosure", "origin": [38.3, 58.2, 31.5], "normal": [1.0, -0.0, -0.0], "x_dir": [0.0, 1.0, 0.0], "polygon_2d": [[-0.9, 0.0], [-0.9, 0.01], [0.01, 0.01], [0.01, -2.15], [0.0, -2.15]], "depth_from": 0.0, "depth_to": 8.9}, {"part": "enclosure", "origin": [21.1, 58.2, 31.5], "normal": [1.0, -0.0, -0.0], "x_dir": [0.0, 1.0, 0.0], "polygon_2d": [[-0.9, 0.0], [-0.9, 0.01], [0.01, 0.01], [0.01, -2.15], [0.0, -2.15]], "depth_from": 0.0, "depth_to": 8.9}], "rounds": 0}

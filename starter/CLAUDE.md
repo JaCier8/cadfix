@@ -88,6 +88,12 @@ Rules:
 - `... cadfix-dev python -m scenarios.hinge_lid.brief --level L --seed N`: what an agent would know (S3 as rule only; L3 in world coordinates only)
 - `... cadfix-dev python -m scenarios.hinge_lid.evaluate --level L --seed N --ops ops.json [--hide-score]`: JSON list of ops (`chamfer`, `extrude_cut`, see the module docstring) -> test_fit-style report + reward; `--hide-score` = what we paste to models. Shortcut: `--top T --side S [--symmetric]` = one full-edge chamfer. Examples: `docs/examples/`.
 - Go/no-go runs with a model: `scripts/brief.sh L S` (brief to paste), `scripts/try.sh L S ops.json` (stdout = `--hide-score` report to paste; appends reward, S1, volume/V_ref to `gonogo_log.csv`, private and gitignored). Ops format: `gonogo/README.md`.
+- Tasks (task 4+): `... python -m scenarios.hinge_lid.task --level L --seeds N` -> `output/tasks/<L>/seed_NNNN/{task,pristine}` (public task: task.json, spec.json, parts; private: grader.json with V_ref). Rebuild after changing zones / spec.
+- Grader: `... python -m cadfix.grade --task-dir T/task --pristine T/pristine --submitted OUT --level L --out report.json --reward-file reward.txt`
+- MCP server: `CADFIX_TASK_DIR=T/task CADFIX_OUT_DIR=OUT python -m cadfix.env.server` (stdio); shell calls: `python -m cadfix.env.cli get_task submit`
+- Local eval: `... python run_eval.py --agent reference,do_nothing,stop_early --level L1,L2,L3 --seeds 0-9 [--mcp]` -> table + `results/*.csv`
+- Exploits: `... python -m scenarios.hinge_lid.exploits --level L2,L3 --seeds 0` (table in `docs/exploits.txt`); acceptance vs 2c: `... python -m scenarios.hinge_lid.acceptance`
+- Harbor tasks: `... python -m cadfix.harbor.build --level L1,L2,L3 --seeds 0-9` / `--judge` (harbor_tasks/judge, committed); runs (host, harbor 0.26 in a venv): `harbor run -p harbor_tasks/judge -a oracle` / `-a nop` / `-a opencode -m <provider/model> -k 3`; stop-early: `PYTHONPATH=. harbor run -p harbor_tasks/judge -a cadfix.harbor.agents:StopEarlyAgent`
 - Delete `output/hinge_lid` after changing the generator: the scripts only generate missing level/seed folders.
 - Design decisions not in scenario.json: `docs/DECISIONS.md`.
 - Dependencies: change `pyproject.toml` ranges, then regenerate `requirements.lock` with `pip freeze` in python:3.11-slim.

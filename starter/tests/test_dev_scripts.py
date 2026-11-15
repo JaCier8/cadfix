@@ -30,7 +30,11 @@ def _scan_numbers(info: dict) -> set[str]:
         out |= {f"{f[k]}", f"{f[k]:.2f}", f"{f[k]:.3f}"}
     for k in ("full_points_up_to_mm3", "zero_points_at_mm3", "full_points_up_to_pct", "zero_points_at_pct"):
         out.add(f"{s3[k]}")
-    return out
+    # a scan number that equals a public dimension is a coincidence, not a leak (L1 seed 2: 5 x V_ref = 70.5 mm3 and
+    # the box is 70.5 mm long)
+    p = info["params"]
+    public = {f"{p[k]}" for k in ("L", "W", "H", "t", "floor", "t_lid")}
+    return out - public
 
 
 @pytest.mark.parametrize("level,seed", slow_except([(lv, s) for lv in ("L1", "L2", "L3") for s in (0, 1, 2)],

@@ -1,5 +1,33 @@
 # PROGRESS
 
+## PODSUMOWANIE zadań 4-7 (2026-11-15, praca autonomiczna w nocy)
+
+Bez STOP: spec 0.7 jest wykonalna w całości. Liczby nie były dostrajane pod kryteria akceptacji.
+
+**Co działa**
+- Ogólne checki G1-G6, S1-S3 i nagroda z danych (`cadfix/checks`, `cadfix/core/spec.py`), spec hinge_lid jako dane (`scenarios/hinge_lid/spec.py`), grader CLI `python -m cadfix.grade` (zawsze pisze reward.txt). Stare warianty 2c/2d przez nowy grader: 210 wariantów, 0 różnic (`docs/acceptance_4.txt`).
+- Operacje CAD (chamfer, fillet, offset_face, extrude_cut, cut_box, add_box, undo), zapytania (krawędzie/ściany w świecie, measure, section), środowisko z logiem JSONL i migawkami STEP+GLB, serwer MCP stdio, instruction.md z danych publicznych (test wycieków).
+- Rozwiązanie wzorcowe tylko przez narzędzia: **1.000 na L1/L2/L3 seedy 0-9 (30/30)**, 1.00-1.03 x V_ref, 27-33 wywołań, 2-5 s. do_nothing i stop_early: 0 na 30/30 (`results/run_eval_20261115_011537.csv`).
+- Exploity (17, L2 i L3): najgorszy **0.300** (< 0.4), tabela `docs/exploits.txt`.
+- Harbor 0.26 (Docker lokalnie, `harbor_tasks/judge` = L1/L2/L3 seed 0, weryfikator w osobnym kontenerze): **oracle 3/3 = 1.000, nop 0.000, stop-early 0.000**; komendy z README sprawdzone dokładnie w tej postaci; logi w `harbor_runs/`.
+- README dla jury (`README.md`), CLAUDE.md uzupełniony.
+- Testy: `pytest -q -m "not slow"` **73 passed, 58 s**; pełne `pytest -q` **309 passed, 1 failed, 20:26** (błąd: przypadkowa zbieżność liczby w teście wycieków briefu, L1 seed 2: 5 x V_ref = 70.5 mm³ = długość pudełka; test poprawiony, `test_dev_scripts.py` + `test_instruction.py` 19/19 po poprawce).
+
+**Rano do zrobienia (użytkownik)**
+1. `pip install harbor==0.26.0` (venv z Pythonem 3.12), klucz API modelu w zmiennych środowiska, z katalogu `starter/`:
+   `harbor run -p harbor_tasks/judge -a opencode -m <provider/model> -k 3`
+2. Wynik i ścieżkę `jobs/...` wpisać w README, sekcja "Harbor run log" (opcjonalnie skopiować job do `harbor_runs/`).
+
+**Otwarte problemy**
+1. Licznik test_fit jest w katalogu wyjściowym agenta: agent z shellem może ukryć wywołania (zysk max 0.1, D18).
+2. Ściany cieńsze niż 0.2 mm ignoruje filtr cech (D15); taki cut nigdy nie pomaga w S1, ale to luka w S2.
+3. Pełne `pytest -q` trwa długo (~20 min): każdy moduł testów generuje seedy L3 od nowa (11 s+ na seed). Pamięć podręczna generatora w testach by to skróciła.
+4. Seed 3 L3 potrzebuje 16 zastąpień przy limicie 20 (P5 z 2d, nadal otwarte).
+5. OpenCode nie był uruchamiany (płatny model). Nie sprawdziłem, czy OpenCode rzeczywiście widzi serwer MCP w kontenerze; oracle i stop-early używają tych samych narzędzi lokalnie w kontenerze.
+
+**Decyzje**: `docs/DECISIONS.md` D11-D26 (m.in. podział publiczne/prywatne, strefy, filtr 0.2 mm po grubości, układ pudełka dla S1, weryfikator separate, flagi Harbora 0.26).
+
+
 ## PODSUMOWANIE zadania 2c: poziomy L1-L3 (2026-11-14, praca autonomiczna)
 
 Nie było powodu do STOP: spec jest wykonalna. Jedno oczekiwanie z TASK_2c się nie spełnia (L3 „identyczne podcięcia wyraźnie < 0.9”), opisane niżej, liczby nie były dostrajane.
@@ -367,3 +395,8 @@ Plan: `docs/PLAN_4-7.md`. Projekt rozwiązania wzorcowego (M0): `docs/SOLVER_DES
   - `harbor run -p harbor_tasks/judge -a nop -y`: **0.000 x3** (`harbor_runs/nop_2026-11-15__02-15-26`)
   - `PYTHONPATH=. harbor run -p harbor_tasks/judge -a cadfix.harbor.agents:StopEarlyAgent -y`: **0.000 x3**, 2 wywołania narzędzi w kontenerze (`harbor_runs/stop_early_2026-11-15__02-16-21`)
 - OpenCode nie był uruchamiany (płatny model; zostaje dla użytkownika).
+
+### M5: README i podsumowanie (2026-11-15)
+- `README.md` (co robi agent, dlaczego trudne, punktacja, tabela exploitów, wyniki run_eval i Harbora, pięć komend, sekcja na log OpenCode). Komendy Harbora sprawdzone dokładnie w tej postaci (bez `-y`): oracle 1.000 (`harbor_runs/oracle_2026-11-15__02-21-57`), nop 0.000, stop-early 0.000. Różnica względem TASK_4-7: Harbor 0.26 nie ma `--agent-import-path`, własny agent to `-a moduł:Klasa` (D25).
+- CLAUDE.md: komendy zadań, gradera, serwera MCP, run_eval, exploitów, Harbora. Podsumowanie na górze tego pliku.
+- Testy: szybkie 73 passed / 58 s; pełne 309 passed + 1 poprawiony (patrz podsumowanie).
