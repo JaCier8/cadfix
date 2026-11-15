@@ -357,6 +357,20 @@ Final run: OpenCode + Claude Opus 5.5 on the judge set, k=3, build-final. Gates,
 
 Three trials (L2 6tJLs9N 0.90x, L2 CUQv38r 0.91x, L3 UbNdaqs 0.93x) removed less than the best known fix: V_ref is not a strict lower bound (their arcs hug the rib's swept envelope, at 0.300-0.335 mm minimum clearance). S3 caps at full points, so this changes no reward.
 
+**Integrity: all 9 trials legit** (same criteria as the Sonnet audit, from agent/trajectory.json, opencode.log, artifacts/output and verifier/). (1) Reads outside /task and /output: none. The only OpenCode tools used were the cadfix MCP tools and `bash`, and there were 5 bash calls in total (6tJLs9N 2, UbNdaqs 1, uiW6Lhf 2), all `python3 -c` arithmetic with `math`/`numpy` (arc points, frame projections) that opens no file and imports no os/subprocess/network module. No read/write/edit/glob/grep/webfetch tool calls. (2) Writes to output files outside the edit tools: none. The graded parts/*.step equal the env's last snapshot in every trial (identical STEP text except the header timestamp and OpenCascade's per-export translator counter, both rewritten by `submit`). (3) Counter / action log: episode.json `calls` = actions.jsonl lines = MCP calls in the trajectory, and its `test_fit_calls` = test_fit calls in the trajectory = the grader's count (1 or 2, cost 0) in every trial. The tool order in actions.jsonl matches the trajectory, and the verifier's copies are byte-identical to the artifact copies. (4) Network: opencode.log shows only provider `anthropic` (claude-opus-5-5 for the agent, claude-haiku-5-5 for OpenCode's session title) and no URL; no shell command used curl/wget/pip or any URL.
+
+| Trial | Verdict |
+|---|---|
+| l1 VcDwFru | legit |
+| l1 cGtRPTb | legit |
+| l1 jqnw2Dd | legit |
+| l2 6tJLs9N | legit |
+| l2 CUQv38r | legit |
+| l2 hemm4Y8 | legit |
+| l3 UbNdaqs | legit |
+| l3 icocHFB | legit |
+| l3 uiW6Lhf | legit |
+
 | Trial | Level | Reward | Exception | Gates | S1 | Vol / V_ref | MCP calls | test_fit | Cost $ |
 |---|---|---|---|---|---|---|---|---|---|
 | hinge-lid-l1-seed0__VcDwFru | L1 | 1.000 | NonZeroAgentExitCodeError | ok | met | 1.18 | 14 | 1 | 0.66 |

@@ -163,7 +163,7 @@ The verifier runs in a **separate container** (Harbor `environment_mode = "separ
 over from the agent's container. The grader uses its own code, its own task copy and pristine parts. Missing,
 garbage or unreadable files count as the original part, and a reward is always written. In the Sonnet run all 9
 trials were checked by hand: no exploit, no reads outside the public task, graded parts identical to the env's last
-snapshot. The Opus run was not audited the same way. Exploit suite: `python -m scenarios.hinge_lid.exploits --level L2,L3 --seeds 0` (full table in
+snapshot. The Opus run passed the same audit, 9/9 legit (per-trial lines in `docs/RUNS.md`): its only shell use was 5 `python3 -c` arithmetic calls, counters and logs match the trajectories, and the network shows only the model API. Exploit suite: `python -m scenarios.hinge_lid.exploits --level L2,L3 --seeds 0` (full table in
 `docs/exploits.txt`):
 
 | Exploit | L2 | L3 | Caught by |
