@@ -1,0 +1,144 @@
+{
+    "schema_version": 1,
+    "id": "21b85bc0-dbcf-4486-9c06-5ced5df17896",
+    "task_name": "hinge-lid-l3-seed0",
+    "trial_name": "hinge-lid-l3-seed0__uiW6Lhf",
+    "trial_uri": "file:///home/jappa/junction/cadfix-starter/starter/jobs/2026-11-15__07-55-50/hinge-lid-l3-seed0__uiW6Lhf",
+    "task_id": {
+        "path": "harbor_tasks/judge/hinge-lid-l3-seed0"
+    },
+    "source": "judge",
+    "task_checksum": "83660792c8ea0b56bd40b214852953f0f973ee6e20526985171b40368f9ead03",
+    "config": {
+        "schema_version": 1,
+        "task": {
+            "path": "harbor_tasks/judge/hinge-lid-l3-seed0",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "judge"
+        },
+        "trial_name": "hinge-lid-l3-seed0__uiW6Lhf",
+        "trials_dir": "jobs/2026-11-15__07-55-50",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "opencode",
+            "import_path": null,
+            "model_name": "anthropic/claude-opus-5-5",
+            "base_url": null,
+            "model_api_key_name": null,
+            "model_api_format": null,
+            "skip_model_parsing": false,
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "stream": false,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "override_error_policy": {},
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "693be196-5b7c-4f2a-a9fb-7e1709a7aaac",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "opencode",
+        "version": "1.19.5",
+        "model_info": {
+            "name": "claude-opus-5-5",
+            "provider": "anthropic"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 492746,
+        "n_cache_tokens": 492722,
+        "n_output_tokens": 3218,
+        "cost_usd": 0.6763454000000001,
+        "model_usage": {
+            "anthropic/claude-opus-5-5": {
+                "n_input_tokens": 492746,
+                "n_cache_tokens": 492722,
+                "n_output_tokens": 3218,
+                "cost_usd": 0.6763454000000001
+            }
+        },
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.714191
+        }
+    },
+    "verifier_environment_mode": "separate",
+    "exception_info": {
+        "exception_type": "NonZeroAgentExitCodeError",
+        "exception_message": "Command failed (exit 1): [ -f ~/.nvm/nvm.sh ] && . ~/.nvm/nvm.sh; opencode --model=anthropic/claude-opus-5-5 run --format=json --thinking --dangerously-skip-permissions -- '# Fix the hinged lid\n\n**Bug report:** The lid jams while opening and cannot reach 110 deg. The closed position is fine.\n\nYou get a 3D-printable assembly as B-rep solids and CAD tools. Change the editable parts so that the assembly meets every requirement below. The result is scored automatically when the episode ends.\n\n## Parts\n\n- `enclosure` (editable): printed box with rear wall, top edge carries the seal band. Printed on its floor (build direction (0.0533, 0.0071, 0.9986)).\n- `lid` (editable): printed lid with hinge knuckles, a structural rib (lug) under each knuckle, and a module frame on its underside. Printed top face down (build direction (-0.0533, -0.0071, -0.9986)).\n- `hinge_pin` (fixed): defines the rotation axis; cannot move.\n- `lid_module` (fixed): e.g. display or LED board mounted under the lid near the rear edge; moves with the lid.\n\n## Coordinates and the hinge\n\nUnits: mm, degrees. All coordinates are world coordinates; the assembly is NOT aligned with the world axes, so work with the directions the tools report (face normals, edge directions, the joint axis).\nThe `hinge` joint is revolute: lid, lid_module rotate together about the axis through (-131.796, 27.308, 99.887) with direction (-0.8479, -0.5280, 0.0490); positive angles open the lid (right-hand rule), 0 deg = closed, range 0..110 deg. Fixed: enclosure, hinge_pin.\n\n## Protected zones\n\nKeep-in zones (each must keep >= 99 % of its original material):\n- `bracket_0_bridge` (enclosure; enclosure knuckle bracket): box, corner (-113.936, 34.767, 86.233), edges (5.79, 3.605, -0.334) (-2.949, 4.747, 0.124) (0.431, 0.057, 8.078)\n- `bracket_0_knuckle` (enclosure; enclosure knuckle bracket): box, corner (-114.133, 35.835, 94.337), edges (5.79, 3.605, -0.334) (-2.321, 3.737, 0.097) (0.359, 0.048, 6.73)\n- `bracket_2_bridge` (enclosure; enclosure knuckle bracket): box, corner (-101.678, 42.4, 85.525), edges (5.79, 3.605, -0.334) (-2.949, 4.747, 0.124) (0.431, 0.057, 8.078)\n- `bracket_2_knuckle` (enclosure; enclosure knuckle bracket): box, corner (-101.875, 43.468, 93.629), edges (5.79, 3.605, -0.334) (-2.321, 3.737, 0.097) (0.359, 0.048, 6.73)\n- `bracket_4_bridge` (enclosure; enclosure knuckle bracket): box, corner (-89.421, 50.033, 84.817), edges (5.79, 3.605, -0.334) (-2.949, 4.747, 0.124) (0.431, 0.057, 8.078)\n- `bracket_4_knuckle` (enclosure; enclosure knuckle bracket): box, corner (-89.618, 51.101, 92.921), edges (5.79, 3.605, -0.334) (-2.321, 3.737, 0.097) (0.359, 0.048, 6.73)\n- `bracket_6_bridge` (enclosure; enclosure knuckle bracket): box, corner (-77.164, 57.666, 84.109), edges (5.79, 3.605, -0.334) (-2.949, 4.747, 0.124) (0.431, 0.057, 8.078)\n- `bracket_6_knuckle` (enclosure; enclosure knuckle bracket): box, corner (-77.36, 58.734, 92.213), edges (5.79, 3.605, -0.334) (-2.321, 3.737, 0.097) (0.359, 0.048, 6.73)\n- `lid_knuckle_0` (lid; lid hinge knuckle): cylinder, axis (-108.922, 41.552, 98.565) -> (-103.133, 45.157, 98.231), radius 2.2\n- `lid_rib_0` (lid; lid knuckle rib (structural)): box, corner (-108.718, 40.931, 95.404), edges (5.789, 3.605, -0.334) (-0.976, 1.571, 0.041) (0.168, 0.022, 3.145)\n- `lid_knuckle_1` (lid; lid hinge knuckle): cylinder, axis (-96.665, 49.185, 97.857) -> (-90.876, 52.79, 97.523), radius 2.2\n- `lid_rib_1` (lid; lid knuckle rib (structural)): box, corner (-96.324, 48.357, 94.831), edges (5.789, 3.605, -0.334) (-0.876, 1.41, 0.037) (0.16, 0.021, 3.006)\n- `lid_knuckle_2` (lid; lid hinge knuckle): cylinder, axis (-84.408, 56.818, 97.149) -> (-78.618, 60.423, 96.815), radius 2.2\n- `lid_rib_2` (lid; lid knuckle rib (structural)): box, corner (-84.359, 56.47, 94.235), edges (5.789, 3.605, -0.334) (-0.934, 1.503, 0.039) (0.155, 0.021, 2.906)\n- `lid_module_frame` (lid; lid module frame): box, corner (-93.422, 25.775, 94.306), edges (21.79, 13.569, -1.259) (-8.019, 12.908, 0.336) (0.16, 0.021, 2.996)\n- `seal_lid_front` (lid; seal band, lid underside over the wall tops): box, corner (-98.489, -26.359, 97.951), edges (76.052, 47.359, -4.393) (-1.361, 2.191, 0.057) (0.027, 0.004, 0.499)\n- `seal_lid_rear` (lid; seal band, lid underside over the wall tops): box, corner (-128.94, 22.659, 99.227), edges (76.052, 47.359, -4.393) (-1.361, 2.191, 0.057) (0.027, 0.004, 0.499)\n- `seal_lid_left` (lid; seal band, lid underside over the wall tops): box, corner (-98.489, -26.359, 97.951), edges (2.187, 1.362, -0.126) (-31.811, 51.209, 1.333) (0.027, 0.004, 0.499)\n- `seal_lid_right` (lid; seal band, lid underside over the wall tops): box, corner (-24.624, 19.638, 93.684), edges (2.187, 1.362, -0.126) (-31.811, 51.209, 1.333) (0.027, 0.004, 0.499)\n- `seal_enclosure_front` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (-98.17, -24.875, 97.423), edges (74.221, 46.218, -4.287) (-0.791, 1.274, 0.033) (0.027, 0.004, 0.499)\n- `seal_enclosure_rear` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (-128.05, 23.226, 98.674), edges (74.221, 46.218, -4.287) (-0.791, 1.274, 0.033) (0.027, 0.004, 0.499)\n- `seal_enclosure_left` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (-98.17, -24.875, 97.423), edges (1.272, 0.792, -0.073) (-30.672, 49.374, 1.285) (0.027, 0.004, 0.499)\n- `seal_enclosure_right` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (-25.221, 20.551, 93.209), edges (1.272, 0.792, -0.073) (-30.672, 49.374, 1.285) (0.027, 0.004, 0.499)\n\nKeep-out zones (no new material may enter):\n- `lid_module_volume` (volume occupied by lid_module (moves with the lid); parts lid, enclosure): box, corner (-93.106, 27.686, 91.772), edges (19.416, 12.09, -1.121) (-6.542, 10.531, 0.274) (0.293, 0.039, 5.492)\n\n## Requirements and scoring\n\nGates: if any gate fails, the reward is 0.\n- `G1_valid_solids`: both editable parts are valid closed solids (OpenCascade check)\n- `G2_hinge_interface`: pin holes keep diameter, position and axis: the material within the given cylinders around the pin axis is unchanged on both parts\n- `G3_keep_in`: lid knuckles, knuckle ribs, enclosure knuckle brackets, module frame and seal band (zones in task.json) keep >= 99 % of their original material\n- `G3_keep_out`: no new lid or enclosure material in the volume of lid_module (closed position)\n- `G4_closed_position`: at 0 deg no collision between lid (with module) and enclosure or pin\n- `G5_seal`: at 0 deg the contact between lid and wall tops is >= 1.5 mm wide all around (eroded by 0.75 mm it still forms a closed ring)\n- `G6_not_rebuilt`: outer envelope of each editable part moves by <= 0.5 mm along the box axes; changed volume (removed + added) of each part <= 15 %\n\nObjective:\n- `S1_opening`: rotate lid (with module) about the pin axis 0..110 deg in 1 deg steps: no overlap (> 1e-3 mm3) at any step, touching allowed; clearance lid(+module) vs enclosure >= 0.3 mm at every step from 10 deg (pin excluded). Score = progress: 0.5 * angle progress + 0.5 * clearance progress (see the reward)\n\nScores:\n- `S2_min_wall`: no new wall thinner than 1.2 mm (features smaller than 0.2 mm are ignored)\n- `S2_overhang`: no new overhang steeper than 45 deg in print orientation (enclosure on its floor, lid top face down); features smaller than 0.2 mm are ignored\n- `S3_minimal_change`: changed volume (added + removed) vs the original parts; full points if the changed volume is within 1.15x of the best known fix for this task, zero at 2x (linear in between)\n\nReward: any gate failed -> 0; S1 not met -> 0.25 * progress; S1 met -> 0.3 + 0.1 * printability + 0.6 * minimal_change; minus the test_fit cost. Printability = 1 if both S2 checks pass, else 0. Minimal change = the S3 score. Objective progress = 0.5 * angle progress + 0.5 * clearance progress, where angle progress = (largest angle up to which the S1 rules hold - the original'\"'\"'s) / (110 - the original'\"'\"'s) and clearance progress = min clearance from 10 deg / 0.3 (0 if anything overlaps).\ntest_fit: the first 2 calls are free, then each call costs 0.02 reward, at most 0.1 in total. Single checks (run_check_<id>) are free.\n\n## Tools and the episode\n\nAll tools are on the `cadfix` MCP server. Start with `get_task`: it returns the same information as data (parts, joint, zones with regions, every check with its parameters).\n- Inspect: `list_parts`, `part_info`, `list_edges`, `list_faces`, `find_edges_near`, `find_faces_near`, `measure` (gap and interference between two parts at any joint angle), `section` (a part cut by any plane).\n- Edit: the edit operations in the server'\"'\"'s tool list work on the editable parts. Every edit returns the part'\"'\"'s new edge and face lists; edge and face ids change after every edit. `undo` reverts the last edit.\n- Check: one `run_check_<id>` per requirement (free), `test_fit` = all of them.\n- `submit` ends the episode. Tool calls are capped at 150.\n\nThe editable parts are saved to `/output/parts/` after every edit and are graded as saved when the episode ends. The public task files (the same data the tools use) are in `/task`.\n' 2>&1 </dev/null | stdbuf -oL tee /logs/agent/opencode.txt\nstdout: 45 |       return applyHandlers(handlers, emitter, args), !0;\n46 |   }\n47 |   let er;\n48 |   if (args.length > 0)\n49 |     er = args[0];\n50 |     throw er;\n                ^\nerror: EPIPE: broken pipe, write\n      at emitError (node:events:50:13)\n     ... [193252 chars truncated] ... nd nothing added, about 0.05% of the two parts. The grader doesn't reveal the best known fix, so I can't tell whether this gets full marks for minimal change. I didn't try to shrink the notches further because the clearance and seal margins are already small.\",\"time\":{\"start\":1794726087073,\"end\":1794726087095}}}\n{\"type\":\"step_finish\",\"timestamp\":1794726087118,\"sessionID\":\"ses_e21fe9d79ffeher123PAyIzXzY\",\"part\":{\"id\":\"prt_1de02c9ca001LWR68DybLPEpW0\",\"reason\":\"stop\",\"snapshot\":\"156fe4d5ff1ade149776546336c577727b2e893d\",\"messageID\":\"msg_1de02ae3c001ztfSSi7k5vVTuh\",\"sessionID\":\"ses_e21fe9d79ffeher123PAyIzXzY\",\"type\":\"step-finish\",\"tokens\":{\"total\":82908,\"input\":2,\"output\":661,\"reasoning\":0,\"cache\":{\"write\":118,\"read\":82127}},\"cost\":0.0302434}}\n\nstderr: None",
+        "exception_traceback": "Traceback (most recent call last):\n  File \"/home/jappa/junction/cadfix-starter/.venv-harbor/lib/python3.12/site-packages/harbor/trial/single_step.py\", line 77, in _run_agent\n    await self._run_agent_phase(\n  File \"/home/jappa/junction/cadfix-starter/.venv-harbor/lib/python3.12/site-packages/harbor/trial/trial.py\", line 780, in _run_agent_phase\n    await asyncio.wait_for(\n  File \"/usr/lib/python3.12/asyncio/tasks.py\", line 520, in wait_for\n    return await fut\n           ^^^^^^^^^\n  File \"/home/jappa/junction/cadfix-starter/.venv-harbor/lib/python3.12/site-packages/harbor/agents/installed/base.py\", line 194, in wrapper\n    return await fn(self, instruction, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/jappa/junction/cadfix-starter/.venv-harbor/lib/python3.12/site-packages/harbor/agents/installed/opencode.py\", line 935, in run\n    await self.exec_as_agent(\n  File \"/home/jappa/junction/cadfix-starter/.venv-harbor/lib/python3.12/site-packages/harbor/agents/installed/base.py\", line 1114, in exec_as_agent\n    return await self._exec(\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/jappa/junction/cadfix-starter/.venv-harbor/lib/python3.12/site-packages/harbor/agents/installed/base.py\", line 1081, in _exec\n    raise self._classify_exec_error(command, result)\nharbor.agents.installed.base.NonZeroAgentExitCodeError: Command failed (exit 1): [ -f ~/.nvm/nvm.sh ] && . ~/.nvm/nvm.sh; opencode --model=anthropic/claude-opus-5-5 run --format=json --thinking --dangerously-skip-permissions -- '# Fix the hinged lid\n\n**Bug report:** The lid jams while opening and cannot reach 110 deg. The closed position is fine.\n\nYou get a 3D-printable assembly as B-rep solids and CAD tools. Change the editable parts so that the assembly meets every requirement below. The result is scored automatically when the episode ends.\n\n## Parts\n\n- `enclosure` (editable): printed box with rear wall, top edge carries the seal band. Printed on its floor (build direction (0.0533, 0.0071, 0.9986)).\n- `lid` (editable): printed lid with hinge knuckles, a structural rib (lug) under each knuckle, and a module frame on its underside. Printed top face down (build direction (-0.0533, -0.0071, -0.9986)).\n- `hinge_pin` (fixed): defines the rotation axis; cannot move.\n- `lid_module` (fixed): e.g. display or LED board mounted under the lid near the rear edge; moves with the lid.\n\n## Coordinates and the hinge\n\nUnits: mm, degrees. All coordinates are world coordinates; the assembly is NOT aligned with the world axes, so work with the directions the tools report (face normals, edge directions, the joint axis).\nThe `hinge` joint is revolute: lid, lid_module rotate together about the axis through (-131.796, 27.308, 99.887) with direction (-0.8479, -0.5280, 0.0490); positive angles open the lid (right-hand rule), 0 deg = closed, range 0..110 deg. Fixed: enclosure, hinge_pin.\n\n## Protected zones\n\nKeep-in zones (each must keep >= 99 % of its original material):\n- `bracket_0_bridge` (enclosure; enclosure knuckle bracket): box, corner (-113.936, 34.767, 86.233), edges (5.79, 3.605, -0.334) (-2.949, 4.747, 0.124) (0.431, 0.057, 8.078)\n- `bracket_0_knuckle` (enclosure; enclosure knuckle bracket): box, corner (-114.133, 35.835, 94.337), edges (5.79, 3.605, -0.334) (-2.321, 3.737, 0.097) (0.359, 0.048, 6.73)\n- `bracket_2_bridge` (enclosure; enclosure knuckle bracket): box, corner (-101.678, 42.4, 85.525), edges (5.79, 3.605, -0.334) (-2.949, 4.747, 0.124) (0.431, 0.057, 8.078)\n- `bracket_2_knuckle` (enclosure; enclosure knuckle bracket): box, corner (-101.875, 43.468, 93.629), edges (5.79, 3.605, -0.334) (-2.321, 3.737, 0.097) (0.359, 0.048, 6.73)\n- `bracket_4_bridge` (enclosure; enclosure knuckle bracket): box, corner (-89.421, 50.033, 84.817), edges (5.79, 3.605, -0.334) (-2.949, 4.747, 0.124) (0.431, 0.057, 8.078)\n- `bracket_4_knuckle` (enclosure; enclosure knuckle bracket): box, corner (-89.618, 51.101, 92.921), edges (5.79, 3.605, -0.334) (-2.321, 3.737, 0.097) (0.359, 0.048, 6.73)\n- `bracket_6_bridge` (enclosure; enclosure knuckle bracket): box, corner (-77.164, 57.666, 84.109), edges (5.79, 3.605, -0.334) (-2.949, 4.747, 0.124) (0.431, 0.057, 8.078)\n- `bracket_6_knuckle` (enclosure; enclosure knuckle bracket): box, corner (-77.36, 58.734, 92.213), edges (5.79, 3.605, -0.334) (-2.321, 3.737, 0.097) (0.359, 0.048, 6.73)\n- `lid_knuckle_0` (lid; lid hinge knuckle): cylinder, axis (-108.922, 41.552, 98.565) -> (-103.133, 45.157, 98.231), radius 2.2\n- `lid_rib_0` (lid; lid knuckle rib (structural)): box, corner (-108.718, 40.931, 95.404), edges (5.789, 3.605, -0.334) (-0.976, 1.571, 0.041) (0.168, 0.022, 3.145)\n- `lid_knuckle_1` (lid; lid hinge knuckle): cylinder, axis (-96.665, 49.185, 97.857) -> (-90.876, 52.79, 97.523), radius 2.2\n- `lid_rib_1` (lid; lid knuckle rib (structural)): box, corner (-96.324, 48.357, 94.831), edges (5.789, 3.605, -0.334) (-0.876, 1.41, 0.037) (0.16, 0.021, 3.006)\n- `lid_knuckle_2` (lid; lid hinge knuckle): cylinder, axis (-84.408, 56.818, 97.149) -> (-78.618, 60.423, 96.815), radius 2.2\n- `lid_rib_2` (lid; lid knuckle rib (structural)): box, corner (-84.359, 56.47, 94.235), edges (5.789, 3.605, -0.334) (-0.934, 1.503, 0.039) (0.155, 0.021, 2.906)\n- `lid_module_frame` (lid; lid module frame): box, corner (-93.422, 25.775, 94.306), edges (21.79, 13.569, -1.259) (-8.019, 12.908, 0.336) (0.16, 0.021, 2.996)\n- `seal_lid_front` (lid; seal band, lid underside over the wall tops): box, corner (-98.489, -26.359, 97.951), edges (76.052, 47.359, -4.393) (-1.361, 2.191, 0.057) (0.027, 0.004, 0.499)\n- `seal_lid_rear` (lid; seal band, lid underside over the wall tops): box, corner (-128.94, 22.659, 99.227), edges (76.052, 47.359, -4.393) (-1.361, 2.191, 0.057) (0.027, 0.004, 0.499)\n- `seal_lid_left` (lid; seal band, lid underside over the wall tops): box, corner (-98.489, -26.359, 97.951), edges (2.187, 1.362, -0.126) (-31.811, 51.209, 1.333) (0.027, 0.004, 0.499)\n- `seal_lid_right` (lid; seal band, lid underside over the wall tops): box, corner (-24.624, 19.638, 93.684), edges (2.187, 1.362, -0.126) (-31.811, 51.209, 1.333) (0.027, 0.004, 0.499)\n- `seal_enclosure_front` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (-98.17, -24.875, 97.423), edges (74.221, 46.218, -4.287) (-0.791, 1.274, 0.033) (0.027, 0.004, 0.499)\n- `seal_enclosure_rear` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (-128.05, 23.226, 98.674), edges (74.221, 46.218, -4.287) (-0.791, 1.274, 0.033) (0.027, 0.004, 0.499)\n- `seal_enclosure_left` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (-98.17, -24.875, 97.423), edges (1.272, 0.792, -0.073) (-30.672, 49.374, 1.285) (0.027, 0.004, 0.499)\n- `seal_enclosure_right` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (-25.221, 20.551, 93.209), edges (1.272, 0.792, -0.073) (-30.672, 49.374, 1.285) (0.027, 0.004, 0.499)\n\nKeep-out zones (no new material may enter):\n- `lid_module_volume` (volume occupied by lid_module (moves with the lid); parts lid, enclosure): box, corner (-93.106, 27.686, 91.772), edges (19.416, 12.09, -1.121) (-6.542, 10.531, 0.274) (0.293, 0.039, 5.492)\n\n## Requirements and scoring\n\nGates: if any gate fails, the reward is 0.\n- `G1_valid_solids`: both editable parts are valid closed solids (OpenCascade check)\n- `G2_hinge_interface`: pin holes keep diameter, position and axis: the material within the given cylinders around the pin axis is unchanged on both parts\n- `G3_keep_in`: lid knuckles, knuckle ribs, enclosure knuckle brackets, module frame and seal band (zones in task.json) keep >= 99 % of their original material\n- `G3_keep_out`: no new lid or enclosure material in the volume of lid_module (closed position)\n- `G4_closed_position`: at 0 deg no collision between lid (with module) and enclosure or pin\n- `G5_seal`: at 0 deg the contact between lid and wall tops is >= 1.5 mm wide all around (eroded by 0.75 mm it still forms a closed ring)\n- `G6_not_rebuilt`: outer envelope of each editable part moves by <= 0.5 mm along the box axes; changed volume (removed + added) of each part <= 15 %\n\nObjective:\n- `S1_opening`: rotate lid (with module) about the pin axis 0..110 deg in 1 deg steps: no overlap (> 1e-3 mm3) at any step, touching allowed; clearance lid(+module) vs enclosure >= 0.3 mm at every step from 10 deg (pin excluded). Score = progress: 0.5 * angle progress + 0.5 * clearance progress (see the reward)\n\nScores:\n- `S2_min_wall`: no new wall thinner than 1.2 mm (features smaller than 0.2 mm are ignored)\n- `S2_overhang`: no new overhang steeper than 45 deg in print orientation (enclosure on its floor, lid top face down); features smaller than 0.2 mm are ignored\n- `S3_minimal_change`: changed volume (added + removed) vs the original parts; full points if the changed volume is within 1.15x of the best known fix for this task, zero at 2x (linear in between)\n\nReward: any gate failed -> 0; S1 not met -> 0.25 * progress; S1 met -> 0.3 + 0.1 * printability + 0.6 * minimal_change; minus the test_fit cost. Printability = 1 if both S2 checks pass, else 0. Minimal change = the S3 score. Objective progress = 0.5 * angle progress + 0.5 * clearance progress, where angle progress = (largest angle up to which the S1 rules hold - the original'\"'\"'s) / (110 - the original'\"'\"'s) and clearance progress = min clearance from 10 deg / 0.3 (0 if anything overlaps).\ntest_fit: the first 2 calls are free, then each call costs 0.02 reward, at most 0.1 in total. Single checks (run_check_<id>) are free.\n\n## Tools and the episode\n\nAll tools are on the `cadfix` MCP server. Start with `get_task`: it returns the same information as data (parts, joint, zones with regions, every check with its parameters).\n- Inspect: `list_parts`, `part_info`, `list_edges`, `list_faces`, `find_edges_near`, `find_faces_near`, `measure` (gap and interference between two parts at any joint angle), `section` (a part cut by any plane).\n- Edit: the edit operations in the server'\"'\"'s tool list work on the editable parts. Every edit returns the part'\"'\"'s new edge and face lists; edge and face ids change after every edit. `undo` reverts the last edit.\n- Check: one `run_check_<id>` per requirement (free), `test_fit` = all of them.\n- `submit` ends the episode. Tool calls are capped at 150.\n\nThe editable parts are saved to `/output/parts/` after every edit and are graded as saved when the episode ends. The public task files (the same data the tools use) are in `/task`.\n' 2>&1 </dev/null | stdbuf -oL tee /logs/agent/opencode.txt\nstdout: 45 |       return applyHandlers(handlers, emitter, args), !0;\n46 |   }\n47 |   let er;\n48 |   if (args.length > 0)\n49 |     er = args[0];\n50 |     throw er;\n                ^\nerror: EPIPE: broken pipe, write\n      at emitError (node:events:50:13)\n     ... [193252 chars truncated] ... nd nothing added, about 0.05% of the two parts. The grader doesn't reveal the best known fix, so I can't tell whether this gets full marks for minimal change. I didn't try to shrink the notches further because the clearance and seal margins are already small.\",\"time\":{\"start\":1794726087073,\"end\":1794726087095}}}\n{\"type\":\"step_finish\",\"timestamp\":1794726087118,\"sessionID\":\"ses_e21fe9d79ffeher123PAyIzXzY\",\"part\":{\"id\":\"prt_1de02c9ca001LWR68DybLPEpW0\",\"reason\":\"stop\",\"snapshot\":\"156fe4d5ff1ade149776546336c577727b2e893d\",\"messageID\":\"msg_1de02ae3c001ztfSSi7k5vVTuh\",\"sessionID\":\"ses_e21fe9d79ffeher123PAyIzXzY\",\"type\":\"step-finish\",\"tokens\":{\"total\":82908,\"input\":2,\"output\":661,\"reasoning\":0,\"cache\":{\"write\":118,\"read\":82127}},\"cost\":0.0302434}}\n\nstderr: None\n",
+        "occurred_at": "2026-11-15T07:01:27.331967Z",
+        "policy": {
+            "should_retry": false,
+            "should_grade": true,
+            "has_valid_reward": true
+        }
+    },
+    "started_at": "2026-11-15T06:55:54.218091Z",
+    "finished_at": "2026-11-15T07:01:58.258249Z",
+    "environment_setup": {
+        "started_at": "2026-11-15T06:55:54.521993Z",
+        "finished_at": "2026-11-15T06:55:57.340472Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-11-15T06:55:57.340494Z",
+        "finished_at": "2026-11-15T06:59:53.960267Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-11-15T06:59:53.960486Z",
+        "finished_at": "2026-11-15T07:01:27.331506Z"
+    },
+    "verifier": {
+        "started_at": "2026-11-15T07:01:40.049938Z",
+        "finished_at": "2026-11-15T07:01:58.258239Z"
+    },
+    "step_results": null,
+    "reward_valid": true
+}

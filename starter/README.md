@@ -96,20 +96,25 @@ dev pytest -q -m "not slow"                                                     
 
 ## Results
 
-Harbor, `harbor_tasks/judge` (L1, L2, L3 seed 0), OpenCode 1.19.5, `-k 3`. All runs are listed in
-[`docs/RUNS.md`](docs/RUNS.md), with logs in `harbor_runs/<run_id>/`. The file format is in
+Harbor, `harbor_tasks/judge` (L1, L2, L3 seed 0), OpenCode 1.19.5, `-k 3`: mean reward per level. All runs are listed
+in [`docs/RUNS.md`](docs/RUNS.md) (per-trial tables), with logs in `harbor_runs/<run_id>/`. The file format is in
 [`docs/DATA_FORMAT.md`](docs/DATA_FORMAT.md).
 
 | Agent | Build | L1 | L2 | L3 | Mean | Log |
 |---|---|---|---|---|---|---|
 | reference (oracle) | build-final | 1.000 | 1.000 | 1.000 | **1.000** | `harbor_runs/oracle_2026-11-15__07-37-23` |
-| Claude Opus 5.5, x3 | build-final | _pending_ | _pending_ | _pending_ | _pending_ | `jobs/2026-11-15__07-55-50` (running) |
-| Claude Sonnet 5.5, x3 | build-sonnet-run | 1.000, 1.000, 1.000 | 1.000, 0.884, 0.621 | 0.850, 0.804, 0.400 | **0.840** | `harbor_runs/sonnet55_2026-11-15__06-48-21` |
+| Claude Opus 5.5, x3 | build-final | 1.000 | 0.998 | 0.891 | **0.963** | `harbor_runs/opus55_judge_k3_2026-11-15__07-55-50` |
+| Claude Sonnet 5.5, x3 | build-sonnet-run | 1.000 | 0.835 | 0.685 | **0.840** | `harbor_runs/sonnet55_2026-11-15__06-48-21` |
+| Hydrogen, manual (no tools, 3 attempts) | pre-Harbor | 1.000 | 0.400 | not run | – | `docs/RUNS.md#hydrogen_gonogo_manual` |
 | do nothing (nop) | build-final | 0.000 | 0.000 | 0.000 | 0.000 | `harbor_runs/nop_2026-11-15__07-38-15` |
 | stop early | build-sonnet-run | 0.000 | 0.000 | 0.000 | 0.000 | `harbor_runs/stop_early_2026-11-15__02-22-43` |
 
-`build-final` and `build-sonnet-run` are git tags. Each run's tasks are byte-identical to `harbor_tasks/judge` at its tag
-(Harbor's task digests in the job's `lock.json`). The two builds differ only in the MCP server's shutdown code
+Per trial: Opus L2 1.000 / 1.000 / 0.995, L3 1.000 / 0.960 / 0.714; Sonnet L2 1.000 / 0.884 / 0.621, L3 0.850 /
+0.804 / 0.400. Both scored 1.000 on all three L1 trials. Gates, S1 and printability passed in all 18 agent trials.
+Hydrogen's L1 took 2 attempts (0.115 -> 1.000).
+
+`build-final` and `build-sonnet-run` are git tags. Each run's tasks are byte-identical to `harbor_tasks/judge` at its
+tag (Harbor's task digests in the job's `lock.json`). The two builds differ only in the MCP server's shutdown code
 (`cadfix/env/server.py`). The instruction, spec, tools and grader are the same, so the Sonnet and Opus numbers are
 directly comparable.
 
@@ -117,23 +122,40 @@ Locally, without Harbor (`results/run_eval_20261115_011537.csv`): the reference 
 (L1-L3 x seeds 0-9) at 1.00-1.03x the best known volume, with 27-33 tool calls. do-nothing and stop-early score 0 on
 30/30. The reference solver's design is in `docs/SOLVER_DESIGN.md`.
 
-## Main finding: agents stop at the first passing fix
+## Main finding: a capability ladder on minimal change
 
-Sonnet 5.5 diagnoses the jam and fixes it locally every time. S1 and all gates pass in 9/9 trials, and no agent
-fell for the full-edge chamfer that caught the weak model. It loses points only on minimal change:
+All three models can find the clash. What separates them is whether they keep working once a fix passes.
 
-- **Every agent called `test_fit` once and submitted the first fix that passed**, with a free `test_fit` and 120+
-  tool calls left. None of the 9 tried to shrink a passing cut, and none compared two candidate fixes by volume.
-  Every later change to a cut added material, because S1 still failed.
-- **They knew the rule.** 8/9 final answers discuss S3 or the changed volume and say the score is unknown, e.g.
-  "I can't see the grader's best-known fix, so I don't know how the S3 minimal-change score compares to it". One
-  wrote "I did not try to shrink the pockets further, so some of the minimal-change score may be left on the table."
-- **L3: one relief size for three different ribs (3/3).** Two agents had the per-rib difference in front of them,
-  one from its own section scan (0.948 / 0.585 / 0.700 mm²) and one from our `measure` tool (overlap pieces of
-  1.077 / 0.140 / 0.120 mm³). Both still cut the worst-case profile at all three ribs.
+1. **Weaker models fall for the full-edge cut.** Hydrogen (manual go/no-go) tuned one full-edge chamfer on every
+   attempt: 3.2x the best known volume, 0.400 on L2. It never tried a local relief.
+2. **Sonnet 5.5 stops at the first passing fix.** It fixed every rib locally (S1 and gates 9/9), but every agent
+   called `test_fit` once and submitted the first fix that passed, with 120+ tool calls left. 0/9 tried to shrink a
+   passing cut. 8/9 wrote that they knew the S3 rule and could not see their score, e.g. "I did not try to shrink
+   the pockets further, so some of the minimal-change score may be left on the table." On L3 all three used one
+   relief size for three different ribs, two of them after measuring that the ribs differ.
+3. **Opus 5.5 is close but still below the reference on 3 of 9 trials.** It optimised after its first passing fix
+   in 4/9 trials (undo, re-cut smaller, re-check): "Total now ~14.8 mm³ (was 23.3). Running the free checks."
+   The one L3 trial that sized each rib separately reached full points. It still lost points where it skipped that
+   step. On L3 uiW6Lhf (0.714) it cut one identical notch at all three ribs (1.55x) and submitted on its first
+   pass: "I didn't try to shrink the notches further because the clearance and seal margins are already small."
+   On L3 icocHFB (0.960) it re-cut but kept one radius for all ribs (1.21x). On L2 hemm4Y8 (0.995) it stopped at
+   1.157x, just over the 1.15x line.
 
-The information was there, so the failure is a decision, not a missing fact. Per-trial evidence:
-[`docs/RUN_ANALYSIS_sonnet55.md`](docs/RUN_ANALYSIS_sonnet55.md) sections 4-5.
+The information was there in every run, so the remaining gap is a decision, not a missing fact. L3 (different ribs,
+rotated frame) is where it shows. Evidence: [`docs/RUN_ANALYSIS_sonnet55.md`](docs/RUN_ANALYSIS_sonnet55.md)
+sections 4-5 and the Opus entry in [`docs/RUNS.md`](docs/RUNS.md). Side note: three Opus trials removed less
+than the best known fix (0.90-0.93x), so V_ref is not a strict lower bound. S3 caps at full points, so this
+changes no reward.
+
+## Next steps
+
+- **Combine the difficulty knobs.** L3's different ribs and rotated frame are what still separate Opus from the
+  reference. Add more ribs, non-uniform rib shapes, a tighter S3 factor and a seal band that leaves less margin, on
+  more seeds.
+- **A second scenario** on the same framework (`cadfix/` knows nothing about hinges): e.g. a snap-fit or a sliding
+  drawer, which again has a minimal-change objective on top of a pass/fail fit.
+- **Train a smaller model** on the generated levels and seeds. The reward is dense above the gates (0.3-1.0 for
+  working fixes), so the "optimise after the first pass" behaviour can be learned and measured.
 
 ## Reward integrity
 
@@ -141,7 +163,7 @@ The verifier runs in a **separate container** (Harbor `environment_mode = "separ
 over from the agent's container. The grader uses its own code, its own task copy and pristine parts. Missing,
 garbage or unreadable files count as the original part, and a reward is always written. In the Sonnet run all 9
 trials were checked by hand: no exploit, no reads outside the public task, graded parts identical to the env's last
-snapshot. Exploit suite: `python -m scenarios.hinge_lid.exploits --level L2,L3 --seeds 0` (full table in
+snapshot. The Opus run was not audited the same way. Exploit suite: `python -m scenarios.hinge_lid.exploits --level L2,L3 --seeds 0` (full table in
 `docs/exploits.txt`):
 
 | Exploit | L2 | L3 | Caught by |
@@ -161,18 +183,19 @@ snapshot. Exploit suite: `python -m scenarios.hinge_lid.exploits --level L2,L3 -
 
 - **S3 is checkable by the agent in this build.** `run_check_S3_minimal_change` and `test_fit` report the agent's
   changed volume and the S3 rule. They never report V_ref or a score, and they always say `"passed": true`, because
-  without V_ref the agent-side check has no threshold. The agents in the Sonnet run all said the score was
-  unknown, so they did not read the `true` as full points. Still, a cleaner build would compute S3 in the verifier
+  without V_ref the agent-side check has no threshold. Every agent in both runs that commented on S3 said the
+  score was unknown, so they did not read the `true` as full points. Still, a cleaner build would compute S3 in the verifier
   only and give the agent a plain `changed_volume` tool.
 - **The test_fit counter lives in the agent-writable output dir** (`/output/episode.json`, `actions.jsonl`). The
   verifier takes the larger of the two counts, but an agent with a shell could edit both and hide extra test_fit
   calls. The most this can gain is the 0.1 cost cap. No agent touched these files (Sonnet: 1 test_fit call in
-  every trial, counters match the trajectories).
-- **OpenCode's own EPIPE crash at shutdown.** Some OpenCode 1.19.5 trials end with `NonZeroAgentExitCodeError`
-  (`EPIPE: broken pipe, write` in OpenCode's Bun runtime), always after `submit` and the final answer. Rewards are
-  unaffected: the verifier runs normally and Harbor's mean includes these trials (Sonnet: 4/9). It is not our MCP
-  server: 0 EPIPE in 60 runs of OpenCode's MCP client stack against it (`scripts/epipe_repro`), and the server now
-  exits 0 on stdin close, SIGTERM and broken pipe.
+  every trial, counters match the trajectories). Opus used at most 2, so it paid no test_fit cost.
+- **OpenCode's own EPIPE crash at shutdown.** OpenCode 1.19.5 often ends a trial with `NonZeroAgentExitCodeError`
+  (`EPIPE: broken pipe, write` in its Bun runtime). This happened in 8/9 Opus trials and 4/9 Sonnet trials, always
+  after `submit` and the final answer. Rewards are unaffected: the verifier runs normally and Harbor's mean includes
+  these trials. It is OpenCode's bug, not our MCP server's: our reproduction ran OpenCode's MCP client stack against
+  the server 60 times with no model, in three shutdown modes, and saw 0 EPIPE (`scripts/epipe_repro`). The server
+  also exits 0 on stdin close, SIGTERM and broken pipe.
 
 ## Layout
 

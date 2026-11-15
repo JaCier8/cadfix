@@ -1,0 +1,65 @@
+{
+    "schema_version": 1,
+    "id": "693be196-5b7c-4f2a-a9fb-7e1709a7aaac",
+    "started_at": "2026-11-15T07:55:53.530875",
+    "updated_at": "2026-11-15T08:10:07.508555",
+    "finished_at": "2026-11-15T08:10:07.508555",
+    "n_total_trials": 9,
+    "stats": {
+        "n_completed_trials": 9,
+        "n_errored_trials": 8,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "opencode__claude-opus-5-5__judge": {
+                "n_trials": 9,
+                "n_errors": 8,
+                "metrics": [
+                    {
+                        "mean": 0.9632095555555557
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "1.0": [
+                            "hinge-lid-l1-seed0__cGtRPTb",
+                            "hinge-lid-l2-seed0__CUQv38r",
+                            "hinge-lid-l1-seed0__jqnw2Dd",
+                            "hinge-lid-l1-seed0__VcDwFru",
+                            "hinge-lid-l2-seed0__6tJLs9N",
+                            "hinge-lid-l3-seed0__UbNdaqs"
+                        ],
+                        "0.714191": [
+                            "hinge-lid-l3-seed0__uiW6Lhf"
+                        ],
+                        "0.994861": [
+                            "hinge-lid-l2-seed0__hemm4Y8"
+                        ],
+                        "0.959834": [
+                            "hinge-lid-l3-seed0__icocHFB"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "NonZeroAgentExitCodeError": [
+                        "hinge-lid-l1-seed0__cGtRPTb",
+                        "hinge-lid-l2-seed0__CUQv38r",
+                        "hinge-lid-l3-seed0__uiW6Lhf",
+                        "hinge-lid-l1-seed0__jqnw2Dd",
+                        "hinge-lid-l3-seed0__icocHFB",
+                        "hinge-lid-l1-seed0__VcDwFru",
+                        "hinge-lid-l2-seed0__6tJLs9N",
+                        "hinge-lid-l3-seed0__UbNdaqs"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 8338274,
+        "n_cache_tokens": 8338006,
+        "n_output_tokens": 29412,
+        "cost_usd": 7.416983199999999
+    }
+}
