@@ -19,11 +19,17 @@ def test_build_layout_and_split(tmp_path):
     assert public == {"task.json", "spec.json", "parts/enclosure.step", "parts/lid.step", "parts/hinge_pin.step",
                       "parts/lid_module.step"}
     assert not list(env.rglob("grader.json")) and not (env / "scenarios").exists()     # no private data, no generator
+    assert not [p for p in env.rglob("*") if "reference" in p.name.lower() and p.name != "reference.py"]   # no reference fix
+    assert (out / "tests" / "pristine" / "reference" / "parts" / "enclosure.step").exists()
     assert "reference_mm3" not in (env / "task" / "spec.json").read_text()
     pri = json.loads((out / "tests" / "pristine" / "grader.json").read_text())
     assert pri["private"]["S3_minimal_change"]["reference_mm3"] > 0
     assert (out / "tests" / "cadfix" / "grade.py").exists() and (out / "tests" / "task" / "spec.json").exists()
     t = (out / "tests" / "test.sh").read_text()
     assert "PYTHONPATH=/tests" in t and "--pristine /tests/pristine" in t and "reward.txt" in t
+    assert not (env / "cadfix" / "viz.py").exists() and (out / "tests" / "cadfix" / "viz.py").exists()  # viewer: humans only
+    assert not (env / "cadfix" / "show.py").exists() and not (env / "cadfix" / "show_index.py").exists()                                  # viewer launcher: humans only
+    assert not (env / "cadfix" / "playback.py").exists() and (out / "tests" / "cadfix" / "playback.py").exists()
+    assert t.index("reward.txt") < t.index("cadfix.viz") and "cadfix.viz" in t and t.rstrip().endswith("exit 0")
     assert "--mcp" in (out / "solution" / "solve.sh").read_text() and (out / "solution" / "reference.py").exists()
     assert "`cadfix` MCP server" in (out / "instruction.md").read_text()

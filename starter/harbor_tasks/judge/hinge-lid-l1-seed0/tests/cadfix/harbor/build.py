@@ -24,6 +24,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc")
+# the 3D viewer export is for humans only: it ships with the verifier (tests/), never to the agent's container
+IGNORE_AGENT = shutil.ignore_patterns("__pycache__", "*.pyc", "viz.py", "playback.py", "show.py", "show_index.py")
 
 TASK_TOML = """schema_version = "1.4"
 artifacts = ["/output"]
@@ -94,6 +96,10 @@ PYTHONPATH=/tests python3 -m cadfix.grade --task-dir /tests/task --pristine /tes
     2> /logs/verifier/grader_stderr.txt
 [ -s /logs/verifier/reward.txt ] || echo 0 > /logs/verifier/reward.txt
 cp /output/actions.jsonl /output/episode.json /logs/verifier/ 2>/dev/null
+# 3D model for humans (best effort: after the reward is written, never changes it)
+mkdir -p /logs/verifier/submitted && cp -r /output/parts /logs/verifier/submitted/ 2>/dev/null
+PYTHONPATH=/tests timeout 600 python3 -m cadfix.viz --task-dir /tests/task --pristine /tests/pristine --submitted /output \\
+    --report /logs/verifier/grade.json --out /logs/verifier/viz > /logs/verifier/viz_stdout.txt 2>&1 || true
 echo "reward: $(cat /logs/verifier/reward.txt)"
 exit 0
 """
@@ -127,7 +133,7 @@ def build_task(task_root: Path, out: Path, name: str | None = None) -> Path:
     env = out / "environment"
     (env / "Dockerfile").write_text(DOCKERFILE)
     shutil.copy(ROOT / "requirements.lock", env / "requirements.lock")
-    shutil.copytree(ROOT / "cadfix", env / "cadfix", ignore=IGNORE)
+    shutil.copytree(ROOT / "cadfix", env / "cadfix", ignore=IGNORE_AGENT)
     shutil.copytree(task_root / "task", env / "task", ignore=IGNORE)
     tests = out / "tests"
     shutil.copytree(ROOT / "cadfix", tests / "cadfix", ignore=IGNORE)
