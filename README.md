@@ -1,6 +1,11 @@
+[DEMO](https://jacier8.github.io/cadfix/)
+
 # cadfix: fix a 3D-printed hinge that jams
 
 An RL environment for the AfterQuery "Break the Agent" track.
+
+**Live demo: <https://jacier8.github.io/cadfix/>**: results on the judge set, and every run (reference, Opus 5.5 x3,
+Sonnet 5.5 x3, do-nothing, stop-early) replayed step by step in 3D next to the reference fix.
 
 ## What the agent has to do
 
@@ -81,6 +86,8 @@ dev python run_eval.py --agent reference,do_nothing,stop_early --level L1,L2,L3 
 first use (about 4 min cold, about 2.2 GB). Running `docker build -t cadfix-dev .` first shares the heavy layers.
 To archive a finished job and add it to `runs/index.json` + `docs/RUNS.md`:
 `python scripts/record_run.py jobs/<job> --label <name> --notes "..."`.
+Demo site: build the viewers (`scripts/view.sh <dir>`), then `python3 scripts/build_site.py && scripts/deploy_site.sh`
+(run groups are listed at the top of `scripts/build_site.py`; the site is force-pushed to the `gh-pages` branch).
 
 Dev image, generation and the other local tools:
 
