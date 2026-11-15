@@ -2,6 +2,9 @@
 
   <root>/<L>/seed_NNNN/task/       PUBLIC (goes into the agent's container): task.json, spec.json, parts/*.step
   <root>/<L>/seed_NNNN/pristine/   PRIVATE (verifier only): parts/*.step (copies), grader.json (V_ref)
+  <root>/<L>/seed_NNNN/pristine/reference/parts/<editable>.step
+                                   PRIVATE: editable parts with the hidden reference fix applied; only the 3D viewer
+                                   (cadfix.viz, humans) reads it, the grader never does
 
 task.json has no generator parameters, no pose, no feasibility data and no reference fix.
 
@@ -14,6 +17,8 @@ import json
 import shutil
 from pathlib import Path
 
+from cadfix.core import kernel
+from cadfix.ops.edit import apply_ops
 from scenarios.hinge_lid import generator as gen
 from scenarios.hinge_lid import spec as hl_spec
 
@@ -62,6 +67,7 @@ def write_task(level: str, seed: int, gen_out="output/hinge_lid", root="output/t
     for n in gen.PART_NAMES:
         shutil.copy(src / f"{n}.step", pub / "parts" / f"{n}.step")
         shutil.copy(src / f"{n}.step", pri / "parts" / f"{n}.step")
+    write_reference(info, src, pri)
     (pub / "task.json").write_text(json.dumps(task_dict(info), indent=2))
     (pub / "spec.json").write_text(json.dumps(hl_spec.public_spec(info), indent=2))
     (pri / "grader.json").write_text(json.dumps({"level": level, "seed": seed,
@@ -69,9 +75,19 @@ def write_task(level: str, seed: int, gen_out="output/hinge_lid", root="output/t
     return out
 
 
+def write_reference(info: dict, src: Path, pri: Path) -> None:
+    """pristine/reference/parts/<editable>.step = original parts + the generator's hidden reference ops (viewer only)."""
+    shapes = {n: kernel.import_step(src / f"{n}.step") for n in gen.PART_NAMES}
+    editable = [n for n, d in task_dict(info)["parts"].items() if d["editable"]]
+    new, _ = apply_ops(shapes, info["reference_ops"], editable, default_part="enclosure")
+    (pri / "reference" / "parts").mkdir(parents=True, exist_ok=True)
+    for n in editable:
+        kernel.export_step(new[n], pri / "reference" / "parts" / f"{n}.step")
+
+
 def ensure_task(level: str, seed: int, gen_out="output/hinge_lid", root="output/tasks") -> Path:
     out = task_dir(root, level, seed)
-    if not (out / "pristine" / "grader.json").exists():
+    if not (out / "pristine" / "grader.json").exists() or not (out / "pristine" / "reference" / "parts").exists():
         write_task(level, seed, gen_out, root)
     return out
 

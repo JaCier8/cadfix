@@ -16,7 +16,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from cadfix import grade
+from cadfix import grade, viz
 from cadfix.agents import BASELINES
 from cadfix.env.env import Env
 from scenarios.hinge_lid import generator
@@ -29,7 +29,7 @@ FIELDS = ["agent", "level", "seed", "reward", "s1_met", "gates_ok", "failed_gate
 
 
 def run_case(agent: str, level: str, seed: int, results: Path, gen="output/hinge_lid", tasks="output/tasks",
-             mcp: bool = False) -> dict:
+             mcp: bool = False, with_viz: bool = True) -> dict:
     d = hl_task.ensure_task(level, seed, gen, tasks)
     out = results / agent / level / f"seed_{seed:04d}"
     if out.exists():
@@ -48,6 +48,11 @@ def run_case(agent: str, level: str, seed: int, results: Path, gen="output/hinge
     seconds = time.perf_counter() - t0
     rep = grade.grade(d / "task", d / "pristine", out)
     (out / "grade.json").write_text(json.dumps(rep, indent=2, default=str))
+    if with_viz:
+        try:
+            viz.visualize(d / "task", d / "pristine", out, out / "viz", report=rep)
+        except Exception as e:  # noqa: BLE001 - the 3D export must never break an eval
+            print(f"warning: viz failed for {agent} {level} seed {seed}: {type(e).__name__}: {e}")
     if isinstance(res, dict) and res.get("log"):
         (out / "agent_log.txt").write_text("\n".join(res["log"]) + "\n")
     ep = json.loads((out / "episode.json").read_text()) if (out / "episode.json").exists() else {}
@@ -67,6 +72,7 @@ def main(argv=None):
     ap.add_argument("--gen", default="output/hinge_lid")
     ap.add_argument("--tasks", default="output/tasks")
     ap.add_argument("--mcp", action="store_true", help="agents talk to a real MCP stdio server")
+    ap.add_argument("--no-viz", action="store_true", help="skip the 3D model export (viz/ folder)")
     a = ap.parse_args(argv)
     results = Path(a.results)
     rows = []
@@ -75,7 +81,7 @@ def main(argv=None):
     for agent in a.agent.split(","):
         for level in generator.parse_levels(a.level):
             for seed in generator.parse_seeds(a.seeds):
-                r = run_case(agent, level, seed, results, a.gen, a.tasks, a.mcp)
+                r = run_case(agent, level, seed, results, a.gen, a.tasks, a.mcp, not a.no_viz)
                 rows.append(r)
                 print(f"{r['agent']:<11} {r['level']:<3} {r['seed']:>4} {r['reward']:>7.3f} "
                       f"{('ok' if r['s1_met'] else 'FAIL'):<4} {('ok' if r['gates_ok'] else 'FAIL'):<5} "
