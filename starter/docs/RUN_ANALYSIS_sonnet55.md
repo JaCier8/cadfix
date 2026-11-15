@@ -233,3 +233,81 @@ reliefs separately. L1 1.00, L2 0.84, L3 0.68 against the reference's 1.00 on al
 0 EPIPE in 60 runs (normal shutdown, SIGTERM during a write, SIGKILL then a write), with the old and the new server.
 The crash is OpenCode's alone. The server now shuts down gracefully anyway (exit 0 on stdin close, SIGTERM and
 broken pipe; WARNING-level logging). The README run-log section notes it. Details: `scripts/epipe_repro/README.md`.
+
+## 5. Evidence that the gap is a decision, not ignorance
+
+No new runs. Sources: the archived job `harbor_runs/sonnet55_2026-11-15__06-48-21` (identical copy of
+`jobs/2026-11-15__06-48-21`): every `text` part in `agent/opencode.txt`, the tool calls and outputs in
+`agent/trajectory.json`, and `verifier/actions.jsonl`. The reasoning parts are encrypted (see the top), so
+"mentioned" below means **in a visible message**. The build is `build-sonnet-run` (c2b3560).
+
+### What the agent was told about S3 before it acted
+
+Every trial got the same three statements, in the prompt and again in `get_task`:
+
+- the S3 description in the spec list: "changed volume (added + removed) vs the original parts; full points if the
+  changed volume is within 1.15x of the best known fix for this task, zero at 2x (linear in between)" (L1: 5x / 10x);
+- `get_task.rules.S3`: the same rule;
+- the reward formula: "S1 met -> 0.3 + 0.1 * printability + 0.6 * minimal_change; minus the test_fit cost", followed
+  by the test_fit cost line ("the first 2 calls are free, then each call costs 0.02 ...").
+
+All 9 trials called `get_task` first. 8 of 9 final answers or interim notes refer to the test_fit cost line, which
+comes right after the reward formula. That is direct evidence they read the scoring paragraph: "Now the other checks
+(test_fit first 2 calls are free)" (u2d86jU), "Run the full check (free first call)" (AXwNsaV), "I used one `test_fit`
+call, within the two free ones, so there was no cost" (Vs6f6U7). Only yUegVYW does not mention it.
+
+### What test_fit returned about S3 (old build)
+
+`test_fit` compacts each check to `passed` + `details`. For S3 that was, verbatim (AXwNsaV):
+
+```json
+"S3_minimal_change": {"passed": true, "details": [
+  "changed volume 27.672 mm3 (removed 27.672, added 0.000) = 0.0559 % of enclosure, lid",
+  "scored by the rule: full points within 1.15x of the best known fix for this task, zero at 2x"]}
+```
+
+The result also carried `"note": "minimal change is scored by the grader with the rule in spec.json (best known fix
+not shown)"`. So the agent saw its own changed volume and the rule, never V_ref or a score. `"passed": true` is what
+the agent-side S3 check always returns, because without V_ref it has no threshold. Several final answers echo that
+"pass" ("every gate and score check passed"), but every agent that names S3 also says the score is unknown, so
+none of them read the `true` as full points (quotes below). No trial called `run_check_S3_minimal_change`.
+
+### Per trial
+
+"Compared alternatives" = built or evaluated more than one candidate fix and chose between them by cost.
+"Iterated" = changed the cut only because S1 still failed.
+
+| Trial | Mentioned minimal change / volume / S3 (quote) | Read the scoring section | Compared alternatives | Measured per-rib differences |
+|---|---|---|---|---|
+| QjRN4co L1 | "Change size: 49.4 mm³ removed and none added, about 0.1% of the parts. The grader doesn't show its reference value, so I can't say how that scores on S3." | yes (S3, free test_fit) | no; iterated once after S1 failed at 65° (deeper notches, +22.8 mm³) | n/a (identical ribs); measured them alike |
+| QofdJZK L1 | "Change size: 48.6 mm³ removed and none added. The grader scores this against a hidden best fix, so I can't see the exact minimal-change score." | yes | no; 3 rounds, each one adding material (widen, then deepen) to pass S1 | n/a |
+| u2d86jU L1 | "The changed volume is 54 mm³ (0.11 % of the two parts)"; "`test_fit` passed every gate, both printability checks and the minimal-change check." | yes ("test_fit first 2 calls are free") | no; after S1 failed at 67° it added swept-arc cuts on top of the boxes | n/a |
+| AXwNsaV L2 | "Change volume: 27.7 mm³ removed in total ... I can't see the grader's best-known fix, so I don't know how the S3 minimal-change score compares to it." | yes ("free first call") | no; first cut passed S1, then test_fit, then submit | n/a (identical ribs) |
+| gJP7UPj L2 | "Change size: 43.6 mm³ removed and nothing added ... I don't know the grader's reference fix, so I can't say how the minimal-change score comes out." | yes | no; first cut passed, submitted | n/a |
+| znT7Qc9 L2 | "Minimal change: 33.9 mm³ was removed and nothing added ... I can't see how that compares with the best known fix, so I don't know the exact minimal-change score." | yes | no; went from the cut straight to test_fit (no S1 check in between), then submit | n/a |
+| Vs6f6U7 L3 | "Change size: 21.7 mm³ removed and none added. I can't tell how that compares with the best known fix, so I don't know the minimal-change score." | yes ("within the two free ones") | no; first cut passed, submitted | **yes, from our tool**: `measure` at 90° returned overlap pieces of 1.077 / 0.140 / 0.120 mm³ (rib at x ≈ -104.5 / -92.2 / -80.0), i.e. one rib ~8x the others. It then cut one identical profile 3 times |
+| vtetXAU L3 | "S3 minimal change: passed. The total change is 22.7 mm³ removed ... How that compares with the best known fix is graded separately and isn't shown." | yes | no; one profile, cut 3 times, then G2/G3/G5/test_fit | **yes, its own scan** (`run5.py`): swept-overlap hulls 0.948 / 0.585 / 0.700 mm² with different depths (to v = -3.70 / -3.50 / -3.57). It then cut one envelope profile (to v = -3.85) at all three |
+| yUegVYW L3 | "`S3_minimal_change` also passes, but its score depends on the best-known fix, which isn't shown." / "I did not try to shrink the pockets further, so some of the minimal-change score may be left on the table." | partly: knew S3, did not mention the test_fit cost | no; when S1 failed at 45° it undid all three boxes and re-cut all three bigger (+5.6 mm³ each), not only the rib that failed (section 4) | partly: `measure` at 60° showed 2 pieces of 0.291 / 0.287 mm³; it did not size the ribs separately |
+
+### Verdict per trial
+
+- QjRN4co (L1, 1.000): knew the rule: yes; tried to reduce: no.
+- QofdJZK (L1, 1.000): knew the rule: yes; tried to reduce: no.
+- u2d86jU (L1, 1.000): knew the rule: unclear (reported its volume and called S3 "passed", never named the reference); tried to reduce: no.
+- AXwNsaV (L2, 1.000): knew the rule: yes; tried to reduce: no (landed at 1.07x on the first cut).
+- gJP7UPj (L2, 0.621): knew the rule: yes; tried to reduce: no.
+- znT7Qc9 (L2, 0.884): knew the rule: yes; tried to reduce: no.
+- Vs6f6U7 (L3, 0.850): knew the rule: yes; tried to reduce: no (had per-rib overlap volumes from `measure`).
+- vtetXAU (L3, 0.804): knew the rule: yes; tried to reduce: no (had measured per-rib profiles itself).
+- yUegVYW (L3, 0.400): knew the rule: yes; tried to reduce: no, and said so.
+
+**Summary: 8/9 knew the rule (1 unclear), 0/9 tried to reduce a passing fix.** No trial compared two candidate
+fixes by volume. All changes to a cut were made because S1 still failed, and every one of them added material. The
+agents had their own changed volume (in every edit result and in test_fit), the rule, 120+ unused tool calls and, on
+L3, per-rib evidence that the ribs differ. One agent wrote down that it was leaving points on the table. The gap is
+the decision to stop at the first fix that passes, not a missing fact.
+
+Caveat: the old build's agent-side S3 always reports `"passed": true`. Every agent that commented on S3 said the
+score was unknown, so we do not count this as having misled them. It is still a confound for any agent that reads
+`passed` as "full points", which is why the planned Task 9 build (not made before the Opus run) removes S3 from the agent's checks and gives
+a `changed_volume` tool instead.
