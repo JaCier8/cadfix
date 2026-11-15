@@ -1,0 +1,85 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>cadfix demo cards</title>
+<style>
+:root{--bg:#16181d;--panel:#20232a;--ink:#e8eaee;--mute:#9aa1ad;--mag:#ff2bd6;--cy:#00e5ff;--ok:#3ddc84;--warn:#ffb020;--bad:#ff5a5a}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,"DejaVu Sans",sans-serif;width:1600px;height:900px;overflow:hidden}
+.card{position:absolute;inset:0;padding:90px 120px;display:none;flex-direction:column;justify-content:center;gap:28px}
+.card.on{display:flex}
+h1{font-size:76px;font-weight:800;letter-spacing:-1.5px;line-height:1.05}
+h2{font-size:52px;font-weight:750;letter-spacing:-1px}
+.k{color:var(--mag)} .c{color:var(--cy)}
+.sub{font-size:30px;color:var(--mute);line-height:1.4;max-width:1250px}
+.tag{display:inline-block;font-size:20px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--mag)}
+table{border-collapse:collapse;font-size:30px;width:100%}
+th,td{padding:14px 22px;text-align:right;border-bottom:1px solid #2e323b}
+th{color:var(--mute);font-weight:600;font-size:22px;text-transform:uppercase;letter-spacing:1px}
+th:first-child,td:first-child{text-align:left}
+td.m{font-weight:800}
+tr.hl td{background:#2a1a28}
+.g{color:var(--ok)} .y{color:var(--warn)} .r{color:var(--bad)}
+.rows{display:flex;flex-direction:column;gap:22px;margin-top:10px}
+.row{display:flex;gap:28px;align-items:center;background:var(--panel);border-radius:14px;padding:22px 30px;border-left:8px solid}
+.row .who{font-size:30px;font-weight:750;min-width:270px}
+.row .what{font-size:27px;color:#cfd3da;line-height:1.35}
+.row .num{font-size:40px;font-weight:800;margin-left:auto;font-variant-numeric:tabular-nums}
+.pts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px}
+.pt{background:var(--panel);border-radius:14px;padding:26px 28px}
+.pt b{display:block;font-size:44px;font-weight:800;margin-bottom:8px}
+.pt span{font-size:24px;color:#cfd3da;line-height:1.35}
+code{font-family:"DejaVu Sans Mono",monospace;font-size:26px;background:#262a32;padding:4px 10px;border-radius:6px;color:var(--cy)}
+</style></head><body>
+
+<section class="card" id="title">
+  <span class="tag">AfterQuery · Break the Agent</span>
+  <h1>Can an AI agent fix a<br>jammed <span class="k">3D-printed hinge</span>?</h1>
+  <p class="sub">cadfix: an RL environment where the agent edits real B-rep CAD parts through MCP tools.
+  We ran Claude Sonnet 5.5 and Opus 5.5 (three tries per level) and replayed every step in 3D.</p>
+</section>
+
+<section class="card" id="score">
+  <span class="tag">How it is scored</span>
+  <h2>A working fix is only <span class="k">40 %</span> of the reward</h2>
+  <div class="pts">
+    <div class="pt"><b class="r">0</b><span>if any gate fails: broken solid, hinge or seal touched, protected zones cut, part rebuilt</span></div>
+    <div class="pt"><b class="y">0.3 + 0.1</b><span>the lid opens to 110° with ≥ 0.3 mm clearance, and the parts still print</span></div>
+    <div class="pt"><b class="g">+ 0.6</b><span>minimal change: full points within 1.15× the material of the best known fix, zero at 2×</span></div>
+  </div>
+  <p class="sub">The agent sees every requirement, the rule and its own changed volume. It never sees the fix or the reference volume.</p>
+</section>
+
+<section class="card" id="results">
+  <span class="tag">Results · Harbor judge set, mean reward per level</span>
+  <table>
+    <tr><th>Agent</th><th>L1 easy</th><th>L2 local fix</th><th>L3 3 different ribs</th><th>Mean</th></tr>
+    <tr><td>Reference solver</td><td>1.000</td><td>1.000</td><td>1.000</td><td class="m">1.000</td></tr>
+    <tr class="hl"><td>Claude Opus 5.5 ×3</td><td>1.000</td><td>0.998</td><td class="y">0.891</td><td class="m">0.963</td></tr>
+    <tr><td>Claude Sonnet 5.5 ×3</td><td>1.000</td><td class="y">0.835</td><td class="r">0.685</td><td class="m">0.840</td></tr>
+    <tr><td>Hydrogen (manual, no tools)</td><td>1.000</td><td class="r">0.400</td><td class="mute">–</td><td class="m">–</td></tr>
+    <tr><td>Do nothing / stop early</td><td>0.000</td><td>0.000</td><td>0.000</td><td class="m">0.000</td></tr>
+  </table>
+  <p class="sub">Every one of the 18 agent trials passed all gates and opened the lid. All points were lost on minimal change.</p>
+</section>
+
+<section class="card" id="finding">
+  <span class="tag">Finding · a capability ladder</span>
+  <h2>The gap is a <span class="k">decision</span>, not missing information</h2>
+  <div class="rows">
+    <div class="row" style="border-color:var(--bad)"><div class="who">Weaker model</div><div class="what">falls for one full-edge chamfer: works, but 3.2× the material</div><div class="num r">0.40</div></div>
+    <div class="row" style="border-color:var(--warn)"><div class="who">Sonnet 5.5</div><div class="what">fixes every rib locally, then submits the first fix that passes (0/9 tried to shrink it)</div><div class="num y">0.84</div></div>
+    <div class="row" style="border-color:var(--ok)"><div class="who">Opus 5.5</div><div class="what">optimises after its first pass in 4/9 trials, but is still below the reference in 3/9</div><div class="num g">0.96</div></div>
+  </div>
+</section>
+
+<section class="card" id="end">
+  <h2>cadfix</h2>
+  <p class="sub">Reproduce: <code>harbor run -p harbor_tasks/judge -a opencode -m &lt;model&gt; -k 3</code></p>
+  <p class="sub">Look at any run in 3D: <code>scripts/view.sh jobs/&lt;job&gt;</code></p>
+  <p class="sub">Next: combine the difficulty knobs, a second scenario, train a smaller model.</p>
+</section>
+
+<script>
+const id = new URLSearchParams(location.search).get("card") || "title";
+document.getElementById(id).classList.add("on");
+</script>
+</body></html>

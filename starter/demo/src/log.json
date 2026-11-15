@@ -1,0 +1,147 @@
+{
+ "01_title": {
+  "start": 1.26,
+  "dur": 7.0,
+  "cues": []
+ },
+ "02_problem": {
+  "start": 7.6,
+  "dur": 19.79,
+  "cues": [
+   [
+    0.0,
+    "A printed box with a hinged lid. Left: the original part. Right: what an agent made of it."
+   ],
+   [
+    6.76,
+    "Opening it, a rib under each hinge knuckle swings into the rear wall: the lid jams around 40°, never reaching 110°."
+   ],
+   [
+    12.22,
+    "The agent gets CAD tools over MCP, every requirement with its threshold, and the scoring rule. Never the fix."
+   ]
+  ]
+ },
+ "03_score": {
+  "start": 1.24,
+  "dur": 10.0,
+  "cues": []
+ },
+ "04_results": {
+  "start": 1.24,
+  "dur": 10.0,
+  "cues": []
+ },
+ "05_dashboard": {
+  "start": 2.05,
+  "dur": 10.03,
+  "cues": [
+   [
+    0.0,
+    "Opus 5.5 on the judge set: 9 trials, mean 0.963. All gates passed, and every replay reproduces the graded parts."
+   ],
+   [
+    5.53,
+    "Three trials stayed below the reference, all because of minimal change. Let's open the interesting ones."
+   ]
+  ]
+ },
+ "06_playback": {
+  "start": 5.81,
+  "dur": 40.31,
+  "cues": [
+   [
+    0.0,
+    "Opus 5.5 on L3: three different ribs, the whole assembly rotated in space. This is the replay of every tool call."
+   ],
+   [
+    4.78,
+    "It measures the interference at several angles and cuts sections through the ribs."
+   ],
+   [
+    9.25,
+    "Then one notch per rib, cut along the path the rib sweeps."
+   ],
+   [
+    15.21,
+    "The first fix passes every check: 23.3 mm³ removed. This is where Sonnet submitted, every time."
+   ],
+   [
+    21.15,
+    "Opus instead undoes all three cuts..."
+   ],
+   [
+    24.82,
+    "...and re-cuts each rib to its own swept radius: 3.70, 3.50 and 3.57 mm."
+   ],
+   [
+    29.12,
+    "Then it re-checks every requirement one by one before submitting."
+   ],
+   [
+    36.31,
+    "Submitted at 14.8 mm³, 0.93× the best known fix. Reward 1.0."
+   ]
+  ]
+ },
+ "07_best": {
+  "start": 7.6,
+  "dur": 13.38,
+  "cues": [
+   [
+    0.0,
+    "Same trial, from behind the wall. Red = material removed. Left: the reference fix. Right: Opus."
+   ],
+   [
+    6.98,
+    "Both size each notch to its own rib: the reference volume is 15.9 mm³, Opus removed 14.8 mm³ (0.93×)."
+   ]
+  ]
+ },
+ "08_opus_bad": {
+  "start": 7.73,
+  "dur": 17.37,
+  "cues": [
+   [
+    0.0,
+    "Another Opus attempt at the same task. The reference cuts differ per rib; Opus copied one notch three times."
+   ],
+   [
+    6.96,
+    "24.7 mm³ = 1.55× the best known fix, submitted after its first passing check. Reward 0.714."
+   ],
+   [
+    12.16,
+    "Its explanation: “I didn't try to shrink the notches further because the clearance and seal margins are already small.”"
+   ]
+  ]
+ },
+ "09_sonnet_bad": {
+  "start": 7.51,
+  "dur": 17.79,
+  "cues": [
+   [
+    0.0,
+    "Sonnet 5.5 on the same task: identical rectangular pockets instead of a relief that follows the rib's sweep."
+   ],
+   [
+    7.39,
+    "37.6 mm³ = 2.37× the necessary material, past the zero line for minimal change. Reward 0.400."
+   ],
+   [
+    12.59,
+    "And it knew: “I did not try to shrink the pockets further, so some of the minimal-change score may be left on the table.”"
+   ]
+  ]
+ },
+ "10_finding": {
+  "start": 1.24,
+  "dur": 12.0,
+  "cues": []
+ },
+ "11_end": {
+  "start": 1.24,
+  "dur": 7.0,
+  "cues": []
+ }
+}
