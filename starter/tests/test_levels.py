@@ -42,8 +42,9 @@ def test_l2_has_the_l1_geometry(seed):
 
 
 @pytest.mark.parametrize("seed", SEEDS)
-def test_l3_ribs_differ_collide_and_are_fixable(seed):
-    p, f, rejected = generator.resolve_seed(seed, "L3")
+def test_l3_ribs_differ_collide_and_are_fixable(seed, written):
+    _, info, _ = written("L3", seed)          # generator.write -> resolve_seed (shared with the other L3 tests)
+    p, f, rejected = generator.params_from_info(info), info["feasibility"], info["rejected_source_seeds"]
     assert p.seed == seed + generator.REPLACE_STRIDE * len(rejected)
     assert p.n_knuckles == 7 and len(p.lid_segments()) == 3 and len(set(p.rib_profiles())) == 3
     assert not f["reasons"] and f["feasible"] and f["plate_clear"]

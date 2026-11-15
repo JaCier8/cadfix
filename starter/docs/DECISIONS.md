@@ -161,6 +161,35 @@ expectations that encode the old numbers changed:
   side_collisions over the sweep and the first-contact table in dev_sweep. Test changes: `min_wall` number ->
   `min_wall_ok` (the check reports new thin walls only), gate names valid/seal/brackets/closed -> spec ids.
 
+## D20. Edit results and ids
+- Every edit returns the edited part's full edge and face lists in a compact form (edge: id, type, end points,
+  adjacent face ids, circle centre / radius; face: id, type, centre, area, normal / axis / radius): ~11 KB for the
+  enclosure. `list_edges` / `list_faces` give the full descriptions (adjacent face normals, bboxes). Ids =
+  positions in the current shape's lists.
+- Edges and faces are selected by id or by a point (`edge_near` / `face_near` + optional direction / normal), so
+  the 2c ops JSON (gonogo) still works.
+- offset_face = push / pull of a PLANAR face (the prism swept by the face is added or cut); boxes are oriented
+  (corner + three perpendicular edge vectors), needed on L3.
+
+## D21. Episode details
+- The server may be restarted mid-episode (harness reconnects): Env resumes from out_dir/parts and episode.json
+  (counters kept, undo history lost, `resumed` counted).
+- After `submit` every tool refuses (also queries): the episode is over.
+- Tool-call cap 150 (scenario.json): after it only `submit` works.
+
+## D22. Agents that write part files with their shell
+- The agent's container has a shell and CadQuery. The grader grades whatever is in /output/parts/<editable>.step
+  at the end, made by the tools or not: the checks use only the verifier's pristine data, so a hand-made STEP is
+  judged by exactly the same rules (envelope, zones, interfaces, sweep, change). Fixed parts are never read from
+  the output dir. Garbage or missing files count as the original part.
+
+## D23. instruction.md content
+- Rendered from task.json + spec.json only. It lists every check with its thresholds, the reward formula, the
+  S3 rule, all zones with regions, the joint, print orientations, conventions and how the tools / episode work.
+- It does not name the edit operations in prose (the agent sees them in the MCP tool list; the brief's leak test
+  forbids fix words like "chamfer") and does not give the measured first-contact angle (scenario.json
+  disclosure: the angle is measurable, not given).
+
 ## Spec change proposals
 - P1. `levels.L1_easy.geometry` / `L2_medium.geometry` say "three identical ribs"; the task 2b geometry has 2 or 3
   (8/10 seeds: 2). Either reword to "two or three identical ribs" or force 7 knuckles (changes all L1 parts).

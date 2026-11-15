@@ -342,3 +342,12 @@ Plan: `docs/PLAN_4-7.md`. Projekt rozwiązania wzorcowego (M0): `docs/SOLVER_DES
 - devgrade/evaluate/dev_sweep/brief przepięte na nowe checki (stare przybliżenia usunięte).
 - Akceptacja: `python -m scenarios.hinge_lid.acceptance --level L1,L2,L3 --seeds 0-9` -> `docs/acceptance_4.txt`, 203 s. **210 wariantów, 0 różnic** względem `docs/acceptance_2c.txt` (po dwóch poprawkach po drodze: pas uszczelki tylko jako wewnętrzny pierścień, D12; szczelina zerowej szerokości w kontakcie na L3 seed 4, D17; oraz filtr 0.2 mm po grubości zamiast po prostokącie, D15).
 - Testy: nowe `tests/test_checks.py` (9), `tests/test_grade.py` (5), `tests/test_task.py` (2). `pytest -q -m "not slow"`: 63 passed, 52 s.
+
+### M2 (zadanie 5): operacje, środowisko, serwer MCP (2026-11-15)
+- `cadfix/ops/topology.py`: opisy krawędzi/ścian w świecie (id, typ, końce, długość, okrąg, sąsiednie ściany z normalnymi; ściany: środek, pole, bbox, normalna / oś i promień), `edges_near`, `faces_near`. Obudowa: 108 krawędzi, 43 ściany, 0.03 s.
+- `cadfix/ops/edit.py`: + fillet, offset_face (płaska ściana, push/pull), cut_box / add_box (zorientowane), wybór krawędzi/ściany po id albo punkcie; rejestr `OP_SPECS` z opisem każdego parametru (z niego powstają narzędzia MCP).
+- `cadfix/env/env.py`: stan epizodu, undo, log JSONL każdego wywołania, migawki STEP + GLB (start i po każdej edycji), limit 150, run_check, test_fit (licznik w episode.json), submit, wznowienie po restarcie serwera; zapytania measure (kawałki kolizji osobno, z centroidem) i section (dowolna płaszczyzna, współrzędne u/v).
+- `cadfix/env/server.py`: FastMCP stdio; narzędzia z rejestrów + zapytania + `run_check_<id>` dla każdego checka ze spec.json.
+- `scenarios/hinge_lid/instruction.py`: instruction.md z publicznych danych (D23); test wycieków jak dla briefu.
+- Test MCP z prawdziwym klientem stdio (`tests/test_mcp.py`): L2 seed 0, poprawka odniesienia przez narzędzia, test_fit przechodzi, grader 1.0, log ma każde wywołanie.
+- Testy: + `test_env.py` (4), `test_instruction.py` (6, w szybkim 2), `test_mcp.py` (1), `test_ops.py` +1. `pytest -q -m "not slow"`: 71 passed, 55 s.

@@ -357,3 +357,28 @@ def clearance_sweep(moving: dict, fixed: dict, point, direction, angles, search:
                     best = (g, (mv, fx), best[2])
         out.append({"angle": ang, "gap": best[0], "pair": best[1], "overlap": best[2]})
     return out
+
+
+# ---------------------------------------------------------------- sections in any plane
+def section_loops(m: manifold3d.Manifold, point, normal, x_dir=None, window: float | None = None) -> tuple[list, np.ndarray]:
+    """Section of a mesh with the plane (point, normal) in plane coordinates: u along x_dir (projected into the
+    plane), v = normal x u, origin at `point`. Returns ([{"outer": [[u, v], ...], "holes": [[...]]}], axes) where
+    axes are the world directions of u, v, normal. window: keep only |u|, |v| <= window."""
+    axes = orthonormal_axes(normal, x_dir)
+    local = transform_mesh(m, frame_matrix(axes, point))
+    region = Polygon()
+    for loop in local.slice(0.0).to_polygons():
+        loop = np.asarray(loop)
+        if len(loop) >= 3:
+            region = region.symmetric_difference(Polygon(loop))
+    region = region.buffer(0)
+    if window is not None:
+        from shapely.geometry import box as _box
+        region = region.intersection(_box(-window, -window, window, window))
+    out = []
+    for g in getattr(region, "geoms", [region]):
+        if g.is_empty or g.geom_type != "Polygon":
+            continue
+        rnd = lambda ring: [[round(float(x), 3) + 0.0, round(float(y), 3) + 0.0] for x, y in list(ring.coords)[:-1]]  # noqa: E731
+        out.append({"outer": rnd(g.exterior), "holes": [rnd(h) for h in g.interiors], "area": round(g.area, 4)})
+    return out, axes
