@@ -230,7 +230,11 @@ function applyVis(root) {
     const c = cls(o.name);
     if (!c.kind) {
       o.visible = !hidden.has(c.base);
-      for (const m of [].concat(o.material)) { m.transparent = xr; m.opacity = xr ? (mode === "playback" ? 0.3 : 0.35) : 1; m.depthWrite = !xr; }
+      for (const m of [].concat(o.material)) {
+        // three.js bakes "opaque" into the compiled shader: a transparency change needs a recompile
+        if (m.transparent !== xr) { m.transparent = xr; m.needsUpdate = true; }
+        m.opacity = xr ? (mode === "playback" ? 0.3 : 0.35) : 1; m.depthWrite = !xr;
+      }
     } else o.visible = !hidden.has(c.base) && (c.step ? stepHighlight : showDiff);
   });
 }
