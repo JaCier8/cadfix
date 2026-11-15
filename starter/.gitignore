@@ -6,5 +6,5 @@ output/
 .pytest_cache/
 gonogo_log.csv
 results/*/
-harbor_tasks/
+harbor_tasks/L*/
 jobs/

@@ -352,8 +352,9 @@ Plan: `docs/PLAN_4-7.md`. Projekt rozwiązania wzorcowego (M0): `docs/SOLVER_DES
 - Test MCP z prawdziwym klientem stdio (`tests/test_mcp.py`): L2 seed 0, poprawka odniesienia przez narzędzia, test_fit przechodzi, grader 1.0, log ma każde wywołanie.
 - Testy: + `test_env.py` (4), `test_instruction.py` (6, w szybkim 2), `test_mcp.py` (1), `test_ops.py` +1. `pytest -q -m "not slow"`: 71 passed, 55 s.
 
-### M3 (zadanie 6): W TOKU, przerwane limitem użycia (2026-11-15)
-- Zrobione: `scenarios/hinge_lid/reference.py` (wg SOLVER_DESIGN.md, tylko narzędzia, klient in-process i MCP), `cadfix/agents.py` (do_nothing, stop_early), `run_eval.py`, `scenarios/hinge_lid/exploits.py` + `tests/test_exploits.py`.
-- run_eval (L1-L3 x seedy 0-9, przed ostatnią poprawką): reference 29/30 = 1.000 (1.00-1.03 x V_ref, 27-33 wywołań, ~3 s), L3 seed 4 = 0.039; do_nothing i stop_early = 0 wszędzie. Poprawka (pomijanie 0° i próg pola 1e-3/długość segmentu w modelu 2D): L3 seed 4 -> 1.000.
-- Exploity na L2 seed 0: wszystkie 17 = 0.000; znane ograniczenie: reset licznika test_fit daje 1.0 zamiast 0.9 (max zysk 0.1).
-- Do zrobienia: `output/tasks` było nieaktualne (strefy uszczelki sprzed poprawki D12) - usunięte, trzeba ponownie uruchomić `python run_eval.py` i `python -m scenarios.hinge_lid.exploits --level L2,L3`; test `test_gut_rear_wall_loses_printability` oczekuje 0.3 (sprawdzić po odświeżeniu zadań); pełny `pytest -q`; potem M4 (Harbor, tryb weryfikatora `separate`) i M5 (README).
+### M3 (zadanie 6): rozwiązanie wzorcowe, baseline'y, exploity (2026-11-15)
+- `scenarios/hinge_lid/reference.py` wg `docs/SOLVER_DESIGN.md`: tylko narzędzia (klient in-process albo MCP stdio), deterministyczny; analiza 2D przekrojów z narzędzia + weryfikacja S1 w 3D, 3 rundy powiększania, fallback: fazowanie całej krawędzi. Jedna poprawka po pierwszym przebiegu: L3 seed 4 dawał 0.039, bo model 2D liczył styk w pozycji zamkniętej (0°) jako kolizję (zaokrąglenia przekroju, 8e-5 mm²); teraz od 1° i próg pola 1e-3 mm³ / długość segmentu jak w generatorze.
+- `cadfix/agents.py`: do_nothing, stop_early. `run_eval.py`: agent x poziom x seedy -> tabela + `results/*.csv`.
+- **`python run_eval.py --agent reference,do_nothing,stop_early --level L1,L2,L3 --seeds 0-9`** (`results/run_eval_20261115_011537.csv`): reference **1.000 na 30/30** (1.00-1.03 x V_ref, 27-33 wywołań, 1.6-5 s), do_nothing 0 i stop_early 0 na 30/30.
+- `scenarios/hinge_lid/exploits.py` + `tests/test_exploits.py`, tabela `docs/exploits.txt`: 17 exploitów na L2 i L3 seed 0, **najgorszy 0.300** (wydrążenie tylnej ściany + fazowanie: działa, ale traci drukowalność i S3; reszta 0.000). Znane ograniczenie: ukrycie wywołań test_fit przez przepisanie własnego logu daje 1.0 zamiast 0.9 (max zysk 0.1, D18).
+- Uwaga: `output/tasks` trzeba odświeżyć po zmianie stref (`python -m scenarios.hinge_lid.task`); stare foldery dawały złe strefy uszczelki.
