@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cadfix: fix the hinge</title>
+<meta name="description" content="An RL environment where an AI agent repairs a jammed 3D-printed hinge with CAD tools. Every run replayed in 3D.">
+<style>
+:root{--bg:#1e2024;--panel:#272a30;--panel2:#2e3239;--line:#3a3f48;--fg:#e8eaee;--mut:#9aa1ad;--mag:#ff2bd6;--cyan:#00e5ff;
+--red:#ff5d5d;--grn:#3ddc84;--amb:#ffb74d;color-scheme:dark}
+@media (prefers-color-scheme:light){:root{--bg:#f3f4f7;--panel:#fff;--panel2:#eef0f4;--line:#d6dae1;--fg:#1c1f24;--mut:#5b6472;
+--mag:#c4009f;--cyan:#007c94;--red:#c62828;--grn:#1b8a46;--amb:#a35c00;color-scheme:light}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:inherit}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 64px}
+header{padding:48px 0 18px}
+.tag{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mag)}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.02em;margin:10px 0 14px}
+h1 em{font-style:normal;color:var(--mag)}
+.lead{font-size:18px;color:var(--mut);max-width:780px;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn{display:inline-block;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--panel);text-decoration:none;font-weight:600}
+.btn.pri{border-color:var(--mag);color:var(--mag)}
+.btn:hover{border-color:var(--cyan)}
+section{margin-top:44px}
+h2{font-size:22px;letter-spacing:-.01em;margin:0 0 6px}
+.sec-sub{color:var(--mut);margin:0 0 16px;max-width:820px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+thead th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:600}
+tbody tr:last-child>*{border-bottom:0}
+tbody th{width:28%;font-weight:700}
+tbody th a{text-decoration:none;border-bottom:1px dashed var(--mut)}
+tbody th a:hover{color:var(--cyan);border-color:var(--cyan)}
+.note{font-weight:400;font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.4}
+tr.ref th a{color:var(--cyan)}
+tr.manual{opacity:.75}
+.lm{font-weight:700;font-variant-numeric:tabular-nums;font-family:ui-monospace,Menlo,Consolas,monospace}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{font:600 12px ui-monospace,Menlo,Consolas,monospace;padding:3px 8px;border-radius:7px;text-decoration:none;border:1px solid}
+.chip:hover{transform:translateY(-1px);filter:brightness(1.15)}
+.ok{color:var(--grn)} .mid{color:var(--amb)} .low{color:var(--red)} .zero{color:var(--mut)}
+.chip.ok{background:color-mix(in srgb,var(--grn) 14%,transparent)} .chip.mid{background:color-mix(in srgb,var(--amb) 14%,transparent)}
+.chip.low{background:color-mix(in srgb,var(--red) 14%,transparent)} .chip.zero{background:color-mix(in srgb,var(--mut) 12%,transparent)}
+td.mean b{font:700 18px ui-monospace,Menlo,Consolas,monospace}
+.bar{height:6px;border-radius:3px;background:var(--panel2);margin-top:8px;overflow:hidden;min-width:80px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--mag),var(--cyan))}
+.mute{color:var(--mut)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--mut);margin-top:10px}
+.feats{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.feat{display:flex;flex-direction:column;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-decoration:none;transition:border-color .12s,transform .12s}
+.feat:hover{border-color:var(--mag);transform:translateY(-2px)}
+.fh{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.lvl{font-weight:700;padding:1px 8px;border-radius:999px;border:1px solid var(--mag);color:var(--mag)}
+.who{color:var(--mut)} .rw{margin-left:auto;font:700 14px ui-monospace,Menlo,Consolas,monospace}
+.feat h3{margin:4px 0 0;font-size:16px}
+.feat p{margin:0;color:var(--mut);font-size:13.5px;flex:1}
+.open{font-weight:600;color:var(--cyan);font-size:13.5px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.card h3{margin:0 0 8px;font-size:15px}
+.card p,.card li{color:var(--mut);font-size:14px;margin:0}
+.card ul,.card ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.card b{color:var(--fg)}
+.formula{font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;background:var(--panel2);border-radius:9px;padding:10px 12px;margin-top:10px;color:var(--fg)}
+.ladder{counter-reset:s;display:flex;flex-direction:column;gap:12px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:36px;height:36px;border-radius:10px;
+background:linear-gradient(135deg,var(--mag),var(--cyan));color:#111;font-weight:800}
+.step h3{margin:0 0 4px;font-size:15.5px}
+.step p{margin:0;color:var(--mut);font-size:14px}
+blockquote{margin:8px 0 0;padding:6px 12px;border-left:3px solid var(--mag);color:var(--fg);font-size:13.5px;background:var(--panel2);border-radius:0 8px 8px 0}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto;font-size:13px;line-height:1.6;margin:0}
+pre .c{color:var(--mut)}
+video{width:100%;border-radius:14px;border:1px solid var(--line);background:#000;display:block}
+.ex td,.ex th{font-size:13.5px;padding:9px 14px}
+.ex td.n{font-family:ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:13px;display:flex;flex-wrap:wrap;gap:8px 20px}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+</style></head><body><div class="wrap">
+
+<header>
+<div class="tag">AfterQuery · Break the Agent</div>
+<h1>Can an AI agent fix a jammed <em>3D-printed hinge</em>?</h1>
+<p class="lead">cadfix is an RL environment where an agent edits real B-rep CAD parts through MCP tools. The lid of a printed box
+jams while opening; the agent has to make it open to 110&deg; while changing as little material as possible.
+Every run below is replayed step by step in 3D, next to the reference fix.</p>
+<div class="btns"><a class="btn pri" href="#results">See the runs</a><a class="btn" href="#video">Watch the demo</a><a class="btn" href="https://github.com/JaCier8/cadfix">Code &amp; one-command eval</a></div>
+</header>
+
+<section id="results">
+<h2>Results on the judge set</h2>
+<p class="sec-sub">Harbor, <code>harbor_tasks/judge</code> (L1, L2, L3 seed 0), OpenCode 1.19.5, three trials per level.
+Each chip is one trial: click it to open the 3D replay of every tool call, the agent's fix next to the reference fix, and the grade.</p>
+<div class="tw"><table>
+<thead><tr><th>Agent</th><th>L1 · easy</th><th>L2 · strict minimal change</th><th>L3 · 3 different ribs, rotated</th><th>Mean</th></tr></thead>
+<tbody>
+<tr class="ref"><th scope="row"><a href="reference/index.html">Reference solver</a><div class="note">The reference solver plays through the same MCP tools as the agent (local run_eval, seed 0). The Harbor oracle run scores the same 1.000 on all three levels.</div></th><td class="lv"><div class="lm">1.000</div><div class="chips"><a class="chip ok" href="reference/L1/seed_0000/viz/viewer.html" title="L1/seed_0000: reward 1.000, 1.00x the best known volume">1.00</a></div></td><td class="lv"><div class="lm">1.000</div><div class="chips"><a class="chip ok" href="reference/L2/seed_0000/viz/viewer.html" title="L2/seed_0000: reward 1.000, 1.00x the best known volume">1.00</a></div></td><td class="lv"><div class="lm">1.000</div><div class="chips"><a class="chip ok" href="reference/L3/seed_0000/viz/viewer.html" title="L3/seed_0000: reward 1.000, 1.03x the best known volume">1.00</a></div></td><td class="mean"><b>1.000</b><div class="bar"><i style="width:100.0%"></i></div></td></tr>
+<tr class="agent"><th scope="row"><a href="opus55/index.html">Claude Opus 5.5</a><div class="note">OpenCode 1.19.5, harbor_tasks/judge, -k 3.</div></th><td class="lv"><div class="lm">1.000</div><div class="chips"><a class="chip ok" href="opus55/hinge-lid-l1-seed0__VcDwFru/verifier/viz/viewer.html" title="hinge-lid-l1-seed0__VcDwFru: reward 1.000, 1.18x the best known volume">1.00</a><a class="chip ok" href="opus55/hinge-lid-l1-seed0__cGtRPTb/verifier/viz/viewer.html" title="hinge-lid-l1-seed0__cGtRPTb: reward 1.000, 1.09x the best known volume">1.00</a><a class="chip ok" href="opus55/hinge-lid-l1-seed0__jqnw2Dd/verifier/viz/viewer.html" title="hinge-lid-l1-seed0__jqnw2Dd: reward 1.000, 1.08x the best known volume">1.00</a></div></td><td class="lv"><div class="lm">0.998</div><div class="chips"><a class="chip ok" href="opus55/hinge-lid-l2-seed0__6tJLs9N/verifier/viz/viewer.html" title="hinge-lid-l2-seed0__6tJLs9N: reward 1.000, 0.90x the best known volume">1.00</a><a class="chip ok" href="opus55/hinge-lid-l2-seed0__CUQv38r/verifier/viz/viewer.html" title="hinge-lid-l2-seed0__CUQv38r: reward 1.000, 0.91x the best known volume">1.00</a><a class="chip mid" href="opus55/hinge-lid-l2-seed0__hemm4Y8/verifier/viz/viewer.html" title="hinge-lid-l2-seed0__hemm4Y8: reward 0.995, 1.16x the best known volume">0.99</a></div></td><td class="lv"><div class="lm">0.891</div><div class="chips"><a class="chip ok" href="opus55/hinge-lid-l3-seed0__UbNdaqs/verifier/viz/viewer.html" title="hinge-lid-l3-seed0__UbNdaqs: reward 1.000, 0.93x the best known volume">1.00</a><a class="chip mid" href="opus55/hinge-lid-l3-seed0__icocHFB/verifier/viz/viewer.html" title="hinge-lid-l3-seed0__icocHFB: reward 0.960, 1.21x the best known volume">0.96</a><a class="chip low" href="opus55/hinge-lid-l3-seed0__uiW6Lhf/verifier/viz/viewer.html" title="hinge-lid-l3-seed0__uiW6Lhf: reward 0.714, 1.55x the best known volume">0.71</a></div></td><td class="mean"><b>0.963</b><div class="bar"><i style="width:96.3%"></i></div></td></tr>
+<tr class="agent"><th scope="row"><a href="sonnet55/index.html">Claude Sonnet 5.5</a><div class="note">OpenCode 1.19.5, harbor_tasks/judge, -k 3.</div></th><td class="lv"><div class="lm">1.000</div><div class="chips"><a class="chip ok" href="sonnet55/hinge-lid-l1-seed0__QjRN4co/verifier/viz/viewer.html" title="hinge-lid-l1-seed0__QjRN4co: reward 1.000, 1.91x the best known volume">1.00</a><a class="chip ok" href="sonnet55/hinge-lid-l1-seed0__QofdJZK/verifier/viz/viewer.html" title="hinge-lid-l1-seed0__QofdJZK: reward 1.000, 1.88x the best known volume">1.00</a><a class="chip ok" href="sonnet55/hinge-lid-l1-seed0__u2d86jU/verifier/viz/viewer.html" title="hinge-lid-l1-seed0__u2d86jU: reward 1.000, 2.09x the best known volume">1.00</a></div></td><td class="lv"><div class="lm">0.835</div><div class="chips"><a class="chip ok" href="sonnet55/hinge-lid-l2-seed0__AXwNsaV/verifier/viz/viewer.html" title="hinge-lid-l2-seed0__AXwNsaV: reward 1.000, 1.07x the best known volume">1.00</a><a class="chip mid" href="sonnet55/hinge-lid-l2-seed0__znT7Qc9/verifier/viz/viewer.html" title="hinge-lid-l2-seed0__znT7Qc9: reward 0.884, 1.31x the best known volume">0.88</a><a class="chip low" href="sonnet55/hinge-lid-l2-seed0__gJP7UPj/verifier/viz/viewer.html" title="hinge-lid-l2-seed0__gJP7UPj: reward 0.621, 1.69x the best known volume">0.62</a></div></td><td class="lv"><div class="lm">0.685</div><div class="chips"><a class="chip mid" href="sonnet55/hinge-lid-l3-seed0__Vs6f6U7/verifier/viz/viewer.html" title="hinge-lid-l3-seed0__Vs6f6U7: reward 0.850, 1.36x the best known volume">0.85</a><a class="chip mid" href="sonnet55/hinge-lid-l3-seed0__vtetXAU/verifier/viz/viewer.html" title="hinge-lid-l3-seed0__vtetXAU: reward 0.804, 1.43x the best known volume">0.80</a><a class="chip low" href="sonnet55/hinge-lid-l3-seed0__yUegVYW/verifier/viz/viewer.html" title="hinge-lid-l3-seed0__yUegVYW: reward 0.400, 2.37x the best known volume">0.40</a></div></td><td class="mean"><b>0.840</b><div class="bar"><i style="width:84.0%"></i></div></td></tr>
+<tr class="manual"><th scope="row">Hydrogen (weak model)<div class="note">Manual go/no-go: no tools, ops as JSON, 3 attempts with test_fit feedback. No 3D replay.</div></th><td class="lv"><div class="lm">1.000</div></td><td class="lv"><div class="lm">0.400</div></td><td class="lv"><span class="mute">not run</span></td><td class="mean"><span class="mute">–</span></td></tr>
+<tr class="base"><th scope="row"><a href="do_nothing/index.html">Do nothing</a><div class="note">Submits the untouched parts. Harbor nop run: 0.000 on all levels.</div></th><td class="lv"><div class="lm">0.000</div><div class="chips"><a class="chip zero" href="do_nothing/L1/seed_0000/viz/viewer.html" title="L1/seed_0000: reward 0.000">0.00</a></div></td><td class="lv"><div class="lm">0.000</div><div class="chips"><a class="chip zero" href="do_nothing/L2/seed_0000/viz/viewer.html" title="L2/seed_0000: reward 0.000">0.00</a></div></td><td class="lv"><div class="lm">0.000</div><div class="chips"><a class="chip zero" href="do_nothing/L3/seed_0000/viz/viewer.html" title="L3/seed_0000: reward 0.000">0.00</a></div></td><td class="mean"><b>0.000</b><div class="bar"><i style="width:0.0%"></i></div></td></tr>
+<tr class="base"><th scope="row"><a href="stop_early/index.html">Stop early</a><div class="note">Inspects the task, then submits without a fix. Harbor stop-early run: 0.000 on all levels.</div></th><td class="lv"><div class="lm">0.000</div><div class="chips"><a class="chip zero" href="stop_early/L1/seed_0000/viz/viewer.html" title="L1/seed_0000: reward 0.000">0.00</a></div></td><td class="lv"><div class="lm">0.000</div><div class="chips"><a class="chip zero" href="stop_early/L2/seed_0000/viz/viewer.html" title="L2/seed_0000: reward 0.000">0.00</a></div></td><td class="lv"><div class="lm">0.000</div><div class="chips"><a class="chip zero" href="stop_early/L3/seed_0000/viz/viewer.html" title="L3/seed_0000: reward 0.000">0.00</a></div></td><td class="mean"><b>0.000</b><div class="bar"><i style="width:0.0%"></i></div></td></tr>
+</tbody></table></div>
+<div class="legend"><span><b class="ok">green</b> full points</span><span><b class="mid">amber</b> 0.75–0.99</span>
+<span><b class="low">red</b> &lt; 0.75</span><span><b class="zero">grey</b> 0</span><span>Hover a chip for its volume vs the best known fix.</span></div>
+</section>
+
+<section>
+<h2>Start here</h2>
+<p class="sec-sub">Four replays that show where the gap comes from. In Playback, the magenta/cyan marks are this step's change; the left pane shows the reference fix.</p>
+<div class="feats"><a class="feat" href="opus55/hinge-lid-l3-seed0__UbNdaqs/verifier/viz/viewer.html"><div class="fh"><span class="lvl">L3</span><span class="who">Claude Opus 5.5</span><span class="rw ok">1.000</span></div><h3>Opus sizes each rib separately</h3><p>Three different ribs, rotated frame. It measured each rib, cut one notch per rib, then undid and re-cut smaller after the first pass. Full points.</p><span class="open">Open 3D replay &rarr;</span></a>
+<a class="feat" href="opus55/hinge-lid-l3-seed0__uiW6Lhf/verifier/viz/viewer.html"><div class="fh"><span class="lvl">L3</span><span class="who">Claude Opus 5.5</span><span class="rw low">0.714</span></div><h3>Opus stops at the first pass</h3><p>One identical notch at all three ribs (1.55x the best known volume), submitted on its first passing fix: &quot;I didn&#x27;t try to shrink the notches further because the clearance and seal margins are already small.&quot;</p><span class="open">Open 3D replay &rarr;</span></a>
+<a class="feat" href="sonnet55/hinge-lid-l3-seed0__yUegVYW/verifier/viz/viewer.html"><div class="fh"><span class="lvl">L3</span><span class="who">Claude Sonnet 5.5</span><span class="rw low">0.400</span></div><h3>Sonnet: one size for three ribs</h3><p>Every gate and the opening pass, but one relief size for three different ribs: 2.37x the best known volume, so minimal change scores 0.</p><span class="open">Open 3D replay &rarr;</span></a>
+<a class="feat" href="reference/L3/seed_0000/viz/viewer.html"><div class="fh"><span class="lvl">L3</span><span class="who">Reference solver</span><span class="rw ok">1.000</span></div><h3>Reference solver on L3</h3><p>The smallest valid relief per rib, sized from a 2D scan of the swept rib profile, cut through the same tools. 1.03x the best known volume.</p><span class="open">Open 3D replay &rarr;</span></a></div>
+</section>
+
+<section id="video"><h2>Demo video</h2><video controls preload="metadata" playsinline poster="demo/poster.jpg" src="demo/cadfix_demo.mp4"></video></section>
+
+<section>
+<h2>The task</h2>
+<div class="cols">
+<div class="card"><h3>What the agent gets</h3><p>A printable box with a hinged lid as B-rep solids. While the lid opens, a rib under each lid
+knuckle swings into the top of the rear wall: it jams around 40–70&deg;. The agent gets the bug report, every requirement with its
+threshold, the scoring formula and the protected zones with coordinates. <b>Never the cause or the fix.</b></p></div>
+<div class="card"><h3>Tools (MCP)</h3><ul>
+<li><b>Inspect</b>: measure, section, edge/face queries</li>
+<li><b>Edit</b>: chamfer, fillet, offset_face, extrude_cut, cut_box, add_box, undo</li>
+<li><b>Check</b>: run_check_&lt;id&gt; (free), test_fit (2 free calls)</li>
+<li><b>Budget</b>: 150 tool calls, 1 hour</li></ul></div>
+<div class="card"><h3>How it is scored</h3><p>Any gate fails (broken solid, hinge or seal touched, protected zone cut, part rebuilt) &rarr; <b>0</b>.
+Otherwise the opening sweep, printability and minimal change vs the best known fix (the agent is told the rule, never the volume).</p>
+<div class="formula">S1 not met &rarr; 0.25 &times; progress<br>S1 met &rarr; 0.3 + 0.1&times;print + 0.6&times;minimal change</div></div>
+</div>
+</section>
+
+<section>
+<h2>What separates the models</h2>
+<p class="sec-sub">All of them find the clash. The gap is whether they keep working once a fix passes. The information was there in
+every run, so the remaining gap is a decision, not a missing fact.</p>
+<div class="ladder">
+<div class="step"><div><h3>Weaker models fall for the full-edge cut</h3><p>Hydrogen tuned one full-edge chamfer on every attempt:
+3.2&times; the best known volume, 0.400 on L2. It never tried a local relief.</p></div></div>
+<div class="step"><div><h3>Sonnet 5.5 stops at the first passing fix</h3><p>Every rib fixed locally, gates and opening 9/9, but each trial
+called test_fit once and submitted the first fix that passed, with 120+ tool calls left. 0/9 tried to shrink a passing cut.
+On L3 all three used one relief size for three different ribs.</p>
+<blockquote>"I did not try to shrink the pockets further, so some of the minimal-change score may be left on the table."</blockquote></div></div>
+<div class="step"><div><h3>Opus 5.5 is close, still below the reference on 3 of 9</h3><p>It optimised after its first passing fix in 4/9 trials
+(undo, re-cut smaller, re-check). The L3 trial that sized each rib separately reached full points; it lost points where it skipped that step.</p>
+<blockquote>"Total now ~14.8 mm³ (was 23.3). Running the free checks."</blockquote></div></div>
+</div>
+</section>
+
+<section>
+<h2>Reward integrity</h2>
+<p class="sec-sub">The verifier runs in a separate container with its own grader code, task copy and pristine parts. Doing nothing or
+stopping early scores 0; any working fix beats any broken one; a tailored fix beats a wasteful one. Exploit suite
+(<code>python -m scenarios.hinge_lid.exploits --level L2,L3 --seeds 0</code>):</p>
+<div class="tw"><table class="ex">
+<thead><tr><th>Exploit</th><th>L2</th><th>L3</th><th>Caught by</th></tr></thead><tbody>
+<tr><td>shorten the ribs / cut the lid's hinge side</td><td class="n">0.000</td><td class="n">0.000</td><td>G2, G3 keep-in</td></tr>
+<tr><td>hollow the rear wall + full-edge relief</td><td class="n">0.300</td><td class="n">0.300</td><td>S2 thin walls, S3</td></tr>
+<tr><td>huge cut / cut through the seal band</td><td class="n">0.000</td><td class="n">0.000</td><td>G3, G5 seal</td></tr>
+<tr><td>fill the box / scaled copy / lid saved already opened</td><td class="n">0.000</td><td class="n">0.000</td><td>G3 keep-out, G4, G6</td></tr>
+<tr><td>edit fixed parts or the agent's own task files</td><td class="n">0.000</td><td class="n">0.000</td><td>verifier uses its own copies</td></tr>
+<tr><td>garbage / deleted outputs, spam test_fit, submit then keep editing</td><td class="n">0.000</td><td class="n">0.000</td><td>treated as the original</td></tr>
+</tbody></table></div>
+</section>
+
+<section>
+<h2>Reproduce</h2>
+<p class="sec-sub">From <a href="https://github.com/JaCier8/cadfix/tree/main/starter/">the repo</a> (Docker + <code>pip install harbor==0.26.0</code>):</p>
+<pre><span class="c"># reference run, agent x3, do-nothing, stop-early</span>
+harbor run -p harbor_tasks/judge -a oracle
+harbor run -p harbor_tasks/judge -a opencode -m &lt;provider/model&gt; -k 3
+harbor run -p harbor_tasks/judge -a nop
+PYTHONPATH=. harbor run -p harbor_tasks/judge -a cadfix.harbor.agents:StopEarlyAgent
+<span class="c"># open the 3D viewer of any run</span>
+scripts/view.sh jobs/&lt;job&gt;</pre>
+</section>
+
+<footer><span>cadfix · built 2026-11-15</span><a href="https://github.com/JaCier8/cadfix">GitHub</a><a href="https://github.com/JaCier8/cadfix/tree/main/starter/docs/RUNS.md">All runs (docs/RUNS.md)</a>
+<span>3D viewers load three.js from jsDelivr.</span></footer>
+</div></body></html>

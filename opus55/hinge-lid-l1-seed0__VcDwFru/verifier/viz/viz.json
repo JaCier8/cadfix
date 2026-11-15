@@ -1,0 +1,128 @@
+{
+  "level": "L1",
+  "seed": 0,
+  "reward": 1.0,
+  "submission": {
+    "enclosure": "submitted",
+    "lid": "submitted"
+  },
+  "parts": {
+    "enclosure": {
+      "editable": true,
+      "moving": false,
+      "volume_original": 33830.068,
+      "volume_current": 33799.708,
+      "removed": 30.36,
+      "added": 0.0
+    },
+    "lid": {
+      "editable": true,
+      "moving": true,
+      "volume_original": 15673.14,
+      "volume_current": 15673.14,
+      "removed": 0.0,
+      "added": 0.0
+    },
+    "hinge_pin": {
+      "editable": false,
+      "moving": false,
+      "volume_original": 143.776,
+      "volume_current": 143.776,
+      "removed": 0.0,
+      "added": 0.0
+    },
+    "lid_module": {
+      "editable": false,
+      "moving": true,
+      "volume_original": 1178.463,
+      "volume_current": 1178.463,
+      "removed": 0.0,
+      "added": 0.0
+    }
+  },
+  "variants": {
+    "agent": {
+      "parts": {
+        "enclosure": {
+          "removed": 30.36,
+          "added": 0.0
+        },
+        "lid": {
+          "removed": 0.0,
+          "added": 0.0
+        }
+      },
+      "diff_bbox": [
+        [
+          21.15,
+          29.2,
+          -58.2
+        ],
+        [
+          64.35,
+          31.5,
+          -57.2
+        ]
+      ]
+    },
+    "reference": {
+      "parts": {
+        "enclosure": {
+          "removed": 25.832,
+          "added": 0.0
+        },
+        "lid": {
+          "removed": 0.0,
+          "added": 0.0
+        }
+      },
+      "diff_bbox": [
+        [
+          21.1,
+          29.35,
+          -58.2
+        ],
+        [
+          64.4,
+          31.5,
+          -57.3
+        ]
+      ]
+    },
+    "original": {
+      "parts": {},
+      "diff_bbox": null
+    }
+  },
+  "view_toward": [
+    0.0,
+    31.92,
+    -61.03
+  ],
+  "files": [
+    "agent_closed.glb",
+    "agent_open.glb",
+    "reference_closed.glb",
+    "reference_open.glb",
+    "original_closed.glb",
+    "original_open.glb",
+    "viewer.html",
+    "viz.json",
+    "playback/playback.json",
+    "playback/frame_000.glb",
+    "playback/frame_001.glb",
+    "playback/frame_002.glb",
+    "playback/frame_003.glb",
+    "playback/frame_004.glb",
+    "playback/frame_005.glb",
+    "playback/frame_006.glb"
+  ],
+  "playback": {
+    "status": "reproduced",
+    "message": null,
+    "steps": 14,
+    "frames": 7,
+    "seconds": 1.85,
+    "dir": "playback"
+  }
+}

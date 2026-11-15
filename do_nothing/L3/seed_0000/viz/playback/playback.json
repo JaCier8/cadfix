@@ -1,0 +1,52 @@
+{
+ "status": "reproduced",
+ "message": null,
+ "notes": [],
+ "submission": {
+  "enclosure": "submitted",
+  "lid": "submitted"
+ },
+ "level": "L3",
+ "seed": 0,
+ "pose": {
+  "joint_angle_deg": 0.0,
+  "name": "closed"
+ },
+ "editable": [
+  "enclosure",
+  "lid"
+ ],
+ "steps": [
+  {
+   "n": 1,
+   "tool": "submit",
+   "args_short": "submit",
+   "result_short": "submitted",
+   "seconds": 0.023,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": null
+  }
+ ],
+ "frames": [
+  {
+   "index": 0,
+   "after_step": 0,
+   "label": "start (original)",
+   "trusted": true,
+   "file": "frame_000.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 0.0,
+     "added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0
+    }
+   }
+  }
+ ],
+ "seconds": 0.88
+}

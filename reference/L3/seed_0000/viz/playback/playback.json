@@ -1,0 +1,595 @@
+{
+ "status": "reproduced",
+ "message": null,
+ "notes": [],
+ "submission": {
+  "enclosure": "submitted",
+  "lid": "submitted"
+ },
+ "level": "L3",
+ "seed": 0,
+ "pose": {
+  "joint_angle_deg": 0.0,
+  "name": "closed"
+ },
+ "editable": [
+  "enclosure",
+  "lid"
+ ],
+ "steps": [
+  {
+   "n": 1,
+   "tool": "get_task",
+   "args_short": "get_task",
+   "result_short": "units=mm, degrees zones[24] checks[11] max_tool_calls=150",
+   "seconds": 0.0,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": null
+  },
+  {
+   "n": 2,
+   "tool": "run_check",
+   "args_short": "run_check check_id=S1_opening",
+   "result_short": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0",
+   "seconds": 0.164,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 3,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=20",
+   "result_short": "overlap 0 mm3, min gap 0.4 mm at 20 deg",
+   "seconds": 0.125,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 4,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=30",
+   "result_short": "overlap 0 mm3, min gap 0.4 mm at 30 deg",
+   "seconds": 0.123,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 5,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=38",
+   "result_short": "overlap 0 mm3, min gap 0.288 mm at 38 deg",
+   "seconds": 0.122,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 6,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=40",
+   "result_short": "overlap 0 mm3, min gap 0.2272 mm at 40 deg",
+   "seconds": 0.118,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 7,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=50",
+   "result_short": "overlap 0.004986 mm3, min gap 0 mm at 50 deg",
+   "seconds": 0.003,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 8,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=60",
+   "result_short": "overlap 0.5788 mm3, min gap 0 mm at 60 deg",
+   "seconds": 0.004,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 9,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=70",
+   "result_short": "overlap 0.7941 mm3, min gap 0 mm at 70 deg",
+   "seconds": 0.003,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 10,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=80",
+   "result_short": "overlap 0.9836 mm3, min gap 0 mm at 80 deg",
+   "seconds": 0.004,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 11,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=90",
+   "result_short": "overlap 1.338 mm3, min gap 0 mm at 90 deg",
+   "seconds": 0.004,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 12,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=100",
+   "result_short": "overlap 0.6555 mm3, min gap 0 mm at 100 deg",
+   "seconds": 0.005,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 13,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=110",
+   "result_short": "overlap 0 mm3, min gap 0.1105 mm at 110 deg",
+   "seconds": 0.117,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 14,
+   "tool": "find_edges_near",
+   "args_short": "find_edges_near enclosure point=[-104.5, 40.78, 97.49] direction=[-0.85, -0.53, 0.05] radius=3",
+   "result_short": "part=enclosure edges[2]",
+   "seconds": 0.012,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 15,
+   "tool": "list_faces",
+   "args_short": "list_faces lid",
+   "result_short": "part=lid faces[49]",
+   "seconds": 0.008,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 16,
+   "tool": "section",
+   "args_short": "section lid point=[-81.51, 58.62, 96.98] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02] windo",
+   "result_short": "part=lid joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 17,
+   "tool": "section",
+   "args_short": "section lid_module point=[-81.51, 58.62, 96.98] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02",
+   "result_short": "part=lid_module joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.0,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 18,
+   "tool": "section",
+   "args_short": "section enclosure point=[-81.51, 58.62, 96.98] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02]",
+   "result_short": "part=enclosure joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.0,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 19,
+   "tool": "section",
+   "args_short": "section enclosure point=[-85.25, 56.29, 97.2] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02] ",
+   "result_short": "part=enclosure joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 20,
+   "tool": "section",
+   "args_short": "section lid point=[-93.77, 50.99, 97.69] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02] windo",
+   "result_short": "part=lid joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 21,
+   "tool": "section",
+   "args_short": "section lid_module point=[-93.77, 50.99, 97.69] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02",
+   "result_short": "part=lid_module joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.0,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 22,
+   "tool": "section",
+   "args_short": "section enclosure point=[-93.77, 50.99, 97.69] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02]",
+   "result_short": "part=enclosure joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.0,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 23,
+   "tool": "section",
+   "args_short": "section enclosure point=[-97.51, 48.66, 97.91] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02]",
+   "result_short": "part=enclosure joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 24,
+   "tool": "section",
+   "args_short": "section lid point=[-106, 43.35, 98.4] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02] window_m",
+   "result_short": "part=lid joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 25,
+   "tool": "section",
+   "args_short": "section lid_module point=[-106, 43.35, 98.4] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02] w",
+   "result_short": "part=lid_module joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.0,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 26,
+   "tool": "section",
+   "args_short": "section enclosure point=[-106, 43.35, 98.4] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02] wi",
+   "result_short": "part=enclosure joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 27,
+   "tool": "section",
+   "args_short": "section enclosure point=[-109.8, 41.02, 98.61] normal=[-0.85, -0.53, 0.05] x_dir=[-0.53, 0.85, 0.02]",
+   "result_short": "part=enclosure joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 28,
+   "tool": "extrude_cut",
+   "args_short": "extrude_cut enclosure origin=[-83.21, 54.18, 96.56] normal=[0.85, 0.53, -0.05] x_dir=[-0.53, 0.85, 0",
+   "result_short": "removed 4.612 / added 0 mm3 (edit 1)",
+   "seconds": 0.151,
+   "frame": 1,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 29,
+   "tool": "extrude_cut",
+   "args_short": "extrude_cut enclosure origin=[-95.47, 46.54, 97.27] normal=[0.85, 0.53, -0.05] x_dir=[-0.53, 0.85, 0",
+   "result_short": "removed 3.669 / added 0 mm3 (edit 2)",
+   "seconds": 0.149,
+   "frame": 2,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 30,
+   "tool": "extrude_cut",
+   "args_short": "extrude_cut enclosure origin=[-107.7, 38.91, 97.98] normal=[0.85, 0.53, -0.05] x_dir=[-0.53, 0.85, 0",
+   "result_short": "removed 8.034 / added 0 mm3 (edit 3)",
+   "seconds": 0.149,
+   "frame": 3,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 2,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=37 original_ok_until=37 min_clearance=0"
+   }
+  },
+  {
+   "n": 31,
+   "tool": "run_check",
+   "args_short": "run_check check_id=S1_opening",
+   "result_short": "S1_opening passed=True score=1 ok_until=110 original_ok_until=37 min_clearance=0.3046",
+   "seconds": 0.148,
+   "frame": 3,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 31,
+    "tool": "run_check",
+    "summary": "S1_opening passed=True score=1 ok_until=110 original_ok_until=37 min_clearance=0.3046"
+   }
+  },
+  {
+   "n": 32,
+   "tool": "test_fit",
+   "args_short": "test_fit",
+   "result_short": "gates_ok=True failed=[] met=True progress=1 printability=1",
+   "seconds": 1.529,
+   "frame": 3,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 32,
+    "tool": "test_fit",
+    "summary": "gates_ok=True failed=[] met=True progress=1 printability=1"
+   }
+  },
+  {
+   "n": 33,
+   "tool": "submit",
+   "args_short": "submit",
+   "result_short": "submitted",
+   "seconds": 0.019,
+   "frame": 3,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 32,
+    "tool": "test_fit",
+    "summary": "gates_ok=True failed=[] met=True progress=1 printability=1"
+   }
+  }
+ ],
+ "frames": [
+  {
+   "index": 0,
+   "after_step": 0,
+   "label": "start (original)",
+   "trusted": true,
+   "file": "frame_000.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 0.0,
+     "added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0
+    }
+   }
+  },
+  {
+   "index": 1,
+   "after_step": 28,
+   "label": "after extrude_cut enclosure origin=[-83.21, 54.18, 96.56] normal=[0.85, 0.53, -0.05] x_dir=[-0.53, 0.85, 0",
+   "trusted": true,
+   "file": "frame_001.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 4.6119,
+     "added": 0.0,
+     "step_removed": 4.6119,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 2,
+   "after_step": 29,
+   "label": "after extrude_cut enclosure origin=[-95.47, 46.54, 97.27] normal=[0.85, 0.53, -0.05] x_dir=[-0.53, 0.85, 0",
+   "trusted": true,
+   "file": "frame_002.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 8.2805,
+     "added": 0.0,
+     "step_removed": 3.6687,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 3,
+   "after_step": 30,
+   "label": "after extrude_cut enclosure origin=[-107.7, 38.91, 97.98] normal=[0.85, 0.53, -0.05] x_dir=[-0.53, 0.85, 0",
+   "trusted": true,
+   "file": "frame_003.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 16.3145,
+     "added": 0.0,
+     "step_removed": 8.034,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  }
+ ],
+ "seconds": 1.98
+}

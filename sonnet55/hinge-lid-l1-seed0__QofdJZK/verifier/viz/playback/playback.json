@@ -1,0 +1,582 @@
+{
+ "status": "reproduced",
+ "message": null,
+ "notes": [],
+ "submission": {
+  "enclosure": "submitted",
+  "lid": "submitted"
+ },
+ "level": "L1",
+ "seed": 0,
+ "pose": {
+  "joint_angle_deg": 0.0,
+  "name": "closed"
+ },
+ "editable": [
+  "enclosure",
+  "lid"
+ ],
+ "steps": [
+  {
+   "n": 1,
+   "tool": "get_task",
+   "args_short": "get_task",
+   "result_short": "units=mm, degrees zones[24] checks[11] max_tool_calls=150",
+   "seconds": 0.0,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": null
+  },
+  {
+   "n": 2,
+   "tool": "list_parts",
+   "args_short": "list_parts",
+   "result_short": "",
+   "seconds": 0.019,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": null
+  },
+  {
+   "n": 3,
+   "tool": "run_check",
+   "args_short": "run_check check_id=S1_opening",
+   "result_short": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0",
+   "seconds": 0.19,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 4,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=110",
+   "result_short": "overlap 0 mm3, min gap 0.2176 mm at 110 deg",
+   "seconds": 0.113,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 5,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=60",
+   "result_short": "overlap 0.1751 mm3, min gap 0 mm at 60 deg",
+   "seconds": 0.002,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 6,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=90",
+   "result_short": "overlap 4.637 mm3, min gap 0 mm at 90 deg",
+   "seconds": 0.003,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 7,
+   "tool": "measure",
+   "args_short": "measure part_a=lid_module part_b=enclosure joint_angle_deg=60",
+   "result_short": "overlap 0 mm3, min gap 5 mm at 60 deg",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 8,
+   "tool": "section",
+   "args_short": "section lid point=[25.5, 60, 31] normal=[1, 0, 0] window_mm=12",
+   "result_short": "part=lid joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 9,
+   "tool": "section",
+   "args_short": "section enclosure point=[25.5, 60, 31] normal=[1, 0, 0] window_mm=12",
+   "result_short": "part=enclosure joint_angle_deg=0 origin[3] u_dir[3]",
+   "seconds": 0.001,
+   "frame": 0,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 10,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[21.25, 57.5, 29.5] edges[3]",
+   "result_short": "removed 12.04 / added 0 mm3 (edit 1)",
+   "seconds": 0.163,
+   "frame": 1,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 11,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[38.45, 57.5, 29.5] edges[3]",
+   "result_short": "removed 12.04 / added 0 mm3 (edit 2)",
+   "seconds": 0.242,
+   "frame": 2,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 12,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[55.65, 57.5, 29.5] edges[3]",
+   "result_short": "removed 12.04 / added 0 mm3 (edit 3)",
+   "seconds": 0.143,
+   "frame": 3,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 3,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0 ok_until=45 original_ok_until=45 min_clearance=0"
+   }
+  },
+  {
+   "n": 13,
+   "tool": "run_check",
+   "args_short": "run_check check_id=S1_opening",
+   "result_short": "S1_opening passed=False score=0.3487 ok_until=47 original_ok_until=45 min_clearance=0.2",
+   "seconds": 0.142,
+   "frame": 3,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 13,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.3487 ok_until=47 original_ok_until=45 min_clearance=0.2"
+   }
+  },
+  {
+   "n": 14,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=57",
+   "result_short": "overlap 0 mm3, min gap 0.2 mm at 57 deg",
+   "seconds": 0.107,
+   "frame": 3,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 13,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.3487 ok_until=47 original_ok_until=45 min_clearance=0.2"
+   }
+  },
+  {
+   "n": 15,
+   "tool": "measure",
+   "args_short": "measure part_a=lid part_b=enclosure joint_angle_deg=0",
+   "result_short": "overlap 0 mm3, min gap 0 mm at 0 deg",
+   "seconds": 0.105,
+   "frame": 3,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 13,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.3487 ok_until=47 original_ok_until=45 min_clearance=0.2"
+   }
+  },
+  {
+   "n": 16,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[21.05, 57.5, 29.5] edges[3]",
+   "result_short": "removed 0.56 / added 0 mm3 (edit 4)",
+   "seconds": 0.129,
+   "frame": 4,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 13,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.3487 ok_until=47 original_ok_until=45 min_clearance=0.2"
+   }
+  },
+  {
+   "n": 17,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[38.25, 57.5, 29.5] edges[3]",
+   "result_short": "removed 0.56 / added 0 mm3 (edit 5)",
+   "seconds": 0.131,
+   "frame": 5,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 13,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.3487 ok_until=47 original_ok_until=45 min_clearance=0.2"
+   }
+  },
+  {
+   "n": 18,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[55.45, 57.5, 29.5] edges[3]",
+   "result_short": "removed 0.56 / added 0 mm3 (edit 6)",
+   "seconds": 0.141,
+   "frame": 6,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 13,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.3487 ok_until=47 original_ok_until=45 min_clearance=0.2"
+   }
+  },
+  {
+   "n": 19,
+   "tool": "run_check",
+   "args_short": "run_check check_id=S1_opening",
+   "result_short": "S1_opening passed=False score=0.8427 ok_until=98 original_ok_until=45 min_clearance=0.261",
+   "seconds": 0.134,
+   "frame": 6,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 19,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.8427 ok_until=98 original_ok_until=45 min_clearance=0.261"
+   }
+  },
+  {
+   "n": 20,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[21.05, 57.3, 29.5] edges[3]",
+   "result_short": "removed 3.6 / added 0 mm3 (edit 7)",
+   "seconds": 0.128,
+   "frame": 7,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 19,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.8427 ok_until=98 original_ok_until=45 min_clearance=0.261"
+   }
+  },
+  {
+   "n": 21,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[38.25, 57.3, 29.5] edges[3]",
+   "result_short": "removed 3.6 / added 0 mm3 (edit 8)",
+   "seconds": 0.133,
+   "frame": 8,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 19,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.8427 ok_until=98 original_ok_until=45 min_clearance=0.261"
+   }
+  },
+  {
+   "n": 22,
+   "tool": "cut_box",
+   "args_short": "cut_box enclosure origin=[55.45, 57.3, 29.5] edges[3]",
+   "result_short": "removed 3.6 / added 0 mm3 (edit 9)",
+   "seconds": 0.136,
+   "frame": 9,
+   "is_edit": true,
+   "edit_ok": true,
+   "last_check": {
+    "step": 19,
+    "tool": "run_check",
+    "summary": "S1_opening passed=False score=0.8427 ok_until=98 original_ok_until=45 min_clearance=0.261"
+   }
+  },
+  {
+   "n": 23,
+   "tool": "test_fit",
+   "args_short": "test_fit",
+   "result_short": "gates_ok=True failed=[] met=True progress=1 printability=1",
+   "seconds": 0.52,
+   "frame": 9,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 23,
+    "tool": "test_fit",
+    "summary": "gates_ok=True failed=[] met=True progress=1 printability=1"
+   }
+  },
+  {
+   "n": 24,
+   "tool": "submit",
+   "args_short": "submit",
+   "result_short": "submitted",
+   "seconds": 0.021,
+   "frame": 9,
+   "is_edit": false,
+   "edit_ok": null,
+   "last_check": {
+    "step": 23,
+    "tool": "test_fit",
+    "summary": "gates_ok=True failed=[] met=True progress=1 printability=1"
+   }
+  }
+ ],
+ "frames": [
+  {
+   "index": 0,
+   "after_step": 0,
+   "label": "start (original)",
+   "trusted": true,
+   "file": "frame_000.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 0.0,
+     "added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0
+    }
+   }
+  },
+  {
+   "index": 1,
+   "after_step": 10,
+   "label": "after cut_box enclosure origin=[21.25, 57.5, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_001.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 12.04,
+     "added": 0.0,
+     "step_removed": 12.04,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 2,
+   "after_step": 11,
+   "label": "after cut_box enclosure origin=[38.45, 57.5, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_002.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 24.08,
+     "added": 0.0,
+     "step_removed": 12.04,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 3,
+   "after_step": 12,
+   "label": "after cut_box enclosure origin=[55.65, 57.5, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_003.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 36.12,
+     "added": 0.0,
+     "step_removed": 12.04,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 4,
+   "after_step": 16,
+   "label": "after cut_box enclosure origin=[21.05, 57.5, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_004.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 36.68,
+     "added": 0.0,
+     "step_removed": 0.56,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 5,
+   "after_step": 17,
+   "label": "after cut_box enclosure origin=[38.25, 57.5, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_005.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 37.24,
+     "added": 0.0,
+     "step_removed": 0.56,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 6,
+   "after_step": 18,
+   "label": "after cut_box enclosure origin=[55.45, 57.5, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_006.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 37.8,
+     "added": 0.0,
+     "step_removed": 0.56,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 7,
+   "after_step": 20,
+   "label": "after cut_box enclosure origin=[21.05, 57.3, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_007.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 41.4,
+     "added": 0.0,
+     "step_removed": 3.6,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 8,
+   "after_step": 21,
+   "label": "after cut_box enclosure origin=[38.25, 57.3, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_008.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 45.0,
+     "added": 0.0,
+     "step_removed": 3.6,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  },
+  {
+   "index": 9,
+   "after_step": 22,
+   "label": "after cut_box enclosure origin=[55.45, 57.3, 29.5] edges[3]",
+   "trusted": true,
+   "file": "frame_009.glb",
+   "parts": {
+    "enclosure": {
+     "removed": 48.6,
+     "added": 0.0,
+     "step_removed": 3.6,
+     "step_added": 0.0
+    },
+    "lid": {
+     "removed": 0.0,
+     "added": 0.0,
+     "step_removed": 0.0,
+     "step_added": 0.0
+    }
+   }
+  }
+ ],
+ "seconds": 2.89
+}

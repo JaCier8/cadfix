@@ -1,0 +1,84 @@
+{
+  "level": "L3",
+  "seed": 0,
+  "reward": 0.0,
+  "submission": {
+    "enclosure": "submitted",
+    "lid": "submitted"
+  },
+  "parts": {
+    "enclosure": {
+      "editable": true,
+      "moving": false,
+      "volume_original": 36102.722,
+      "volume_current": 36102.722,
+      "removed": 0.0,
+      "added": 0.0
+    },
+    "lid": {
+      "editable": true,
+      "moving": true,
+      "volume_original": 16892.815,
+      "volume_current": 16892.815,
+      "removed": 0.0,
+      "added": 0.0
+    },
+    "hinge_pin": {
+      "editable": false,
+      "moving": false,
+      "volume_original": 120.695,
+      "volume_current": 120.695,
+      "removed": 0.0,
+      "added": 0.0
+    },
+    "lid_module": {
+      "editable": false,
+      "moving": true,
+      "volume_original": 1561.78,
+      "volume_current": 1561.78,
+      "removed": 0.0,
+      "added": 0.0
+    }
+  },
+  "variants": {
+    "agent": {
+      "parts": {
+        "enclosure": {
+          "removed": 0.0,
+          "added": 0.0
+        },
+        "lid": {
+          "removed": 0.0,
+          "added": 0.0
+        }
+      },
+      "diff_bbox": null
+    },
+    "original": {
+      "parts": {},
+      "diff_bbox": null
+    }
+  },
+  "view_toward": [
+    -131.796,
+    99.887,
+    -27.308
+  ],
+  "files": [
+    "agent_closed.glb",
+    "agent_open.glb",
+    "original_closed.glb",
+    "original_open.glb",
+    "viewer.html",
+    "viz.json",
+    "playback/playback.json"
+  ],
+  "playback": {
+    "status": "reproduced",
+    "message": null,
+    "steps": 1,
+    "frames": 1,
+    "seconds": 0.88,
+    "dir": "playback"
+  }
+}

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cadfix runs - Claude Sonnet 5.5</title>
+<style>
+:root{--bg:#1e2024;--panel:#272a30;--panel2:#2e3239;--line:#3a3f48;--fg:#e8eaee;--mut:#9aa1ad;--mag:#ff2bd6;--cyan:#00e5ff;
+--red:#ff5d5d;--grn:#3ddc84;--amb:#ffb74d;--shadow:0 1px 0 #0003,0 6px 18px #0004;--lt:60%;color-scheme:dark}
+@media (prefers-color-scheme:light){:root{--bg:#f3f4f7;--panel:#fff;--panel2:#eef0f4;--line:#d6dae1;--fg:#1c1f24;--mut:#5b6472;
+--mag:#c4009f;--cyan:#007c94;--red:#c62828;--grn:#1b8a46;--amb:#a35c00;--shadow:0 1px 2px #0001,0 6px 18px #0001;--lt:32%;color-scheme:light}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.mono,.num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+a{color:inherit}
+.wrap{max-width:1500px;margin:0 auto;padding:0 20px 48px}
+header{padding:28px 0 14px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--mag),var(--cyan));box-shadow:0 0 22px #ff2bd655}
+h1{margin:0;font-size:26px;letter-spacing:-.01em}
+.sub{color:var(--mut);margin-top:6px;display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px}
+.sub b{color:var(--fg);font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0 6px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+.tile .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
+.tile .v{font-size:26px;font-weight:700;margin-top:2px;line-height:1.15}
+.tile .d{font-size:12px;color:var(--mut)}
+.tile .v small{font-size:13px;font-weight:500;color:var(--mut)}
+.toolbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);
+display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 0;margin-top:8px;border-bottom:1px solid var(--line)}
+input[type=search],select{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:9px;padding:7px 10px;font:inherit;min-height:36px}
+input[type=search]{flex:1 1 200px;min-width:0;max-width:340px}
+.chipbtn{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 13px;font:inherit;cursor:pointer;min-height:36px}
+.chipbtn[aria-pressed=true]{border-color:var(--mag);color:var(--mag);background:color-mix(in srgb,var(--mag) 12%,var(--panel))}
+.sep{flex:1}
+.count{color:var(--mut);font-size:13px}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.group{margin-top:26px}
+.ghead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.ghead h2{margin:0;font-size:17px}
+.ghead span{color:var(--mut);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 15px 12px;box-shadow:var(--shadow);
+display:flex;flex-direction:column;gap:10px;min-width:0;overflow:hidden;transition:border-color .12s,transform .12s}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:hsl(var(--h) 70% 50%)}
+.card:hover,.card:focus-within{border-color:var(--mag);transform:translateY(-1px)}
+.card.nolink:hover{border-color:var(--line);transform:none}
+.row{display:flex;align-items:center;gap:8px;min-width:0}
+.lvl{font-weight:700;font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid currentColor}
+.lvl1{color:var(--cyan)}.lvl2{color:var(--amb)}.lvl3{color:var(--mag)}.lvl0{color:var(--mut)}
+.title{font-weight:650;font-size:16px;text-decoration:none;min-width:0}
+.title::after{content:"";position:absolute;inset:0;z-index:1}
+.nolink .title::after{display:none}
+.dur{margin-left:auto;color:var(--mut);font-size:12px;white-space:nowrap}
+.meta{color:var(--mut);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reward{display:flex;align-items:center;gap:12px}
+.rnum{font-size:30px;font-weight:700;line-height:1;min-width:84px;color:hsl(var(--h) 75% var(--lt))}
+.bar{flex:1;height:10px;border-radius:6px;background:var(--panel2);overflow:hidden}
+.bar i{display:block;height:100%;width:calc(var(--r)*100%);background:linear-gradient(90deg,hsl(0 75% 50%),hsl(var(--h) 70% 48%));border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--mut);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip.ok{color:var(--grn);border-color:color-mix(in srgb,var(--grn) 45%,var(--line))}
+.chip.bad{color:var(--red);border-color:color-mix(in srgb,var(--red) 50%,var(--line))}
+.chip.warn{color:var(--amb);border-color:color-mix(in srgb,var(--amb) 50%,var(--line))}
+.chip.wrap{white-space:normal}
+.vol{font-size:12px;color:var(--mut);display:flex;flex-wrap:wrap;gap:2px 14px}
+.vol .rm{color:var(--red)}.vol .ad{color:var(--grn)}
+.fp{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:12px}
+.fp svg{flex:1;height:22px;min-width:0;display:block;background:var(--panel2);border-radius:5px}
+.fp .e{fill:var(--mag)}.fp .f{fill:var(--red)}.fp .c{fill:var(--cyan)}.fp .o{fill:var(--mut);opacity:.45}
+.links{display:flex;gap:6px;margin-top:auto;position:relative;z-index:2;flex-wrap:wrap}
+.links a{font-size:12px;text-decoration:none;padding:3px 10px;border-radius:7px;border:1px solid var(--line);color:var(--fg);background:var(--panel2)}
+.links a:hover{border-color:var(--cyan);color:var(--cyan)}
+.legend{display:flex;gap:14px;color:var(--mut);font-size:12px;margin:10px 0 0;flex-wrap:wrap}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+.empty{color:var(--mut);padding:40px 0;text-align:center}
+footer{margin-top:36px;color:var(--mut);font-size:12px}
+@media (max-width:520px){.wrap{padding:0 14px 40px}h1{font-size:22px}.grid{grid-template-columns:1fr}.rnum{font-size:26px;min-width:70px}.sep{display:none}}
+</style></head><body><div class="wrap">
+<header><a href="../index.html" style="display:inline-block;margin-bottom:12px;color:var(--cyan);text-decoration:none;font-weight:600">&larr; overview</a><div class="brand"><div class="logo" aria-hidden="true"></div><h1>Claude Sonnet 5.5</h1></div>
+<div class="sub"><span>source <b class="mono" id="src"></b></span><span id="gen"></span><span id="cnt"></span></div></header>
+<section class="tiles" id="tiles" aria-label="summary"></section>
+<div class="legend"><span><i style="background:var(--mag)"></i>edit step</span><span><i style="background:var(--red)"></i>failed edit</span><span><i style="background:var(--cyan)"></i>check</span><span><i style="background:var(--mut);opacity:.5"></i>other tool call</span></div>
+<div class="toolbar" role="toolbar" aria-label="filters"><input type="search" id="q" placeholder="Search runs, agents, tasks..." aria-label="search">
+<span id="lvls" class="row"></span><button class="chipbtn" id="fail" aria-pressed="false">only failures</button><span class="sep"></span>
+<label class="count" for="sort">sort</label><select id="sort"><option value="reward">reward</option><option value="level">level</option><option value="seed">seed</option><option value="name">name</option></select>
+<button class="chipbtn" id="dir" aria-label="toggle sort direction">&#8593; asc</button><span class="count" id="shown"></span></div>
+<main id="main"></main>
+<noscript><ul><li><a href="hinge-lid-l1-seed0__QjRN4co/verifier/viz/viewer.html">hinge-lid-l1-seed0/hinge-lid-l1-seed0__QjRN4co</a> reward 1.000</li><li><a href="hinge-lid-l1-seed0__QofdJZK/verifier/viz/viewer.html">hinge-lid-l1-seed0/hinge-lid-l1-seed0__QofdJZK</a> reward 1.000</li><li><a href="hinge-lid-l1-seed0__u2d86jU/verifier/viz/viewer.html">hinge-lid-l1-seed0/hinge-lid-l1-seed0__u2d86jU</a> reward 1.000</li><li><a href="hinge-lid-l2-seed0__AXwNsaV/verifier/viz/viewer.html">hinge-lid-l2-seed0/hinge-lid-l2-seed0__AXwNsaV</a> reward 1.000</li><li><a href="hinge-lid-l2-seed0__gJP7UPj/verifier/viz/viewer.html">hinge-lid-l2-seed0/hinge-lid-l2-seed0__gJP7UPj</a> reward 0.621</li><li><a href="hinge-lid-l2-seed0__znT7Qc9/verifier/viz/viewer.html">hinge-lid-l2-seed0/hinge-lid-l2-seed0__znT7Qc9</a> reward 0.884</li><li><a href="hinge-lid-l3-seed0__Vs6f6U7/verifier/viz/viewer.html">hinge-lid-l3-seed0/hinge-lid-l3-seed0__Vs6f6U7</a> reward 0.850</li><li><a href="hinge-lid-l3-seed0__vtetXAU/verifier/viz/viewer.html">hinge-lid-l3-seed0/hinge-lid-l3-seed0__vtetXAU</a> reward 0.804</li><li><a href="hinge-lid-l3-seed0__yUegVYW/verifier/viz/viewer.html">hinge-lid-l3-seed0/hinge-lid-l3-seed0__yUegVYW</a> reward 0.400</li></ul></noscript>
+<footer>cadfix.show &middot; static page, works from file:// &middot; click a card to open its 3D viewer</footer>
+</div>
+<script id="data" type="application/json">{"source": "harbor_runs/sonnet55_2026-11-15__06-48-21", "generated": "2026-11-15 07:56 UTC", "runs": [{"id": "hinge-lid-l1-seed0__QjRN4co", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l1-seed0/hinge-lid-l1-seed0__QjRN4co", "level": "L1", "seed": 0, "task": "hinge-lid-l1-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 1.0, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 19, "edits": 6, "edit_fail": 0, "strip": "oocooooooeeecoeeeoo", "parts": [{"name": "enclosure", "removed": 49.368, "added": 0}], "hasparts": true, "seconds": 85.407495, "href": "hinge-lid-l1-seed0__QjRN4co/verifier/viz/viewer.html", "grade_href": "hinge-lid-l1-seed0__QjRN4co/verifier/grade.json"}, {"id": "hinge-lid-l1-seed0__QofdJZK", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l1-seed0/hinge-lid-l1-seed0__QofdJZK", "level": "L1", "seed": 0, "task": "hinge-lid-l1-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 1.0, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 24, "edits": 9, "edit_fail": 0, "strip": "oocooooooeeecooeeeceeeoo", "parts": [{"name": "enclosure", "removed": 48.6, "added": 0}], "hasparts": true, "seconds": 95.636536, "href": "hinge-lid-l1-seed0__QofdJZK/verifier/viz/viewer.html", "grade_href": "hinge-lid-l1-seed0__QofdJZK/verifier/grade.json"}, {"id": "hinge-lid-l1-seed0__u2d86jU", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l1-seed0/hinge-lid-l1-seed0__u2d86jU", "level": "L1", "seed": 0, "task": "hinge-lid-l1-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 1.0, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 24, "edits": 6, "edit_fail": 0, "strip": "oocooooooeeecoooooeeecoo", "parts": [{"name": "enclosure", "removed": 53.999, "added": 0}], "hasparts": true, "seconds": 190.545534, "href": "hinge-lid-l1-seed0__u2d86jU/verifier/viz/viewer.html", "grade_href": "hinge-lid-l1-seed0__u2d86jU/verifier/grade.json"}, {"id": "hinge-lid-l2-seed0__AXwNsaV", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l2-seed0/hinge-lid-l2-seed0__AXwNsaV", "level": "L2", "seed": 0, "task": "hinge-lid-l2-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 1.0, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 15, "edits": 3, "edit_fail": 0, "strip": "oocooooooeeecoo", "parts": [{"name": "enclosure", "removed": 27.672, "added": 0}], "hasparts": true, "seconds": 77.303572, "href": "hinge-lid-l2-seed0__AXwNsaV/verifier/viz/viewer.html", "grade_href": "hinge-lid-l2-seed0__AXwNsaV/verifier/grade.json"}, {"id": "hinge-lid-l2-seed0__gJP7UPj", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l2-seed0/hinge-lid-l2-seed0__gJP7UPj", "level": "L2", "seed": 0, "task": "hinge-lid-l2-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 0.621371, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 15, "edits": 3, "edit_fail": 0, "strip": "oocooooooeeecoo", "parts": [{"name": "enclosure", "removed": 43.564, "added": 0}], "hasparts": true, "seconds": 89.154379, "href": "hinge-lid-l2-seed0__gJP7UPj/verifier/viz/viewer.html", "grade_href": "hinge-lid-l2-seed0__gJP7UPj/verifier/grade.json"}, {"id": "hinge-lid-l2-seed0__znT7Qc9", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l2-seed0/hinge-lid-l2-seed0__znT7Qc9", "level": "L2", "seed": 0, "task": "hinge-lid-l2-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 0.884136, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 14, "edits": 3, "edit_fail": 0, "strip": "oocooooooeeeoo", "parts": [{"name": "enclosure", "removed": 33.947, "added": 0}], "hasparts": true, "seconds": 74.117674, "href": "hinge-lid-l2-seed0__znT7Qc9/verifier/viz/viewer.html", "grade_href": "hinge-lid-l2-seed0__znT7Qc9/verifier/grade.json"}, {"id": "hinge-lid-l3-seed0__Vs6f6U7", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l3-seed0/hinge-lid-l3-seed0__Vs6f6U7", "level": "L3", "seed": 0, "task": "hinge-lid-l3-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 0.850176, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 17, "edits": 3, "edit_fail": 0, "strip": "oocooooooooeeecoo", "parts": [{"name": "enclosure", "removed": 21.677, "added": 0}], "hasparts": true, "seconds": 123.85132, "href": "hinge-lid-l3-seed0__Vs6f6U7/verifier/viz/viewer.html", "grade_href": "hinge-lid-l3-seed0__Vs6f6U7/verifier/grade.json"}, {"id": "hinge-lid-l3-seed0__vtetXAU", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l3-seed0/hinge-lid-l3-seed0__vtetXAU", "level": "L3", "seed": 0, "task": "hinge-lid-l3-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 0.803676, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 18, "edits": 3, "edit_fail": 0, "strip": "oocooooooeeeccccoo", "parts": [{"name": "enclosure", "removed": 22.725, "added": 0}], "hasparts": true, "seconds": 685.805533, "href": "hinge-lid-l3-seed0__vtetXAU/verifier/viz/viewer.html", "grade_href": "hinge-lid-l3-seed0__vtetXAU/verifier/grade.json"}, {"id": "hinge-lid-l3-seed0__yUegVYW", "group": "Claude Sonnet 5.5", "name": "hinge-lid-l3-seed0/hinge-lid-l3-seed0__yUegVYW", "level": "L3", "seed": 0, "task": "hinge-lid-l3-seed0", "agent": "opencode (anthropic/claude-sonnet-5-5)", "reward": 0.4, "gates_ok": true, "failed_gates": [], "s1": true, "s1_deg": 110.0, "playback": "reproduced", "steps": 28, "edits": 9, "edit_fail": 0, "strip": "oocooooooooeeecooooeeeeeecoo", "parts": [{"name": "enclosure", "removed": 37.638, "added": 0}], "hasparts": true, "seconds": 208.648175, "href": "hinge-lid-l3-seed0__yUegVYW/verifier/viz/viewer.html", "grade_href": "hinge-lid-l3-seed0__yUegVYW/verifier/grade.json"}]}</script>
+<script>
+(function(){
+var D=JSON.parse(document.getElementById('data').textContent),R=D.runs;
+function h(t,a){var e=document.createElement(t),i=2,k;a=a||{};for(k in a){if(k==='text')e.textContent=a[k];else if(k==='cls')e.className=a[k];else e.setAttribute(k,a[k])}
+ for(;i<arguments.length;i++){var c=arguments[i];if(c==null)continue;e.appendChild(typeof c==='string'?document.createTextNode(c):c)}return e}
+function fmt(x,n){return x==null?'-':Number(x).toFixed(n==null?3:n)}
+function hue(r){return Math.round(Math.max(0,Math.min(1,r||0))*130)}
+function dur(s){if(s==null)return '';if(s<1)return '<1 s';if(s<90)return Math.round(s)+' s';var m=Math.floor(s/60);return m+' min '+Math.round(s-m*60)+' s'}
+function isFail(r){return r.error||r.reward==null||r.reward<1||r.gates_ok===false}
+function lvlNum(l){var m=/L(\d+)/.exec(l||'');return m?+m[1]:0}
+var st={q:'',lvl:null,fail:false,sort:'reward',asc:true};
+var $=function(id){return document.getElementById(id)};
+$('src').textContent=D.source;$('gen').textContent='generated '+D.generated;
+function tiles(){
+ var rs=R.filter(function(r){return r.reward!=null}),mean=rs.length?rs.reduce(function(a,r){return a+r.reward},0)/rs.length:null;
+ var solved=R.filter(function(r){return r.reward!=null&&r.reward>=1}).length,gf=R.filter(function(r){return r.gates_ok===false}).length;
+ var rep=R.filter(function(r){return r.playback==='reproduced'}).length,mm=R.filter(function(r){return r.playback==='mismatch'}).length;
+ var other=R.filter(function(r){return r.playback&&r.playback!=='reproduced'&&r.playback!=='mismatch'&&r.playback!=='no_log'}).length;
+ var ng=Object.keys(R.reduce(function(o,r){o[r.group]=1;return o},{})).length;
+ function T(k,v,d,c){return h('div',{cls:'tile'},h('div',{cls:'k',text:k}),h('div',{cls:'v num',style:c?'color:'+c:''},v),h('div',{cls:'d',text:d||' '}))}
+ var t=$('tiles');
+ t.appendChild(T('runs',String(R.length),ng+(ng==1?' group':' groups')));
+ t.appendChild(T('mean reward',fmt(mean),'',mean==null?'':'hsl('+hue(mean)+' 75% var(--lt))'));
+ t.appendChild(T('solved',h('span',{},String(solved),h('small',{text:' / '+R.length})),'reward = 1',solved?'var(--grn)':''));
+ t.appendChild(T('failed gates',String(gf),gf?'runs with a failed gate':'all gates ok',gf?'var(--red)':'var(--grn)'));
+ t.appendChild(T('playback',h('span',{},String(rep),h('small',{text:' reproduced'})),mm+' mismatch'+(other?' · '+other+' error/other':''),mm?'var(--amb)':''));
+ $('cnt').textContent=R.length+' runs';
+}
+function levels(){var ls=[],seen={};R.forEach(function(r){var l=r.level||'?';if(!seen[l]){seen[l]=1;ls.push(l)}});ls.sort();
+ var box=$('lvls');ls.forEach(function(l){var b=h('button',{cls:'chipbtn','aria-pressed':'false',text:l});b.onclick=function(){st.lvl=st.lvl===l?null:l;
+  Array.prototype.forEach.call(box.children,function(c){c.setAttribute('aria-pressed',String(c.textContent===st.lvl))});draw()};box.appendChild(b)})}
+function chip(cls,text,title){return h('span',{cls:'chip '+cls,text:text,title:title||text})}
+function fingerprint(r){
+ var s=r.strip||'';if(!s)return null;var w=4,n=s.length,svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.setAttribute('viewBox','0 0 '+n*w+' 22');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('role','img');
+ svg.setAttribute('aria-label',r.steps+' steps, '+r.edits+' edits');
+ for(var i=0;i<n;i++){var c=s[i],hh=c==='o'?8:(c==='c'?14:20),rc=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  rc.setAttribute('x',i*w);rc.setAttribute('width',w-1);rc.setAttribute('y',22-hh-1);rc.setAttribute('height',hh);rc.setAttribute('class',c);svg.appendChild(rc)}
+ return svg}
+function card(r){
+ var L=lvlNum(r.level),has=!!r.href,rw=r.reward;
+ var el=h('article',{cls:'card'+(has?'':' nolink'),style:'--h:'+hue(rw)+';--r:'+(rw==null?0:Math.max(0,Math.min(1,rw)))});
+ var ttl='seed '+(r.seed===''||r.seed==null?'?':r.seed);
+ var t=has?h('a',{cls:'title',href:r.href,text:ttl,'aria-label':'open viewer: '+r.name+', reward '+fmt(rw)}):h('span',{cls:'title',text:ttl});
+ el.appendChild(h('div',{cls:'row'},h('span',{cls:'lvl lvl'+L,text:r.level||'?'}),t,r.seconds!=null?h('span',{cls:'dur',title:'agent run time',text:dur(r.seconds)}):null));
+ el.appendChild(h('div',{cls:'meta',title:r.id,text:[r.task,r.agent].filter(Boolean).join(' · ')||r.id}));
+ el.appendChild(h('div',{cls:'reward'},h('div',{cls:'rnum num',text:fmt(rw)}),h('div',{cls:'bar',role:'img','aria-label':'reward '+fmt(rw)},h('i'))));
+ var ch=h('div',{cls:'chips'});
+ if(r.error)ch.appendChild(chip('bad','error: '+r.error,r.error));
+ if(r.missing)ch.appendChild(chip('warn','viewer missing',r.missing));
+ if(r.gates_ok===true)ch.appendChild(chip('ok','✓ gates ok'));
+ else if(r.gates_ok===false)ch.appendChild(chip('bad','✗ gates: '+((r.failed_gates||[]).join(', ')||'failed'),'failed gates'));
+ if(r.s1===true)ch.appendChild(chip('ok','S1 opening met'+(r.s1_deg!=null?' · '+r.s1_deg+'°':'')));
+ else if(r.s1===false)ch.appendChild(chip('bad','S1 opening not met'+(r.s1_deg!=null?' · '+r.s1_deg+'°':'')));
+ var p=r.playback;
+ if(p==='reproduced')ch.appendChild(chip('ok','playback reproduced'));
+ else if(p==='mismatch')ch.appendChild(chip('warn','⚠ playback mismatch'));
+ else if(p==='no_log')ch.appendChild(chip('','playback: no log'));
+ else if(p)ch.appendChild(chip('bad','playback '+p.replace(/_/g,' ')));
+ else if(!r.error)ch.appendChild(chip('','no playback'));
+ el.appendChild(ch);
+ var parts=r.parts||[];
+ if(parts.length){var v=h('div',{cls:'vol num'});parts.forEach(function(q){v.appendChild(h('span',{},q.name+' ',h('span',{cls:'rm',text:'−'+fmt(q.removed,1)}),' ',h('span',{cls:'ad',text:'+'+fmt(q.added,1)}),' mm³'))});el.appendChild(v)}
+ else if(r.parts&&!r.parts.length&&!r.error&&r.hasparts)el.appendChild(h('div',{cls:'vol',text:'no change to editable parts'}));
+ var fp=r.steps>1?fingerprint(r):null;
+ if(fp)el.appendChild(h('div',{cls:'fp'},fp,h('span',{cls:'num',text:r.steps+' steps · '+r.edits+' edits'+(r.edit_fail?' ('+r.edit_fail+' failed)':'')})));
+ else if(r.steps>1)el.appendChild(h('div',{cls:'fp'},h('span',{cls:'num',text:r.steps+' steps'})));
+ var ln=h('div',{cls:'links'});
+ if(has){ln.appendChild(h('a',{href:r.href+'#mode=compare',text:'Compare'}));if(r.playback&&(r.edits||0)>0)ln.appendChild(h('a',{href:r.href+'#mode=playback',text:'Playback'}))}
+ if(r.grade_href)ln.appendChild(h('a',{href:r.grade_href,text:'grade.json'}));
+ if(ln.children.length)el.appendChild(ln);
+ return el}
+function cmp(a,b){var k=st.sort,d=0;
+ if(k==='reward')d=(a.reward==null?-1:a.reward)-(b.reward==null?-1:b.reward);
+ else if(k==='level')d=lvlNum(a.level)-lvlNum(b.level);
+ else if(k==='seed')d=(+a.seed||0)-(+b.seed||0);
+ else d=a.name<b.name?-1:a.name>b.name?1:0;
+ if(!d)d=lvlNum(a.level)-lvlNum(b.level)||(+a.seed||0)-(+b.seed||0)||(a.name<b.name?-1:1);
+ return st.asc?d:-d}
+function draw(){
+ var q=st.q.trim().toLowerCase(),main=$('main'),groups={},order=[],n=0;main.textContent='';
+ R.forEach(function(r){
+  if(st.lvl&&r.level!==st.lvl)return;if(st.fail&&!isFail(r))return;
+  if(q&&[r.name,r.agent,r.task,r.group,r.level,'seed '+r.seed].join(' ').toLowerCase().indexOf(q)<0)return;
+  if(!groups[r.group]){groups[r.group]=[];order.push(r.group)}groups[r.group].push(r);n++});
+ order.forEach(function(g){var rs=groups[g].sort(cmp),m=rs.filter(function(r){return r.reward!=null}),
+  mean=m.length?m.reduce(function(a,r){return a+r.reward},0)/m.length:null,sv=rs.filter(function(r){return r.reward>=1}).length;
+  var sec=h('section',{cls:'group','aria-label':g});
+  sec.appendChild(h('div',{cls:'ghead'},h('h2',{cls:'mono',text:g}),h('span',{text:rs.length+' runs · mean '+fmt(mean)+' · '+sv+' solved'})));
+  var gr=h('div',{cls:'grid'});rs.forEach(function(r){gr.appendChild(card(r))});sec.appendChild(gr);main.appendChild(sec)});
+ if(!n)main.appendChild(h('div',{cls:'empty',text:'No runs match these filters.'}));
+ $('shown').textContent=n+' / '+R.length+' shown'}
+$('q').addEventListener('input',function(e){st.q=e.target.value;draw()});
+$('fail').onclick=function(e){st.fail=!st.fail;e.target.setAttribute('aria-pressed',String(st.fail));draw()};
+$('sort').onchange=function(e){st.sort=e.target.value;draw()};
+$('dir').onclick=function(e){st.asc=!st.asc;e.target.textContent=st.asc?'↑ asc':'↓ desc';draw()};
+tiles();levels();draw();
+})();
+</script></body></html>
