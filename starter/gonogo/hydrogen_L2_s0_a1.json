@@ -1,0 +1,11 @@
+[
+  {
+    "op": "chamfer",
+    "part": "enclosure",
+    "edge_near": [42.75, 58.2, 31.5],
+    "d1": 0.97,
+    "d2": 2.0,
+    "d1_face_normal": [0, 0, 1],
+    "edge_direction": [1, 0, 0]
+  }
+]

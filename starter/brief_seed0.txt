@@ -1,0 +1,71 @@
+=== hinge_lid, seed 0: what the agent knows after inspecting the task ===
+
+BUG REPORT
+  The lid jams while opening and cannot reach 110 deg.
+  Fix it by editing the editable parts. The hinge interface is frozen.
+
+PARTS
+  enclosure   editable  volume 33830.129 mm3  printed box with rear wall, top edge carries the seal band
+  lid         editable  volume 15673.155 mm3  printed lid with hinge knuckles, a structural rib (lug) under each knuckle, and a module frame on its underside
+  hinge_pin   fixed     volume   143.836 mm3  defines the rotation axis; cannot move
+  lid_module  fixed     volume  1178.463 mm3  e.g. display or LED board mounted under the lid near the rear edge; moves with the lid
+  Print orientation: enclosure on its floor; lid top face down.
+
+COORDINATE FRAME (units mm, degrees)
+  x along the hinge (0..85.5), y from the front wall (y=0) to the rear wall (y=58.2), z up (floor z=0, wall tops z=31.5).
+  Closed lid: plate z=31.5..34.5 over the whole box.
+
+REAR WALL (section x = const)
+  outer face y = 58.2, inner face y = 55.47, thickness 2.73; wall top z = 31.5
+  outer top edge: the straight edge along x at (y=58.2, z=31.5), x 0..85.5
+  seal band: closed, the lid underside (z=31.5) rests on the wall tops; on the rear wall the contact is y 55.47..58.2 (width 2.73);
+  it must stay >= 1.5 mm wide all around.
+  enclosure knuckles: x 12.85..21.05, 30.05..38.25, 47.25..55.45, 64.45..72.65, hung off the rear wall's outer face below z = 27.5
+
+HINGE
+  axis through (0, 61.03, 31.92), direction (-1, 0, 0); the lid opens by positive rotation about it (right-hand rule), 0..110 deg
+  axis vs the rear wall's outer top edge: 2.83 behind the outer face, 0.42 above the wall top, distance 2.861
+  hinge_pin radius 0.875, knuckle bores radius 1 (frozen), knuckle outer radius 2.2, axial gaps 0.4
+
+LID SECTION NEAR THE HINGE (in each lid knuckle segment)
+  lid knuckle segments: x 21.45..29.65, 38.65..46.85, 55.85..64.05
+  knuckle: cylinder radius 2.2 about the axis; plate continues behind the wall to y = 63.23 at z 31.5..34.5
+  rib under the knuckle (box over the whole segment length), corners in the (y, z) section:
+    top front    y=  60.565 z=  31.920   rel. to axis dy=-0.465 dz=+0.000   distance 0.465
+    top rear     y=  62.175 z=  31.920   rel. to axis dy=+1.145 dz=+0.000   distance 1.145
+    bottom rear  y=  62.175 z=  28.830   rel. to axis dy=+1.145 dz=-3.090   distance 3.295
+    bottom front y=  60.565 z=  28.830   rel. to axis dy=-0.465 dz=-3.090   distance 3.125
+
+ZONES
+  keep-in (filled >= 99 %): lid knuckles, knuckle ribs, lid module frame, seal band, enclosure knuckle brackets:
+    bracket_0_bridge     enclosure: (12.85, 57.7, 19.47) .. (21.05, 63.23, 27.5)
+    bracket_0_knuckle    enclosure: (12.85, 58.83, 27.5) .. (21.05, 63.23, 34.12)
+    bracket_2_bridge     enclosure: (30.05, 57.7, 19.47) .. (38.25, 63.23, 27.5)
+    bracket_2_knuckle    enclosure: (30.05, 58.83, 27.5) .. (38.25, 63.23, 34.12)
+    bracket_4_bridge     enclosure: (47.25, 57.7, 19.47) .. (55.45, 63.23, 27.5)
+    bracket_4_knuckle    enclosure: (47.25, 58.83, 27.5) .. (55.45, 63.23, 34.12)
+    bracket_6_bridge     enclosure: (64.45, 57.7, 19.47) .. (72.65, 63.23, 27.5)
+    bracket_6_knuckle    enclosure: (64.45, 58.83, 27.5) .. (72.65, 63.23, 34.12)
+  keep-out (must stay empty): lid_module volume (32.7, 38.77, 27.4) .. (52.8, 53.07, 31.5) (moves with the lid)
+
+SPEC
+  gate G1_valid_solids: both editable parts are valid closed solids (OpenCascade check)
+  gate G2_hinge_interface: pin holes keep diameter, position and axis; pin does not collide with knuckles; clearance around pin within band so the lid can rotate
+  gate G3_keep_in_keep_out: lid knuckles, knuckle ribs, enclosure knuckle brackets, module frame and seal band filled >= 99%; module volume empty
+  gate G4_closed_position: at 0 deg no collision between lid (with module) and enclosure
+  gate G5_seal: at 0 deg contact between lid and wall tops >= 1.5 mm wide all around (contact region eroded by 0.75 mm still forms a closed ring)
+  gate G6_not_rebuilt: outer envelope within tolerance; volume of each part changed by <= 15%
+  S1_opening: rotate lid (with module) about the pin axis 0..110 deg in 1 deg steps: no overlap (> 1e-3 mm3) at any step from 0 deg, touching allowed; min clearance lid(+module) vs enclosure >= 0.3 mm at every step from 10 to 110 deg (pin excluded: its bores have 0.125 mm radial clearance by design). Progress = largest angle up to which both rules hold, vs the original.
+  S2_printability: thinnest wall >= 1.2 mm; no new overhangs steeper than 45 deg in print orientation (enclosure on its floor, lid top face down)
+  S3_minimal_change: changed volume (added + removed) vs the original, as % of the enclosure volume (33830.129 mm3):
+    full points if the changed volume is at most 1.25x the volume of the smallest possible valid fix, zero at 3x
+  reward: gate failed -> 0.0; S1 not met -> 0.3 * progress, progress = (angle up to which S1 holds - original angle) / (110 - original angle), clipped to [0, 1];
+          S1 met -> 0.4 + 0.2 * printability + 0.4 * minimal_change
+
+ORIGINAL, MEASURED (opening sweep on the given parts)
+  first contact at 56.7 deg (1 deg steps, refined to 0.1 deg), total overlap 0.0017 mm3, pairs [('lid', 'enclosure')]
+  overlap bbox (21.45, 58.192, 30.6) .. (64.05, 58.2, 30.617), pieces:
+    lid x enclosure: 0.00056 mm3  (21.45, 58.192, 30.6) .. (29.65, 58.2, 30.617)
+    lid x enclosure: 0.00056 mm3  (38.65, 58.192, 30.6) .. (46.85, 58.2, 30.617)
+    lid x enclosure: 0.00056 mm3  (55.85, 58.192, 30.6) .. (64.05, 58.2, 30.617)
+  S1: NOT met; holds up to 45.0 deg (the 'original angle' in the reward); first failing step 46.0 deg: clearance 0.284 mm, overlap 0.0000 mm3

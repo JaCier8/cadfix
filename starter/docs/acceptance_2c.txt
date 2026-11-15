@@ -1,0 +1,337 @@
+# Acceptance tables (M6), python -m scenarios.hinge_lid.dev_sweep --seeds 0-9.
+# scenario.json 0.7-levels-tuned (task 2d): L1 (S3 5x/10x) and L3 (draw: V_identical >= 1.4x V_ref, scan
+# clearance margin 0.002 mm, DECISIONS D10) regenerated; L2 unchanged from task 2c (same parts and factors).
+# Seed replacements (a rib without a valid relief -> seed + 1000k):
+#   seed 9 L1: source seeds [9, 1009] have a rib without a valid relief, using source seed 2009
+#   seed 0 L3: source seeds [0, 1000] have a rib without a valid relief, using source seed 2000
+#   seed 1 L3: source seeds [1, 1001] have a rib without a valid relief, using source seed 2001
+#   seed 2 L3: source seeds [2, 1002, 2002, 3002, 4002, 5002, 6002] have a rib without a valid relief, using source seed 7002
+#   seed 3 L3: source seeds [3, 1003, 2003, 3003, 4003, 5003, 6003, 7003, 8003, 9003, 10003, 11003, 12003, 13003, 14003, 15003] have a rib without a valid relief, using source seed 16003
+#   seed 5 L3: source seeds [5, 1005, 2005, 3005, 4005, 5005] have a rib without a valid relief, using source seed 6005
+#   seed 6 L3: source seeds [6, 1006, 2006, 3006, 4006, 5006] have a rib without a valid relief, using source seed 6006
+#   seed 7 L3: source seeds [7, 1007, 2007, 3007, 4007, 5007, 6007, 7007, 8007] have a rib without a valid relief, using source seed 9007
+#   seed 9 L3: source seeds [9, 1009, 2009] have a rib without a valid relief, using source seed 3009
+
+===== L1: S3 full <= 5.0x V_ref, zero at 10.0x =====
+Per seed: original, reference volumes
+seed   src   1st zone ribs   V_ref  V_full V_ident full/ref id/ref sweep_s
+--------------------------------------------------------------------------
+   0     0  56.7    T    3   25.83   82.72   25.83     3.20  1.000    0.17
+   1     1  42.4    T    2   16.36   57.36   16.36     3.51  1.000    0.10
+   2     2  46.3    T    2   14.10   52.88   14.10     3.75  1.000    0.11
+   3     3  56.9    T    2   13.18   54.82   13.18     4.16  1.000    0.12
+   4     4  49.8    T    2   15.88   53.00   15.88     3.34  1.000    0.11
+   5     5  58.0    T    3   11.12   47.47   11.12     4.27  1.000    0.19
+   6     6  71.1    T    2   12.88   60.31   12.88     4.68  1.000    0.14
+   7     7  40.3    T    2   17.05   70.76   17.05     4.15  1.000    0.11
+   8     8  47.2    T    2   17.07   72.23   17.07     4.23  1.000    0.15
+   9  2009  54.1    T    2   18.33   67.33   18.33     3.67  1.000    0.14
+
+Per seed x variant (L1, 3D, real B-rep operations)
+seed variant      sizes                        S1 until minclr   seal  wall   vol%  x_ref    S3 gates        side reward
+------------------------------------------------------------------------------------------------------------------------
+   0 original     -                          FAIL  45.0  0.000   1.23  2.72  0.000   0.00 1.000 ok              0  0.000
+   0 reference    0.90x2.15 x3                 ok 110.0  0.308   0.33  1.83  0.076   1.00 1.000 ok              0  1.000
+   0 full_edge    0.90x2.15 edge               ok 110.0  0.308   0.33  1.83  0.245   3.20 1.000 ok              0  1.000
+   0 identical    0.90x2.15 x3                 ok 110.0  0.308   0.33  1.83  0.076   1.00 1.000 ok              0  1.000
+   0 exact_length 0.90x2.15 x3               FAIL  45.0  0.000   0.33  1.83  0.070   0.92 1.000 ok              0  0.000
+   0 side_0.7x    0.90x1.50 x3               FAIL  46.0  0.119   0.33  1.83  0.053   0.70 1.000 ok              0  0.052
+   0 symmetric    1.80x1.80 edge               ok 110.0  0.302  -0.57  0.93  0.409   5.36 0.928 FAIL seal       0  0.000
+   1 original     -                          FAIL  32.0  0.000   1.23  2.72  0.000   0.00 1.000 ok              0  0.000
+   1 reference    0.75x1.90 x2                 ok 110.0  0.305   0.48  1.98  0.052   1.00 1.000 ok              0  1.000
+   1 full_edge    0.75x1.90 edge               ok 110.0  0.305   0.48  1.98  0.182   3.51 1.000 ok              0  1.000
+   1 identical    0.75x1.90 x2                 ok 110.0  0.305   0.48  1.98  0.052   1.00 1.000 ok              0  1.000
+   1 exact_length 0.75x1.90 x2               FAIL  32.0  0.000   0.48  1.98  0.049   0.94 1.000 ok              0  0.000
+   1 side_0.7x    0.75x1.33 x2               FAIL  32.0  0.130   0.48  1.98  0.036   0.70 1.000 ok              0  0.054
+   1 symmetric    1.70x1.70 edge               ok 110.0  0.325  -0.47  1.03  0.370   7.11 0.578 FAIL seal       0  0.000
+   2 original     -                          FAIL  36.0  0.000   1.06  2.55  0.000   0.00 1.000 ok              0  0.000
+   2 reference    0.75x2.00 x2                 ok 110.0  0.304   0.31  1.81  0.072   1.00 1.000 ok              0  1.000
+   2 full_edge    0.75x2.00 edge               ok 110.0  0.304   0.31  1.81  0.271   3.75 1.000 ok              0  1.000
+   2 identical    0.75x2.00 x2                 ok 110.0  0.304   0.31  1.81  0.072   1.00 1.000 ok              0  1.000
+   2 exact_length 0.75x2.00 x2               FAIL  36.0  0.000   0.31  1.81  0.067   0.93 1.000 ok              0  0.000
+   2 side_0.7x    0.75x1.40 x2               FAIL  36.0  0.195   0.31  1.81  0.051   0.70 1.000 ok              0  0.081
+   2 symmetric    1.55x1.55 edge               ok 110.0  0.327  -0.49  1.01  0.434   6.01 0.799 FAIL seal       0  0.000
+   3 original     -                          FAIL  45.0  0.000   1.08  2.57  0.000   0.00 1.000 ok              0  0.000
+   3 reference    0.70x1.75 x2                 ok 110.0  0.304   0.38  1.88  0.044   1.00 1.000 ok              0  1.000
+   3 full_edge    0.70x1.75 edge               ok 110.0  0.304   0.38  1.88  0.184   4.16 1.000 ok              0  1.000
+   3 identical    0.70x1.75 x2                 ok 110.0  0.304   0.38  1.88  0.044   1.00 1.000 ok              0  1.000
+   3 exact_length 0.70x1.75 x2               FAIL  45.0  0.000   0.38  1.88  0.041   0.93 1.000 ok              0  0.000
+   3 side_0.7x    0.70x1.22 x2               FAIL  45.0  0.132   0.38  1.88  0.031   0.70 1.000 ok              0  0.055
+   3 symmetric    1.55x1.55 edge               ok 110.0  0.302  -0.47  1.03  0.362   8.16 0.369 FAIL seal       0  0.000
+   4 original     -                          FAIL  39.0  0.000   1.42  2.91  0.000   0.00 1.000 ok              0  0.000
+   4 reference    0.70x1.55 x2                 ok 110.0  0.307   0.72  2.22  0.045   1.00 1.000 ok              0  1.000
+   4 full_edge    0.70x1.55 edge               ok 110.0  0.307   0.72  2.22  0.151   3.34 1.000 ok              0  1.000
+   4 identical    0.70x1.55 x2                 ok 110.0  0.307   0.72  2.22  0.045   1.00 1.000 ok              0  1.000
+   4 exact_length 0.70x1.55 x2               FAIL  39.0  0.000   0.72  2.22  0.043   0.95 1.000 ok              0  0.000
+   4 side_0.7x    0.70x1.08 x2               FAIL  39.0  0.148   0.72  2.22  0.032   0.70 1.000 ok              0  0.062
+   4 symmetric    1.40x1.40 edge               ok 110.0  0.330   0.02  1.52  0.274   6.03 0.794 ok              0  0.877
+   5 original     -                          FAIL  45.0  0.000   1.43  2.92  0.000   0.00 1.000 ok              0  0.000
+   5 reference    0.60x1.65 x3                 ok 110.0  0.301   0.83  2.33  0.034   1.00 1.000 ok              0  1.000
+   5 full_edge    0.60x1.65 edge               ok 110.0  0.301   0.83  2.33  0.146   4.27 1.000 ok              0  1.000
+   5 identical    0.60x1.65 x3                 ok 110.0  0.301   0.83  2.33  0.034   1.00 1.000 ok              0  1.000
+   5 exact_length 0.60x1.65 x3               FAIL  45.0  0.000   0.83  2.33  0.031   0.91 1.000 ok              0  0.000
+   5 side_0.7x    0.60x1.15 x3               FAIL  45.0  0.170   0.83  2.33  0.024   0.70 1.000 ok              0  0.071
+   5 symmetric    1.45x1.45 edge               ok 110.0  0.325  -0.02  1.48  0.310   9.07 0.186 FAIL seal       0  0.000
+   6 original     -                          FAIL  54.0  0.000   1.31  2.80  0.000   0.00 1.000 ok              0  0.000
+   6 reference    0.80x1.85 x2                 ok 110.0  0.306   0.51  2.01  0.044   1.00 1.000 ok              0  1.000
+   6 full_edge    0.80x1.85 edge               ok 110.0  0.306   0.51  2.01  0.204   4.68 1.000 ok              0  1.000
+   6 identical    0.80x1.85 x2                 ok 110.0  0.306   0.51  2.01  0.044   1.00 1.000 ok              0  1.000
+   6 exact_length 0.80x1.85 x2               FAIL  54.0  0.000   0.51  2.01  0.040   0.92 1.000 ok              0  0.000
+   6 side_0.7x    0.80x1.29 x2               FAIL  75.0  0.129   0.51  2.01  0.030   0.70 1.000 ok              0  0.100
+   6 symmetric    1.60x1.60 edge               ok 110.0  0.307  -0.29  1.21  0.352   8.10 0.380 FAIL seal       0  0.000
+   7 original     -                          FAIL  31.0  0.000   1.38  2.87  0.000   0.00 1.000 ok              0  0.000
+   7 reference    0.90x1.85 x2                 ok 110.0  0.301   0.48  1.98  0.058   1.00 1.000 ok              0  1.000
+   7 full_edge    0.90x1.85 edge               ok 110.0  0.301   0.48  1.98  0.240   4.15 1.000 ok              0  1.000
+   7 identical    0.90x1.85 x2                 ok 110.0  0.301   0.48  1.98  0.058   1.00 1.000 ok              0  1.000
+   7 exact_length 0.90x1.85 x2               FAIL  31.0  0.000   0.48  1.98  0.054   0.93 1.000 ok              0  0.000
+   7 side_0.7x    0.90x1.29 x2               FAIL  31.0  0.080   0.48  1.98  0.040   0.70 1.000 ok              0  0.033
+   7 symmetric    1.70x1.70 edge               ok 110.0  0.315  -0.32  1.18  0.417   7.20 0.559 FAIL seal       0  0.000
+   8 original     -                          FAIL  37.0  0.000   1.12  2.61  0.000   0.00 1.000 ok              0  0.000
+   8 reference    0.80x1.95 x2                 ok 110.0  0.307   0.32  1.82  0.054   1.00 1.000 ok              0  1.000
+   8 full_edge    0.80x1.95 edge               ok 110.0  0.307   0.32  1.82  0.227   4.23 1.000 ok              0  1.000
+   8 identical    0.80x1.95 x2                 ok 110.0  0.307   0.32  1.82  0.054   1.00 1.000 ok              0  1.000
+   8 exact_length 0.80x1.95 x2               FAIL  37.0  0.000   0.32  1.82  0.050   0.94 1.000 ok              0  0.000
+   8 side_0.7x    0.80x1.36 x2               FAIL  37.0  0.136   0.32  1.82  0.037   0.70 1.000 ok              0  0.057
+   8 symmetric    1.65x1.65 edge               ok 110.0  0.304  -0.53  0.97  0.396   7.39 0.523 FAIL seal       0  0.000
+   9 original     -                          FAIL  43.0  0.000   1.18  2.67  0.000   0.00 1.000 ok              0  0.000
+   9 reference    0.75x1.90 x2                 ok 110.0  0.302   0.43  1.93  0.058   1.00 1.000 ok              0  1.000
+   9 full_edge    0.75x1.90 edge               ok 110.0  0.302   0.43  1.93  0.212   3.67 1.000 ok              0  1.000
+   9 identical    0.75x1.90 x2                 ok 110.0  0.302   0.43  1.93  0.058   1.00 1.000 ok              0  1.000
+   9 exact_length 0.75x1.90 x2               FAIL  43.0  0.000   0.43  1.93  0.055   0.95 1.000 ok              0  0.000
+   9 side_0.7x    0.75x1.33 x2               FAIL  43.0  0.128   0.43  1.93  0.040   0.70 1.000 ok              0  0.053
+   9 symmetric    1.70x1.70 edge               ok 110.0  0.325  -0.52  0.98  0.431   7.45 0.510 FAIL seal       0  0.000
+
+S1 ok = no overlap 0..110 and clearance >= 0.3 mm from 10 deg; until = largest angle up to which S1 holds; minclr = min clearance 10..110 (capped at 0.35);
+seal = seal margin (ring width - 1.5); wall = thinnest wall; vol% = changed volume % of the enclosure; x_ref = changed volume / V_ref;
+gates: valid solid, seal >= 1.5, brackets >= 99 %, closed; side = max overlap over 0..110 of pin x enclosure/lid, module x enclosure, lid x bracket material (0 = none).
+
+===== L2: S3 full <= 1.15x V_ref, zero at 2.0x =====
+Per seed: original, reference volumes
+seed   src   1st zone ribs   V_ref  V_full V_ident full/ref id/ref sweep_s
+--------------------------------------------------------------------------
+   0     0  56.7    T    3   25.83   82.72   25.83     3.20  1.000    0.16
+   1     1  42.4    T    2   16.36   57.36   16.36     3.51  1.000    0.10
+   2     2  46.3    T    2   14.10   52.88   14.10     3.75  1.000    0.11
+   3     3  56.9    T    2   13.18   54.82   13.18     4.16  1.000    0.11
+   4     4  49.8    T    2   15.88   53.00   15.88     3.34  1.000    0.11
+   5     5  58.0    T    3   11.12   47.47   11.12     4.27  1.000    0.18
+   6     6  71.1    T    2   12.88   60.31   12.88     4.68  1.000    0.14
+   7     7  40.3    T    2   17.05   70.76   17.05     4.15  1.000    0.10
+   8     8  47.2    T    2   17.07   72.23   17.07     4.23  1.000    0.11
+   9  2009  54.1    T    2   18.33   67.33   18.33     3.67  1.000    0.12
+
+Per seed x variant (L2, 3D, real B-rep operations)
+seed variant      sizes                        S1 until minclr   seal  wall   vol%  x_ref    S3 gates        side reward
+------------------------------------------------------------------------------------------------------------------------
+   0 original     -                          FAIL  45.0  0.000   1.23  2.72  0.000   0.00 1.000 ok              0  0.000
+   0 reference    0.90x2.15 x3                 ok 110.0  0.308   0.33  1.83  0.076   1.00 1.000 ok              0  1.000
+   0 full_edge    0.90x2.15 edge               ok 110.0  0.308   0.33  1.83  0.245   3.20 0.000 ok              0  0.400
+   0 identical    0.90x2.15 x3                 ok 110.0  0.308   0.33  1.83  0.076   1.00 1.000 ok              0  1.000
+   0 exact_length 0.90x2.15 x3               FAIL  45.0  0.000   0.33  1.83  0.070   0.92 1.000 ok              0  0.000
+   0 side_0.7x    0.90x1.50 x3               FAIL  46.0  0.119   0.33  1.83  0.053   0.70 1.000 ok              0  0.052
+   0 symmetric    1.80x1.80 edge               ok 110.0  0.302  -0.57  0.93  0.409   5.36 0.000 FAIL seal       0  0.000
+   1 original     -                          FAIL  32.0  0.000   1.23  2.72  0.000   0.00 1.000 ok              0  0.000
+   1 reference    0.75x1.90 x2                 ok 110.0  0.305   0.48  1.98  0.052   1.00 1.000 ok              0  1.000
+   1 full_edge    0.75x1.90 edge               ok 110.0  0.305   0.48  1.98  0.182   3.51 0.000 ok              0  0.400
+   1 identical    0.75x1.90 x2                 ok 110.0  0.305   0.48  1.98  0.052   1.00 1.000 ok              0  1.000
+   1 exact_length 0.75x1.90 x2               FAIL  32.0  0.000   0.48  1.98  0.049   0.94 1.000 ok              0  0.000
+   1 side_0.7x    0.75x1.33 x2               FAIL  32.0  0.130   0.48  1.98  0.036   0.70 1.000 ok              0  0.054
+   1 symmetric    1.70x1.70 edge               ok 110.0  0.325  -0.47  1.03  0.370   7.11 0.000 FAIL seal       0  0.000
+   2 original     -                          FAIL  36.0  0.000   1.06  2.55  0.000   0.00 1.000 ok              0  0.000
+   2 reference    0.75x2.00 x2                 ok 110.0  0.304   0.31  1.81  0.072   1.00 1.000 ok              0  1.000
+   2 full_edge    0.75x2.00 edge               ok 110.0  0.304   0.31  1.81  0.271   3.75 0.000 ok              0  0.400
+   2 identical    0.75x2.00 x2                 ok 110.0  0.304   0.31  1.81  0.072   1.00 1.000 ok              0  1.000
+   2 exact_length 0.75x2.00 x2               FAIL  36.0  0.000   0.31  1.81  0.067   0.93 1.000 ok              0  0.000
+   2 side_0.7x    0.75x1.40 x2               FAIL  36.0  0.195   0.31  1.81  0.051   0.70 1.000 ok              0  0.081
+   2 symmetric    1.55x1.55 edge               ok 110.0  0.327  -0.49  1.01  0.434   6.01 0.000 FAIL seal       0  0.000
+   3 original     -                          FAIL  45.0  0.000   1.08  2.57  0.000   0.00 1.000 ok              0  0.000
+   3 reference    0.70x1.75 x2                 ok 110.0  0.304   0.38  1.88  0.044   1.00 1.000 ok              0  1.000
+   3 full_edge    0.70x1.75 edge               ok 110.0  0.304   0.38  1.88  0.184   4.16 0.000 ok              0  0.400
+   3 identical    0.70x1.75 x2                 ok 110.0  0.304   0.38  1.88  0.044   1.00 1.000 ok              0  1.000
+   3 exact_length 0.70x1.75 x2               FAIL  45.0  0.000   0.38  1.88  0.041   0.93 1.000 ok              0  0.000
+   3 side_0.7x    0.70x1.22 x2               FAIL  45.0  0.132   0.38  1.88  0.031   0.70 1.000 ok              0  0.055
+   3 symmetric    1.55x1.55 edge               ok 110.0  0.302  -0.47  1.03  0.362   8.16 0.000 FAIL seal       0  0.000
+   4 original     -                          FAIL  39.0  0.000   1.42  2.91  0.000   0.00 1.000 ok              0  0.000
+   4 reference    0.70x1.55 x2                 ok 110.0  0.307   0.72  2.22  0.045   1.00 1.000 ok              0  1.000
+   4 full_edge    0.70x1.55 edge               ok 110.0  0.307   0.72  2.22  0.151   3.34 0.000 ok              0  0.400
+   4 identical    0.70x1.55 x2                 ok 110.0  0.307   0.72  2.22  0.045   1.00 1.000 ok              0  1.000
+   4 exact_length 0.70x1.55 x2               FAIL  39.0  0.000   0.72  2.22  0.043   0.95 1.000 ok              0  0.000
+   4 side_0.7x    0.70x1.08 x2               FAIL  39.0  0.148   0.72  2.22  0.032   0.70 1.000 ok              0  0.062
+   4 symmetric    1.40x1.40 edge               ok 110.0  0.330   0.02  1.52  0.274   6.03 0.000 ok              0  0.400
+   5 original     -                          FAIL  45.0  0.000   1.43  2.92  0.000   0.00 1.000 ok              0  0.000
+   5 reference    0.60x1.65 x3                 ok 110.0  0.301   0.83  2.33  0.034   1.00 1.000 ok              0  1.000
+   5 full_edge    0.60x1.65 edge               ok 110.0  0.301   0.83  2.33  0.146   4.27 0.000 ok              0  0.400
+   5 identical    0.60x1.65 x3                 ok 110.0  0.301   0.83  2.33  0.034   1.00 1.000 ok              0  1.000
+   5 exact_length 0.60x1.65 x3               FAIL  45.0  0.000   0.83  2.33  0.031   0.91 1.000 ok              0  0.000
+   5 side_0.7x    0.60x1.15 x3               FAIL  45.0  0.170   0.83  2.33  0.024   0.70 1.000 ok              0  0.071
+   5 symmetric    1.45x1.45 edge               ok 110.0  0.325  -0.02  1.48  0.310   9.07 0.000 FAIL seal       0  0.000
+   6 original     -                          FAIL  54.0  0.000   1.31  2.80  0.000   0.00 1.000 ok              0  0.000
+   6 reference    0.80x1.85 x2                 ok 110.0  0.306   0.51  2.01  0.044   1.00 1.000 ok              0  1.000
+   6 full_edge    0.80x1.85 edge               ok 110.0  0.306   0.51  2.01  0.204   4.68 0.000 ok              0  0.400
+   6 identical    0.80x1.85 x2                 ok 110.0  0.306   0.51  2.01  0.044   1.00 1.000 ok              0  1.000
+   6 exact_length 0.80x1.85 x2               FAIL  54.0  0.000   0.51  2.01  0.040   0.92 1.000 ok              0  0.000
+   6 side_0.7x    0.80x1.29 x2               FAIL  75.0  0.129   0.51  2.01  0.030   0.70 1.000 ok              0  0.100
+   6 symmetric    1.60x1.60 edge               ok 110.0  0.307  -0.29  1.21  0.352   8.10 0.000 FAIL seal       0  0.000
+   7 original     -                          FAIL  31.0  0.000   1.38  2.87  0.000   0.00 1.000 ok              0  0.000
+   7 reference    0.90x1.85 x2                 ok 110.0  0.301   0.48  1.98  0.058   1.00 1.000 ok              0  1.000
+   7 full_edge    0.90x1.85 edge               ok 110.0  0.301   0.48  1.98  0.240   4.15 0.000 ok              0  0.400
+   7 identical    0.90x1.85 x2                 ok 110.0  0.301   0.48  1.98  0.058   1.00 1.000 ok              0  1.000
+   7 exact_length 0.90x1.85 x2               FAIL  31.0  0.000   0.48  1.98  0.054   0.93 1.000 ok              0  0.000
+   7 side_0.7x    0.90x1.29 x2               FAIL  31.0  0.080   0.48  1.98  0.040   0.70 1.000 ok              0  0.033
+   7 symmetric    1.70x1.70 edge               ok 110.0  0.315  -0.32  1.18  0.417   7.20 0.000 FAIL seal       0  0.000
+   8 original     -                          FAIL  37.0  0.000   1.12  2.61  0.000   0.00 1.000 ok              0  0.000
+   8 reference    0.80x1.95 x2                 ok 110.0  0.307   0.32  1.82  0.054   1.00 1.000 ok              0  1.000
+   8 full_edge    0.80x1.95 edge               ok 110.0  0.307   0.32  1.82  0.227   4.23 0.000 ok              0  0.400
+   8 identical    0.80x1.95 x2                 ok 110.0  0.307   0.32  1.82  0.054   1.00 1.000 ok              0  1.000
+   8 exact_length 0.80x1.95 x2               FAIL  37.0  0.000   0.32  1.82  0.050   0.94 1.000 ok              0  0.000
+   8 side_0.7x    0.80x1.36 x2               FAIL  37.0  0.136   0.32  1.82  0.037   0.70 1.000 ok              0  0.057
+   8 symmetric    1.65x1.65 edge               ok 110.0  0.304  -0.53  0.97  0.396   7.39 0.000 FAIL seal       0  0.000
+   9 original     -                          FAIL  43.0  0.000   1.18  2.67  0.000   0.00 1.000 ok              0  0.000
+   9 reference    0.75x1.90 x2                 ok 110.0  0.302   0.43  1.93  0.058   1.00 1.000 ok              0  1.000
+   9 full_edge    0.75x1.90 edge               ok 110.0  0.302   0.43  1.93  0.212   3.67 0.000 ok              0  0.400
+   9 identical    0.75x1.90 x2                 ok 110.0  0.302   0.43  1.93  0.058   1.00 1.000 ok              0  1.000
+   9 exact_length 0.75x1.90 x2               FAIL  43.0  0.000   0.43  1.93  0.055   0.95 1.000 ok              0  0.000
+   9 side_0.7x    0.75x1.33 x2               FAIL  43.0  0.128   0.43  1.93  0.040   0.70 1.000 ok              0  0.053
+   9 symmetric    1.70x1.70 edge               ok 110.0  0.325  -0.52  0.98  0.431   7.45 0.000 FAIL seal       0  0.000
+
+S1 ok = no overlap 0..110 and clearance >= 0.3 mm from 10 deg; until = largest angle up to which S1 holds; minclr = min clearance 10..110 (capped at 0.35);
+seal = seal margin (ring width - 1.5); wall = thinnest wall; vol% = changed volume % of the enclosure; x_ref = changed volume / V_ref;
+gates: valid solid, seal >= 1.5, brackets >= 99 %, closed; side = max overlap over 0..110 of pin x enclosure/lid, module x enclosure, lid x bracket material (0 = none).
+
+===== L3: S3 full <= 1.15x V_ref, zero at 2.0x =====
+Per seed: original, reference volumes, per-rib reliefs, world pose
+seed   src   1st zone ribs   V_ref  V_full V_ident full/ref id/ref sweep_s
+--------------------------------------------------------------------------
+   0  2000  49.4    T    3   15.91   92.50   23.29     5.81  1.464    2.22
+     reliefs: rib0 0.75x2.75 (7.76 mm3)  rib1 0.65x1.50 (3.67 mm3)  rib2 0.70x1.70 (4.48 mm3)  ratio 2.12
+     pose: yaw 31.88 deg, tilt 3.08 deg about azimuth 97.59 deg, offset [-100.3, -26.6, 64.0]
+   1  2001  43.7    T    3   17.54  100.13   25.68     5.71  1.464    1.91
+     reliefs: rib0 0.60x1.70 (3.90 mm3)  rib1 0.70x1.90 (5.08 mm3)  rib2 0.70x3.20 (8.56 mm3)  ratio 2.20
+     pose: yaw 18.93 deg, tilt 5.98 deg about azimuth 353.15 deg, offset [-47.7, -151.2, 66.6]
+   2  7002  52.0    T    3   19.36   95.26   27.19     4.92  1.404    2.21
+     reliefs: rib0 0.95x2.10 (9.06 mm3)  rib1 0.70x1.80 (5.72 mm3)  rib2 0.65x1.55 (4.58 mm3)  ratio 1.98
+     pose: yaw 30.41 deg, tilt 1.56 deg about azimuth 235.61 deg, offset [-93.4, -103.2, 176.7]
+   3 16003  42.8    T    3   12.31   71.65   17.83     5.82  1.448    2.26
+     reliefs: rib0 0.70x1.50 (3.54 mm3)  rib1 0.60x1.40 (2.83 mm3)  rib2 0.75x2.35 (5.94 mm3)  ratio 2.10
+     pose: yaw 25.59 deg, tilt 7.04 deg about azimuth 323.61 deg, offset [-21.8, -52.5, 43.2]
+   4     4  44.9    T    3   14.67   75.83   21.03     5.17  1.433    2.24
+     reliefs: rib0 0.65x1.45 (3.99 mm3)  rib1 0.60x1.45 (3.68 mm3)  rib2 0.85x1.95 (7.01 mm3)  ratio 1.91
+     pose: yaw 29.28 deg, tilt 1.83 deg about azimuth 72.06 deg, offset [82.1, -164.8, 39.0]
+   5  6005  43.2    T    3   19.71   85.77   27.81     4.35  1.411    2.54
+     reliefs: rib0 0.90x2.00 (9.27 mm3)  rib1 0.65x1.45 (4.85 mm3)  rib2 0.70x1.55 (5.59 mm3)  ratio 1.91
+     pose: yaw 31.44 deg, tilt 2.95 deg about azimuth 109.42 deg, offset [-61.7, 176.2, 41.9]
+   6  6006  48.5    T    3   17.72   94.84   25.84     5.35  1.459    2.61
+     reliefs: rib0 0.90x2.20 (8.61 mm3)  rib1 0.65x1.65 (4.67 mm3)  rib2 0.60x1.70 (4.44 mm3)  ratio 1.94
+     pose: yaw 27.08 deg, tilt 6.43 deg about azimuth 324.47 deg, offset [-67.3, 84.8, 182.1]
+   7  9007  51.9    T    3   15.18   82.32   21.71     5.42  1.430    2.62
+     reliefs: rib0 0.60x1.45 (3.75 mm3)  rib1 0.65x1.50 (4.20 mm3)  rib2 0.80x2.10 (7.24 mm3)  ratio 1.93
+     pose: yaw 32.13 deg, tilt 6.7 deg about azimuth 261.34 deg, offset [-94.7, 199.5, 165.7]
+   8     8  41.6    T    3   12.40   62.05   17.92     5.00  1.445    2.54
+     reliefs: rib0 0.60x1.50 (3.16 mm3)  rib1 0.60x1.55 (3.27 mm3)  rib2 0.85x2.00 (5.97 mm3)  ratio 1.89
+     pose: yaw 35.46 deg, tilt 6.98 deg about azimuth 91.88 deg, offset [-125.7, -39.4, 134.5]
+   9  3009  41.4    T    3   16.65   73.98   24.95     4.44  1.498    2.21
+     reliefs: rib0 0.65x1.50 (3.75 mm3)  rib1 0.70x1.70 (4.58 mm3)  rib2 0.80x2.70 (8.32 mm3)  ratio 2.22
+     pose: yaw 38.76 deg, tilt 1.33 deg about azimuth 261.99 deg, offset [-195.5, 125.9, 42.8]
+
+Per seed x variant (L3, 3D, real B-rep operations)
+seed variant      sizes                        S1 until minclr   seal  wall   vol%  x_ref    S3 gates        side reward
+------------------------------------------------------------------------------------------------------------------------
+   0 original     -                          FAIL  37.0  0.000   1.08  2.58  0.000   0.00 1.000 ok              0  0.000
+   0 reference    0.75x2.75 0.65x1.50 0.70x1.70   ok 110.0  0.302   0.33  1.83  0.044   1.00 1.000 ok              0  1.000
+   0 full_edge    0.75x2.75 edge               ok 110.0  0.301   0.33  1.83  0.256   5.81 0.000 ok              0  0.400
+   0 identical    0.75x2.75 x3                 ok 110.0  0.302   0.33  1.83  0.065   1.46 0.630 ok              0  0.778
+   0 exact_length 0.75x2.75 0.65x1.50 0.70x1.70 FAIL  37.0  0.000   0.33  1.83  0.040   0.91 1.000 ok              0  0.000
+   0 side_0.7x    0.75x1.92 0.65x1.05 0.70x1.19 FAIL  37.0  0.142   0.33  1.83  0.031   0.70 1.000 ok              0  0.059
+   0 symmetric    1.70x1.70 edge               ok 110.0  0.304  -0.62  0.88  0.359   8.15 0.000 FAIL seal       0  0.000
+   1 original     -                          FAIL  32.0  0.000   1.04  2.53  0.000   0.00 1.000 ok              0  0.000
+   1 reference    0.60x1.70 0.70x1.90 0.70x3.20   ok 110.0  0.303   0.34  1.84  0.065   1.00 1.000 ok              0  1.000
+   1 full_edge    0.70x3.20 edge               ok 110.0  0.303   0.34  1.84  0.368   5.71 0.000 ok              0  0.400
+   1 identical    0.70x3.20 x3                 ok 110.0  0.303   0.34  1.84  0.094   1.46 0.630 ok              0  0.778
+   1 exact_length 0.60x1.70 0.70x1.90 0.70x3.20 FAIL  32.0  0.000   0.34  1.84  0.059   0.91 1.000 ok              0  0.000
+   1 side_0.7x    0.60x1.19 0.70x1.33 0.70x2.24 FAIL  32.0  0.168   0.34  1.84  0.045   0.70 1.000 ok              0  0.070
+   1 symmetric    1.75x1.75 edge               ok 110.0  0.327  -0.71  0.79  0.503   7.80 0.000 FAIL seal       0  0.000
+   2 original     -                          FAIL  38.0  0.000   1.40  2.89  0.000   0.00 1.000 ok              0  0.000
+   2 reference    0.95x2.10 0.70x1.80 0.65x1.55   ok 110.0  0.305   0.45  1.95  0.056   1.00 1.000 ok              0  1.000
+   2 full_edge    0.95x2.10 edge               ok 110.0  0.307   0.45  1.95  0.276   4.92 0.000 ok              0  0.400
+   2 identical    0.95x2.10 x3                 ok 110.0  0.307   0.45  1.95  0.079   1.40 0.701 ok              0  0.821
+   2 exact_length 0.95x2.10 0.70x1.80 0.65x1.55 FAIL  38.0  0.000   0.45  1.95  0.052   0.92 1.000 ok              0  0.000
+   2 side_0.7x    0.95x1.47 0.70x1.26 0.65x1.08 FAIL  38.0  0.090   0.45  1.95  0.039   0.70 1.000 ok              0  0.037
+   2 symmetric    1.85x1.85 edge               ok 110.0  0.314  -0.45  1.05  0.473   8.44 0.000 FAIL seal       0  0.000
+   3 original     -                          FAIL  33.0  0.000   1.09  2.58  0.000   0.00 1.000 ok              0  0.000
+   3 reference    0.70x1.50 0.60x1.40 0.75x2.35   ok 110.0  0.303   0.34  1.84  0.036   1.00 1.000 ok              0  1.000
+   3 full_edge    0.75x2.35 edge               ok 110.0  0.303   0.34  1.84  0.209   5.82 0.000 ok              0  0.400
+   3 identical    0.75x2.35 x3                 ok 110.0  0.303   0.34  1.84  0.052   1.45 0.651 ok              0  0.791
+   3 exact_length 0.70x1.50 0.60x1.40 0.75x2.35 FAIL  33.0  0.000   0.34  1.84  0.032   0.90 1.000 ok              0  0.000
+   3 side_0.7x    0.70x1.05 0.60x0.98 0.75x1.65 FAIL  38.0  0.145   0.34  1.84  0.025   0.70 1.000 ok              0  0.068
+   3 symmetric    1.55x1.55 edge               ok 110.0  0.318  -0.46  1.04  0.285   7.93 0.000 FAIL seal       0  0.000
+   4 original     -                          FAIL  36.0  0.000   1.44  2.94  0.000   0.00 1.000 ok              0  0.000
+   4 reference    0.65x1.45 0.60x1.45 0.85x1.95   ok 110.0  0.302   0.59  2.09  0.046   1.00 1.000 ok              0  1.000
+   4 full_edge    0.85x1.95 edge               ok 110.0  0.303   0.59  2.09  0.239   5.17 0.000 ok              0  0.400
+   4 identical    0.85x1.95 x3                 ok 110.0  0.302   0.59  2.09  0.066   1.43 0.668 ok              0  0.801
+   4 exact_length 0.65x1.45 0.60x1.45 0.85x1.95 FAIL  36.0  0.000   0.59  2.09  0.042   0.92 1.000 ok              0  0.000
+   4 side_0.7x    0.65x1.01 0.60x1.01 0.85x1.36 FAIL  36.0  0.138   0.59  2.09  0.032   0.70 1.000 ok              0  0.057
+   4 symmetric    1.65x1.65 edge               ok 110.0  0.320  -0.21  1.29  0.392   8.49 0.000 FAIL seal       0  0.000
+   5 original     -                          FAIL  34.0  0.000   1.23  2.71  0.000   0.00 1.000 ok              0  0.000
+   5 reference    0.90x2.00 0.65x1.45 0.70x1.55   ok 110.0  0.303   0.33  1.83  0.047   1.00 1.000 ok              0  1.000
+   5 full_edge    0.90x2.00 edge               ok 110.0  0.304   0.33  1.83  0.204   4.35 0.000 ok              0  0.400
+   5 identical    0.90x2.00 x3                 ok 110.0  0.304   0.33  1.83  0.066   1.41 0.693 ok              0  0.816
+   5 exact_length 0.90x2.00 0.65x1.45 0.70x1.55 FAIL  34.0  0.000   0.33  1.83  0.044   0.93 1.000 ok              0  0.000
+   5 side_0.7x    0.90x1.40 0.65x1.01 0.70x1.08 FAIL  34.0  0.108   0.33  1.83  0.033   0.70 1.000 ok              0  0.045
+   5 symmetric    1.75x1.75 edge               ok 110.0  0.315  -0.52  0.98  0.348   7.40 0.000 FAIL seal       0  0.000
+   6 original     -                          FAIL  36.0  0.000   1.30  2.79  0.000   0.00 1.000 ok              0  0.000
+   6 reference    0.90x2.20 0.65x1.65 0.60x1.70   ok 110.0  0.305   0.40  1.90  0.054   1.00 1.000 ok              0  1.000
+   6 full_edge    0.90x2.20 edge               ok 110.0  0.305   0.40  1.90  0.287   5.35 0.000 ok              0  0.400
+   6 identical    0.90x2.20 x3                 ok 110.0  0.305   0.40  1.90  0.078   1.46 0.636 ok              0  0.782
+   6 exact_length 0.90x2.20 0.65x1.65 0.60x1.70 FAIL  36.0  0.000   0.40  1.90  0.049   0.92 1.000 ok              0  0.000
+   6 side_0.7x    0.90x1.54 0.65x1.15 0.60x1.19 FAIL  36.0  0.117   0.40  1.90  0.037   0.70 1.000 ok              0  0.049
+   6 symmetric    1.90x1.90 edge               ok 110.0  0.330  -0.60  0.90  0.523   9.76 0.000 FAIL seal       0  0.000
+   7 original     -                          FAIL  40.0  0.000   1.13  2.62  0.000   0.00 1.000 ok              0  0.000
+   7 reference    0.60x1.45 0.65x1.50 0.80x2.10   ok 110.0  0.304   0.33  1.83  0.045   1.00 1.000 ok              0  1.000
+   7 full_edge    0.80x2.10 edge               ok 110.0  0.306   0.33  1.83  0.242   5.42 0.000 ok              0  0.400
+   7 identical    0.80x2.10 x3                 ok 110.0  0.306   0.33  1.83  0.064   1.43 0.671 ok              0  0.803
+   7 exact_length 0.60x1.45 0.65x1.50 0.80x2.10 FAIL  40.0  0.000   0.33  1.83  0.041   0.92 1.000 ok              0  0.000
+   7 side_0.7x    0.60x1.01 0.65x1.05 0.80x1.47 FAIL  40.0  0.159   0.33  1.83  0.031   0.70 1.000 ok              0  0.066
+   7 symmetric    1.60x1.60 edge               ok 110.0  0.309  -0.47  1.03  0.369   8.26 0.000 FAIL seal       0  0.000
+   8 original     -                          FAIL  29.0  0.000   1.18  2.67  0.000   0.00 1.000 ok              0  0.000
+   8 reference    0.60x1.50 0.60x1.55 0.85x2.00   ok 110.0  0.304   0.33  1.83  0.053   1.00 1.000 ok              0  1.000
+   8 full_edge    0.85x2.00 edge               ok 110.0  0.308   0.33  1.83  0.266   5.00 0.000 ok              0  0.400
+   8 identical    0.85x2.00 x3                 ok 110.0  0.308   0.33  1.83  0.077   1.45 0.652 ok              0  0.791
+   8 exact_length 0.60x1.50 0.60x1.55 0.85x2.00 FAIL  29.0  0.000   0.33  1.83  0.048   0.90 1.000 ok              0  0.000
+   8 side_0.7x    0.60x1.05 0.60x1.08 0.85x1.40 FAIL  29.0  0.127   0.33  1.83  0.037   0.70 1.000 ok              0  0.053
+   8 symmetric    1.75x1.75 edge               ok 110.0  0.331  -0.57  0.93  0.480   9.01 0.000 FAIL seal       0  0.000
+   9 original     -                          FAIL  30.0  0.000   1.14  2.63  0.000   0.00 1.000 ok              0  0.000
+   9 reference    0.65x1.50 0.70x1.70 0.80x2.70   ok 110.0  0.304   0.34  1.84  0.070   1.00 1.000 ok              0  1.000
+   9 full_edge    0.80x2.70 edge               ok 110.0  0.304   0.34  1.84  0.312   4.44 0.000 ok              0  0.400
+   9 identical    0.80x2.70 x3                 ok 110.0  0.304   0.34  1.84  0.105   1.50 0.590 ok              0  0.754
+   9 exact_length 0.65x1.50 0.70x1.70 0.80x2.70 FAIL  30.0  0.000   0.34  1.84  0.064   0.91 1.000 ok              0  0.000
+   9 side_0.7x    0.65x1.05 0.70x1.19 0.80x1.89 FAIL  30.0  0.143   0.34  1.84  0.049   0.70 1.000 ok              0  0.060
+   9 symmetric    1.75x1.75 edge               ok 110.0  0.303  -0.61  0.89  0.442   6.30 0.000 FAIL seal       0  0.000
+
+S1 ok = no overlap 0..110 and clearance >= 0.3 mm from 10 deg; until = largest angle up to which S1 holds; minclr = min clearance 10..110 (capped at 0.35);
+seal = seal margin (ring width - 1.5); wall = thinnest wall; vol% = changed volume % of the enclosure; x_ref = changed volume / V_ref;
+gates: valid solid, seal >= 1.5, brackets >= 99 %, closed; side = max overlap over 0..110 of pin x enclosure/lid, module x enclosure, lid x bracket material (0 = none).
+
+===== Summary: reward min / mean / max over seeds, S1 passes, side collisions =====
+L1 original     0.000 / 0.000 / 0.000   S1 0/10   side hits 0
+L1 reference    1.000 / 1.000 / 1.000   S1 10/10   side hits 0
+L1 full_edge    1.000 / 1.000 / 1.000   S1 10/10   side hits 0
+L1 identical    1.000 / 1.000 / 1.000   S1 10/10   side hits 0
+L1 exact_length 0.000 / 0.000 / 0.000   S1 0/10   side hits 0
+L1 side_0.7x    0.033 / 0.062 / 0.100   S1 0/10   side hits 0
+L1 symmetric    0.000 / 0.088 / 0.877   S1 10/10   side hits 0
+L2 original     0.000 / 0.000 / 0.000   S1 0/10   side hits 0
+L2 reference    1.000 / 1.000 / 1.000   S1 10/10   side hits 0
+L2 full_edge    0.400 / 0.400 / 0.400   S1 10/10   side hits 0
+L2 identical    1.000 / 1.000 / 1.000   S1 10/10   side hits 0
+L2 exact_length 0.000 / 0.000 / 0.000   S1 0/10   side hits 0
+L2 side_0.7x    0.033 / 0.062 / 0.100   S1 0/10   side hits 0
+L2 symmetric    0.000 / 0.040 / 0.400   S1 10/10   side hits 0
+L3 original     0.000 / 0.000 / 0.000   S1 0/10   side hits 0
+L3 reference    1.000 / 1.000 / 1.000   S1 10/10   side hits 0
+L3 full_edge    0.400 / 0.400 / 0.400   S1 10/10   side hits 0
+L3 identical    0.754 / 0.791 / 0.821   S1 10/10   side hits 0
+L3 exact_length 0.000 / 0.000 / 0.000   S1 0/10   side hits 0
+L3 side_0.7x    0.037 / 0.057 / 0.070   S1 0/10   side hits 0
+L3 symmetric    0.000 / 0.000 / 0.000   S1 10/10   side hits 0
+
+total: L1 from a 623.0 s L1+L3 run (its L3 part, before D10, discarded), L3 rerun 593.8 s; L2 from task 2c

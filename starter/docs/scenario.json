@@ -1,0 +1,270 @@
+{
+  "name": "hinge-lid-fit",
+  "version": "0.7-levels-tuned",
+  "status": {
+    "stage_1_scenario": "decided",
+    "stage_2_spec": "decided",
+    "stage_3_agent_interface": "decided",
+    "stage_4_manual_experiment": "done for L1: a weak model (Hydrogen) solved seed 0 in 2 attempts (0.115 -> 1.0) with a full-edge chamfer -> L1 is the easy level; L2/L3 added",
+    "stage_5_mvp_code": "in progress: tasks 1, 2, 2b, 2c done (245 tests); task 2d = small fixes P2/P3 + fast test subset"
+  },
+  "required_stack": {
+    "framework": "Harbor task: instruction.md, task.toml, environment/Dockerfile, tests/, solution/",
+    "harness": "OpenCode, e.g. harbor run -p ./task -a opencode -m <provider/model>",
+    "reward": "one score 0..1 written to /logs/verifier/reward.txt, partial credit allowed",
+    "submission": [
+      "at least one Harbor run log with its score",
+      "short README: what the agent does, why it is hard, how it is scored"
+    ],
+    "inference_credits": "not from AfterQuery; use Google / OpenAI / Modal credits, so plan runs carefully"
+  },
+  "scenario": {
+    "summary": "Box with a lid on a rear hinge. Under each lid knuckle hangs a rib (lug). While opening, the rib hits the outer top edge of the rear wall at roughly 40-72 deg, so the lid cannot open to 110 deg.",
+    "symptom": "the lid jams while opening, somewhere around 40-70 deg; closed position is fine",
+    "root_cause": "the rear wall's outer top edge lies inside the circle swept by the knuckle rib around the hinge axis",
+    "design_decision_task2": "lid prints top face down, so knuckles sit below the lid top and the axis is only ~0.5 mm above the wall top; the colliding material is a rib under each lid knuckle",
+    "decision_log": [
+      "0.4 stop window [110, 130] dropped: Claude Code showed it is geometrically unreachable with this rib (latest possible contact 56-105 deg, larger chamfers give no contact at all)",
+      "0.5 precision comes from two sides instead: clearance >= 0.3 mm while opening (enough must be cut) and a tight minimal-change score (over-cutting costs points)",
+      "0.5 clearance is required only from 10 deg: at 0 deg the lid rests on the wall tops by design (seal), lift-off gap is >= 0.47 mm at 10 deg on all seeds",
+      "0.6 go/no-go on the 0.5 design: Hydrogen fixed seed 0 in two attempts (2 parameters + precise test_fit feedback = guided search). Kept as level L1.",
+      "0.6 the true better fix is LOCAL: relieve the wall only where each rib passes (3 segments, ~25 of 85.5 mm), ~3x less material than a full-edge chamfer.",
+      "0.6 S3 thresholds are not shown as numbers any more (they leaked V_best); the agent gets the rule only.",
+      "0.7 task 2c results (30 level/seed cases x 7 variants): reference 1.0 and original 0 everywhere; full-edge chamfer 0.4 on all L2/L3; reliefs only as long as the rib 0; no false collisions.",
+      "0.7 accepted P1: L1/L2 have 2-3 identical ribs (count depends on box width), not always 3.",
+      "0.7 accepted P2: L1 S3 loosened to 5x/10x so a full-edge chamfer always gets full points.",
+      "0.7 accepted P3: L3 draw constrained so identical reliefs need >= 1.4x V_ref (reward <= ~0.82); in 2c they only cost 1.16-1.39x (reward 0.83-0.99).",
+      "0.7 kept P4: reliefs exactly as long as the rib score 0 (still colliding at the rib ends), no partial credit.",
+      "0.7 fairness: printability ignores features smaller than 0.2 mm (slivers from typing rounded world coordinates on L3 must not count as overhangs or thin walls)."
+    ],
+    "required_open_angle_deg": 110,
+    "units": "mm, degrees"
+  },
+  "parts": {
+    "enclosure": {
+      "editable": true,
+      "role": "printed box with rear wall, top edge carries the seal band"
+    },
+    "lid": {
+      "editable": true,
+      "role": "printed lid with hinge knuckles, a structural rib (lug) under each knuckle, and a module frame on its underside"
+    },
+    "hinge_pin": {
+      "editable": false,
+      "role": "defines the rotation axis; cannot move"
+    },
+    "lid_module": {
+      "editable": false,
+      "role": "e.g. display or LED board mounted under the lid near the rear edge; moves with the lid"
+    }
+  },
+  "protections": {
+    "interfaces_frozen": [
+      "hinge pin holes: diameter, position and axis on both parts"
+    ],
+    "keep_in": [
+      "lid hinge knuckles",
+      "lid knuckle ribs (structural)",
+      "enclosure knuckle brackets",
+      "lid module frame",
+      "seal band on both parts"
+    ],
+    "keep_out": [
+      "volume occupied by lid_module"
+    ],
+    "seal_band": {
+      "min_contact_width_mm": 1.5,
+      "where": "closed position, all around the top edge of the walls",
+      "min_margin_mm_base_level": 0.3
+    }
+  },
+  "expected_good_fix": "L1: smallest asymmetric relief of the rear wall outer top edge. L2/L3: one local relief per rib (only where the rib passes, extended >= 0.3 mm beyond each rib end along x), each sized to keep >= 0.3 mm clearance over 10-110 deg, seal margin >= 0.3, wall >= 1.2",
+  "expected_bad_fixes": [
+    "cutting the lid or its rib: breaks keep-in -> 0",
+    "symmetric 45 deg chamfer: eats the seal band (9/10 seeds in task 2) -> 0",
+    "chamfer by eye, too small: still collides or rubs (< 0.3 mm) -> partial credit only",
+    "generous cut \"to be safe\": passes S1 but loses minimal-change points; deep enough cuts hit the knuckle brackets -> 0",
+    "moving the hinge: forbidden, frozen interface",
+    "L2/L3: one full-edge chamfer: works but ~3x the reference volume -> 0.4",
+    "L3: identical reliefs sized for the largest rib -> visible S3 loss",
+    "reliefs exactly as long as the rib: rib ends rub (< 0.3 mm along x) -> S1 fails"
+  ],
+  "visualisation_plan": {
+    "dev": "OCP CAD Viewer (ocp_vscode) for CadQuery models",
+    "demo_page": "three.js page replaying the agent's edits step by step, lid opening animation, collisions in red",
+    "demo_video": "PyVista offscreen renders"
+  },
+  "open_questions": [
+    "go/no-go: do models find the local fix on L2? do they size each rib on L3?",
+    "task 4: printability check with the 0.2 mm feature filter"
+  ],
+  "spec": {
+    "principle": "Agent sees every measured requirement with its threshold; it is never told the cause or the fix.",
+    "gate": {
+      "G1_valid_solids": "both editable parts are valid closed solids (OpenCascade check)",
+      "G2_hinge_interface": "pin holes keep diameter, position and axis; pin does not collide with knuckles; clearance around pin within band so the lid can rotate",
+      "G3_keep_in_keep_out": "lid knuckles, knuckle ribs, enclosure knuckle brackets, module frame and seal band filled >= 99%; module volume empty",
+      "G4_closed_position": "at 0 deg no collision between lid (with module) and enclosure",
+      "G5_seal": "at 0 deg contact between lid and wall tops >= 1.5 mm wide all around (contact region eroded by 0.75 mm still forms a closed ring)",
+      "G6_not_rebuilt": "outer envelope within tolerance; volume of each part changed by <= 15%"
+    },
+    "score": {
+      "S1_opening": "rotate lid (with module) about the pin axis 0..110 deg in 1 deg steps: no overlap (> 1e-3 mm3) at any step from 0 deg, touching allowed; min clearance lid(+module) vs enclosure >= 0.3 mm at every step from 10 to 110 deg (pin excluded: its bores have 0.125 mm radial clearance by design). Progress (for partial credit) = 0.5 * angle progress + 0.5 * clearance progress; angle progress = (largest angle up to which both rules hold - original) / (110 - original); clearance progress = clip(min clearance over 10..110 deg / 0.3, 0, 1), 0 if any overlap.",
+      "S2_printability": "thinnest wall >= 1.2 mm; no new overhangs steeper than 45 deg in print orientation (enclosure on its floor, lid top face down); features smaller than 0.2 mm (rounding slivers) are ignored",
+      "S3_minimal_change": "changed volume (added + removed) vs the original, compared with the reference fix of this task (V_ref, found by the generator: the smallest valid relief per rib from an exact 2D scan, with the required length along x). Thresholds per level (see levels). The agent is told the RULE only: \"full points if your change is within <factor> of the best known fix for this task, zero at <factor>\", never the volumes or percentages."
+    },
+    "reward": {
+      "gate_failed": 0.0,
+      "S1_not_met": "0.25 * progress (so any working fix beats any broken one)",
+      "S1_met": "0.3 + 0.1 * printability + 0.6 * minimal_change",
+      "reference_points": {
+        "reference fix": 1.0,
+        "working but wasteful (S3 = 0)": 0.4,
+        "broken, best case": 0.25,
+        "do-nothing": 0.0
+      },
+      "properties": [
+        "do-nothing = 0",
+        "ordering: broken < working-but-wasteful < working-and-tailored",
+        "over-cutting is clearly visible: S3 carries 0.6 of the reward",
+        "cutting the lid, its ribs, the seal band or the brackets -> 0 (gate)"
+      ]
+    },
+    "disclosure": {
+      "agent_gets": [
+        "bug report: the lid jams while opening and cannot reach 110 deg",
+        "full spec with thresholds, zones with coordinates, frozen hinge, print orientations",
+        "minimal-change RULE relative to the best known fix (factors per level), no volumes or percentages",
+        "scoring rules",
+        "tools to check every requirement itself"
+      ],
+      "agent_does_not_get": [
+        "the cause",
+        "the angle where collision starts (measurable)",
+        "the expected fix",
+        "list of bad fixes / traps"
+      ]
+    }
+  },
+  "agent_interface": {
+    "variant": "B: agent gets solids (B-rep) and CAD tools, never runs its own CAD code",
+    "edit_operations": [
+      "chamfer(edge, d1, d2) incl. asymmetric (whole edge)",
+      "fillet(edge, r)",
+      "offset_face(face, d)",
+      "extrude_cut(plane origin, plane normal, plane x-direction, 2D polygon, depth range): sketch on a plane + cut, the generic way to make a local relief",
+      "cut_box / add_box as fallback",
+      "undo"
+    ],
+    "query_tools": [
+      "list_parts",
+      "list_edges / list_faces with descriptions",
+      "find_edges_near(point, direction)",
+      "measure / section",
+      "one run_check(id) per validation in the spec",
+      "test_fit = all checks, small reward cost instead of a hard budget"
+    ],
+    "topological_naming": "edge/face ids change after every edit: each edit returns the new described list; geometric queries do not depend on ids",
+    "tool_call_cap": "high safety cap (~150), not a source of difficulty"
+  },
+  "architecture": {
+    "principle": "framework (cadfix) knows nothing about hinges; scenarios compose generic validations through data. Framework grows only by what the current scenario needs, in generic form.",
+    "concepts": {
+      "Part": "name, B-rep solid, editable flag, print orientation",
+      "Assembly": "parts + joints (fixed, revolute with axis and range; prismatic later)",
+      "Zone": "named keep-in / keep-out region attached to a part, moves with it",
+      "Check": "evaluate(ctx) -> passed, score 0..1, metrics, details; registered by type name, declared in scenario data",
+      "Scenario": "generate(seed) -> assembly + check spec + reward policy + bug report; own reference_solver",
+      "Operation": "generic edit ops on any editable part; scenario may enable a subset",
+      "RewardPolicy": "data-driven: gate checks, objective check with progress, weighted score checks"
+    },
+    "key_property": "agent check tools are generated from the scenario spec, so every requirement is checkable by the agent by construction",
+    "geometry": "edits on B-rep (OpenCascade via CadQuery); checks on meshes (manifold3d), regenerated after each edit; sweeps need fast collision",
+    "layout": {
+      "cadfix/core": "assembly.py, kernel.py, spec.py, registry.py, reward.py",
+      "cadfix/checks": "collision.py, sweep.py, zones.py, contact.py, printability.py, change.py, interface.py",
+      "cadfix/ops": "edit.py, topology.py",
+      "cadfix/env": "env.py (state, log, snapshots), server.py (MCP from registries)",
+      "cadfix/harbor": "build.py (any scenario -> Harbor task folders)",
+      "scenarios/hinge_lid": "generator.py, spec data, reference.py, bug_report.md",
+      "tests": "unit tests per check, exploit suites (generic + per scenario)"
+    },
+    "reuse_from_v0": [
+      "mesh geometry (manifold3d)",
+      "Harbor packaging",
+      "MCP server pattern",
+      "grader isolation in tests/",
+      "exploit test harness"
+    ],
+    "harbor_mapping": {
+      "instruction.md": "bug report + full spec, rendered from scenario spec",
+      "task.toml": "MCP server over stdio",
+      "environment/Dockerfile": "python + cadquery + manifold3d + package + public task files",
+      "tests/test.sh": "own copy of grader + pristine parts -> /logs/verifier/reward.txt",
+      "solution/solve.sh": "reference solver (harbor run -a oracle)"
+    },
+    "secrets": "none needed: grader compares against the original and the spec, both public"
+  },
+  "randomisation": {
+    "per_seed": [
+      "box dimensions",
+      "hinge axis position (sets the needed chamfer size)",
+      "wall thickness",
+      "L3: per-rib depth/extent, world pose (yaw, tilt, offset)"
+    ],
+    "difficulty_knobs": {
+      "tight_window": "narrow set of valid chamfers (small seal margin, rib close to the wall)",
+      "rotated_assembly": "hinge axis not parallel to world axes",
+      "edge_clutter": "ribs / fillets add candidate edges",
+      "far_coordinates": "assembly far from the origin (large numbers); measure, but not the main source of the gap"
+    },
+    "feasibility_check": "per rib: exact 2D scan of the relief profile (asymmetric triangle top x side, 0.05 mm steps) meeting S1 for that rib, seal margin >= 0.3, wall >= 1.2; relief length along x = rib length + 2 x (0.3 + 0.05). V_ref = sum over ribs. Also store the best full-edge chamfer volume (L1 behaviour) and the identical-reliefs volume (L3 trap). Empty set -> seed replaced by seed+1000*k, logged.",
+    "experiment": "plot agent score vs knob level next to the reference (difficulty curve for the demo)"
+  },
+  "build_order": [
+    "1 DONE install CadQuery in Docker (python 3.11)",
+    "2 DONE hinge_lid generator, sweep, feasibility (first hit 41-72 deg, asymmetric chamfer needed)",
+    "2b DONE clearance sweep, feasibility range, S3 thresholds (V_best for full-edge chamfer)",
+    "2c DONE levels L1-L3, per-rib reliefs, extrude_cut, V_ref, reward 0.6, brief/evaluate per level, acceptance tables (docs/acceptance_2c.txt)",
+    "2d small fixes: P2, P3, regenerate L1/L3, fast test subset (slow marker)",
+    "3 go/no-go on L2 (now) and L3 (after 2d) with Hydrogen and a stronger model, ops JSON via evaluate --hide-score",
+    "4 checks + reward as generic modules (cadfix/checks); test per level: original 0, reference fix 1.0, wasteful-but-working ~0.4 on L2/L3, broken <= 0.25, seal/brackets/lid cut 0",
+    "5 ops + env + MCP server",
+    "6 reference solver + exploit tests",
+    "7 Harbor packaging + first OpenCode run (required log)"
+  ],
+  "levels": {
+    "L1_easy": {
+      "geometry": "2-3 identical ribs (count depends on box width), assembly axis-aligned",
+      "S3": "lenient: full points up to 5x the reference fix volume, zero at 10x (a full-edge chamfer always gets full points)",
+      "what it tests": "finding the clash and sizing an asymmetric relief"
+    },
+    "L2_medium": {
+      "geometry": "2-3 identical ribs, assembly axis-aligned",
+      "S3": "strict: full points up to 1.15x the reference fix, zero at 2x",
+      "what it tests": "L1 + realising the fix should be local (one relief per rib, with >= 0.3 mm clearance at the rib ends along x)",
+      "expected": {
+        "full-edge chamfer": 0.4,
+        "local reliefs sized right": 1.0
+      }
+    },
+    "L3_hard": {
+      "geometry": "three DIFFERENT ribs drawn per rib, constrained so that identical reliefs sized for the worst rib need >= 1.4x V_ref; whole assembly placed with a random world pose (yaw 15-40 deg, tilt 0-8 deg, offset 20-200 mm), so nothing is axis-aligned",
+      "S3": "strict, as L2",
+      "what it tests": "L2 + sizing each relief separately + working in a rotated frame",
+      "expected": {
+        "full-edge chamfer": 0.4,
+        "identical reliefs sized for the largest rib": "<= ~0.82",
+        "tailored reliefs": 1.0
+      }
+    },
+    "measured_2c": {
+      "L1 full-edge chamfer": "0.897-1.0 (before P2)",
+      "L2/L3 full-edge chamfer": "0.400 on all 20",
+      "L3 identical reliefs": "0.829-0.993, mean 0.903 (before P3)",
+      "reliefs as long as the rib": "0 on all 30",
+      "L3 sweep time": "~2 s (rotated geometry distance query), L1 ~0.15 s",
+      "L3 seed replacement": "6 of 10 seeds replaced (one rib not fixable)"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.git
+legacy_v0
+**/__pycache__
+**/*.pyc
+.venv
+runs
+output
+*.egg-info
+.claude

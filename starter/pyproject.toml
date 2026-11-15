@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cadfix"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+# Loose ranges here; exact versions live in requirements.lock (what Docker installs).
+dependencies = [
+    "cadquery>=2.8,<2.9",
+    "manifold3d>=3.5",
+    "trimesh>=4",
+    "numpy>=2",
+    "scipy>=1.13",
+    "shapely>=2",
+    "mcp<2",
+    "pytest>=8",
+]
+
+[tool.setuptools.packages.find]
+include = ["cadfix*", "scenarios*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: full 3D tables and multi-seed sweeps (deselect with -m \"not slow\")",
+]
