@@ -3,11 +3,18 @@
 
 Env vars: CADFIX_TASK_DIR (public task dir, default /task), CADFIX_OUT_DIR (output dir, default /output).
 Run: python -m cadfix.env.server
+
+Shutdown is always quiet and exits 0: stdin closed (normal end), SIGTERM / SIGHUP (the client stopping us; a tool
+call in progress finishes first) or a client that has gone away (BrokenPipe on the final write). Every tool call
+already persists its result (log, episode.json, parts), so nothing is lost. Logging goes to stderr at WARNING only:
+some clients (OpenCode) pipe stderr and never read it.
 """
 from __future__ import annotations
 
 import inspect
 import os
+import signal
+import sys
 from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
@@ -20,6 +27,48 @@ CONVENTIONS = ("Units mm and degrees, world coordinates. Points are [x, y, z], d
                "Values are snapped to 0.001 mm.")
 TYPES = {"number": float, "integer": int, "point": list[float], "vector": list[float],
          "polygon": list[list[float]], "box_edges": list[list[float]]}
+
+
+# ------------------------------------------------------------ graceful shutdown
+_STATE = {"busy": False, "stop": False}
+
+
+def _exit_quietly(code: int = 0):
+    """Flush what can be flushed, never raise on a closed pipe, exit with `code`."""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.flush()
+        except Exception:
+            pass
+    try:            # stdout may be a broken pipe: point it at /dev/null so no final flush can fail
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+    except Exception:
+        pass
+    os._exit(code)
+
+
+def _on_signal(signum, frame):
+    if _STATE["busy"]:
+        _STATE["stop"] = True       # let the running tool call finish (it persists its result), then exit
+    else:
+        _exit_quietly(0)
+
+
+def _call(env_ref: dict, name: str, **kwargs) -> dict:
+    _STATE["busy"] = True
+    try:
+        return env_ref["env"].call(name, **kwargs)
+    finally:
+        _STATE["busy"] = False
+        if _STATE["stop"]:
+            _exit_quietly(0)
+
+
+def _client_gone(e: BaseException) -> bool:
+    """True if `e` only says the client has gone (closed pipe, interrupt), also inside anyio exception groups."""
+    if isinstance(e, BaseExceptionGroup):
+        return all(_client_gone(x) for x in e.exceptions)
+    return isinstance(e, (BrokenPipeError, ConnectionResetError, EOFError, KeyboardInterrupt))
 
 
 def _tool(mcp: FastMCP, env_ref: dict, name: str, doc: str, params: list):
@@ -36,7 +85,7 @@ def _tool(mcp: FastMCP, env_ref: dict, name: str, doc: str, params: list):
             ann[pname] = Optional[t]
 
     def fn(**kwargs) -> dict:
-        return env_ref["env"].call(name, **{k: v for k, v in kwargs.items() if v is not None})
+        return _call(env_ref, name, **{k: v for k, v in kwargs.items() if v is not None})
     fn.__name__ = name
     fn.__signature__ = inspect.Signature(sig, return_annotation=dict)
     fn.__annotations__ = {**ann, "return": dict}
@@ -86,7 +135,7 @@ QUERIES = [
 
 def _check_tool(env_ref: dict, check_id: str):
     def fn() -> dict:
-        return env_ref["env"].call("run_check", check_id=check_id)
+        return _call(env_ref, "run_check", check_id=check_id)
     fn.__name__ = f"run_check_{check_id}"
     return fn
 
@@ -96,7 +145,7 @@ def build(env: Env | None = None, task_dir=None, out_dir=None) -> FastMCP:
     out_dir = out_dir or os.environ.get("CADFIX_OUT_DIR", "/output")
     env_ref = {"env": env}
     spec = env.spec if env is not None else Spec.load(f"{task_dir}/spec.json")
-    mcp = FastMCP("cadfix", instructions=(
+    mcp = FastMCP("cadfix", log_level="WARNING", instructions=(
         "CAD tools for fixing an assembly. Start with get_task. Edits apply to editable parts only and are saved to "
         "the output dir after every edit; the parts as saved when the episode ends are graded. " + CONVENTIONS))
     if env is None:
@@ -118,7 +167,14 @@ def build(env: Env | None = None, task_dir=None, out_dir=None) -> FastMCP:
 
 
 def main():
-    build().run()
+    for sig in (signal.SIGTERM, signal.SIGHUP):
+        signal.signal(sig, _on_signal)
+    try:
+        build().run()
+    except BaseException as e:      # noqa: BLE001 - a real crash is re-raised below
+        if not _client_gone(e):
+            raise
+    _exit_quietly(0)
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 from cadfix import grade
+from marks import SLOW
 from scenarios.hinge_lid import generator
 from scenarios.hinge_lid import task as hl_task
 
@@ -70,3 +71,41 @@ def test_reference_fix_through_mcp(task, tmp_path):
                                                                      "002_extrude_cut", "003_extrude_cut"]
     rep = grade.grade(d / "task", d / "pristine", out)
     assert rep["reward"] == 1.0 and rep["test_fit_cost"] == 0.0
+
+
+def _server_exit_script():
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "scripts" / "epipe_repro" / "server_exit.py"
+    spec = importlib.util.spec_from_file_location("server_exit", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+@SLOW      # starts the server 3x (~5 s each); the quick run keeps test_signal_during_call_waits_for_the_call
+@pytest.mark.parametrize("mode", ["stdin-eof", "sigterm", "stdout-closed"])
+def test_server_shuts_down_quietly(task, mode, monkeypatch):
+    """stdin closed, SIGTERM, or a client that has gone (BrokenPipe on the final write): exit 0, no traceback."""
+    mod = _server_exit_script()
+    monkeypatch.setattr(mod, "TASK", str(task[0] / "task"))
+    assert mod.run(mode) == 0
+
+
+def test_signal_during_call_waits_for_the_call(monkeypatch):
+    """A SIGTERM while a tool call runs only marks the stop; the server exits right after the call returns."""
+    from cadfix.env import server
+    exits = []
+    monkeypatch.setattr(server, "_exit_quietly", lambda code=0: exits.append(code))
+    monkeypatch.setattr(server, "_STATE", {"busy": False, "stop": False})
+
+    class FakeEnv:
+        def call(self, name, **kw):
+            server._on_signal(15, None)              # signal arrives mid-call
+            assert exits == []                       # ... and does not exit yet
+            return {"ok": name}
+    assert server._call({"env": FakeEnv()}, "list_parts") == {"ok": "list_parts"}
+    assert exits == [0]
+    server._STATE.update(busy=False, stop=False)
+    server._on_signal(15, None)                      # idle: exit at once
+    assert exits == [0, 0]

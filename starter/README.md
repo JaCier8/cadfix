@@ -134,6 +134,8 @@ dev pytest -q -m "not slow"                                                     
 
 _Placeholder: OpenCode run (model, command, `jobs/...` path, rewards per task, mean)._
 
+Note: some OpenCode 1.19.5 trials end with `NonZeroAgentExitCodeError` (`EPIPE: broken pipe` in OpenCode's own shutdown, after `submit`); the reward is unaffected, and it is not caused by the MCP server (0/60 in `scripts/epipe_repro`, which exits 0 on stdin close, SIGTERM and broken pipe).
+
 ## Layout
 
 ```

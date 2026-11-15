@@ -1,0 +1,13 @@
+original: S1 holds up to 37.0 deg, first failing step {'angle': 38.0, 'gap': 0.288, 'overlap': 0.0, 'pair': ['lid', 'enclosure']}
+3 colliding region(s) along the hinge at s = -59.31, -44.85, -30.39
+edge E: [-54.248, 72.209, 94.891] -> [-130.301, 24.85, 99.284], top normal [0.0533, 0.0071, 0.9986], outward normal [-0.5276, 0.8492, 0.0221]
+lid segments (s along the hinge): [-62.721, -55.893], [-48.264, -41.436], [-33.807, -26.979]
+  wall top width 2.580, top <= 0.78, side <= 3.45
+segment [-62.721, -55.893]: relief top x side = (0.7, 1.75)
+  wall top width 2.580, top <= 0.78, side <= 3.45
+segment [-48.264, -41.436]: relief top x side = (0.65, 1.5)
+  wall top width 2.580, top <= 0.78, side <= 3.5
+segment [-33.807, -26.979]: relief top x side = (0.75, 2.85)
+round 0: S1 met (min clearance 0.3046 mm)
+test_fit: gates_ok=True failed=[] printability=1.0
+{"ok": true, "ops": [{"part": "enclosure", "origin": [-83.2081, 54.1751, 96.5638], "normal": [0.847851, 0.527968, -0.048974], "x_dir": [-0.527602, 0.849204, 0.0221], "polygon_2d": [[-0.7, 0.0], [-0.7, 0.01], [0.01, 0.01], [0.01, -1.75], [0.0, -1.75]], "depth_from": 0.0, "depth_to": 7.528}, {"part": "enclosure", "origin": [-95.4655, 46.5423, 97.2718], "normal": [0.847851, 0.527968, -0.048974], "x_dir": [-0.527602, 0.849204, 0.0221], "polygon_2d": [[-0.65, 0.0], [-0.65, 0.01], [0.01, 0.01], [0.01, -1.5], [0.0, -1.5]], "depth_from": 0.0, "depth_to": 7.528}, {"part": "enclosure", "origin": [-107.7229, 38.9095, 97.9798], "normal": [0.847851, 0.527968, -0.048974], "x_dir": [-0.527602, 0.849204, 0.0221], "polygon_2d": [[-0.75, 0.0], [-0.75, 0.01], [0.01, 0.01], [0.01, -2.85], [0.0, -2.85]], "depth_from": 0.0, "depth_to": 7.528}], "rounds": 0}

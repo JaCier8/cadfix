@@ -401,13 +401,24 @@ Plan: `docs/PLAN_4-7.md`. Projekt rozwiązania wzorcowego (M0): `docs/SOLVER_DES
 - CLAUDE.md: komendy zadań, gradera, serwera MCP, run_eval, exploitów, Harbora. Podsumowanie na górze tego pliku.
 - Testy: szybkie 73 passed / 58 s; pełne 309 passed + 1 poprawiony (patrz podsumowanie).
 
-### Wizualizacja przebiegów (gałąź feat/visualization, 2026-11-15)
-Tylko dla ludzi: kod podglądu (`viz.py`, `playback.py`, `show.py`, `show_index.py`) i model wzorcowy nie trafiają do kontenera agenta (`IGNORE_AGENT` w `cadfix/harbor/build.py`, sprawdzane w `tests/test_harbor_build.py`); podgląd powstaje w weryfikatorze dopiero po zapisaniu `reward.txt` (`timeout ... || true`), więc nie zmienia nagrody.
-- `cadfix/viz.py`: po ocenie warianty agent / wzorzec / oryginał (GLB, pozycja zamknięta i otwarta) + samodzielny `viewer.html` (three.js 0.160.0 z CDN). Tryb Compare: dwa panele (poprawka wzorcowa | wynik agenta), wspólna kamera, usunięty materiał na czerwono, dodany na zielono. Różnica liczona na B-rep (bez „zebry” z różnej tesselacji: L3 seed 0 – 138 zerowych kawałków -> 1 kawałek 15.9 mm3).
-- `scenarios/hinge_lid/task.py`: `pristine/reference/parts` = oryginał + ukryte `reference_ops` (tylko weryfikator).
-- `cadfix/playback.py`: odtworzenie edycji z `actions.jsonl` na nietkniętych częściach tym samym kodem `Env`, sprawdzenie zgodności z ocenionym zgłoszeniem (reproduced / mismatch / no_log / replay_error / truncated); migawki agenta tylko jako niezaufany fallback. Tryb Playback w przeglądarce: każdy krok z opisem, zmiana bieżącego kroku pulsuje na magenta/cyan, `#step=N`.
-- `cadfix/show.py` + `scripts/view.sh`: jedna komenda do otwarcia przebiegu, joba albo indeksu (dashboard z kartami, filtrami i paskiem kroków).
-- Poprawka: x-ray wymaga `material.needsUpdate` (bez tego panel rysował się nieprzezroczyście z brakującymi trójkątami).
-- Wyniki: Harbor judge – oracle 1.000 x3 (playback reproduced, 33 kroki, 4 klatki, ~5 s), nop 0.000 x3 (no_log). `run_eval` reference/do_nothing L1, L3: bez zmian (1.0 / 0.0).
-- Komendy: `scripts/view.sh [results/<agent>/<L>/seed_NNNN | jobs/<job> | jobs | results | latest]`, `python -m cadfix.viz ...`, `python -m cadfix.playback ...` (CLAUDE.md).
-- Otwarte: odtwarzanie w czasie (przycisk ▶) i banery mismatch/untrusted nie były sprawdzane na zrzutach (tylko statyczne kroki); długie opisy kroków ucinane w połowie współrzędnych; eksport MP4/GIF jeszcze nie zrobiony; brak przebiegu OpenCode z prawdziwym modelem.
+## Poprawka: łagodne zamykanie serwera MCP + reprodukcja EPIPE (2026-11-15)
+
+Analiza joba OpenCode + claude-sonnet-5-5 (`jobs/2026-11-15__06-48-21`, średnia 0.840): `docs/RUN_ANALYSIS_sonnet55.md`. 4/9 prób kończy się `NonZeroAgentExitCodeError` (EPIPE przy zamykaniu OpenCode, po `submit`; nagroda bez wpływu).
+
+**Co zrobione**
+- Reprodukcja bez modelu i bez OpenCode (`scripts/epipe_repro/`): ten sam stos klienta MCP co OpenCode 1.19.5 (MCP SDK 1.29.0 `StdioClientTransport`, stderr "pipe", Bun 1.4.4), epizod + sekwencja zamknięcia OpenCode, 3 tryby (normal, SIGTERM w trakcie zapisu, SIGKILL + zapis).
+  Wynik: **0 EPIPE / 0 niezerowych kodów w 60 próbach**, zarówno ze starym, jak i z nowym serwerem. EPIPE pochodzi z samego OpenCode, nie z połączenia MCP z naszym serwerem.
+- Serwer MCP (`cadfix/env/server.py`) zamyka się zawsze cicho z kodem 0: koniec stdin, SIGTERM/SIGHUP (trwające wywołanie narzędzia kończy się najpierw), klient zniknął (BrokenPipe przy ostatnim zapisie, także w grupach wyjątków anyio). Przedtem: SIGTERM -> zabity (-15), zamknięty stdout -> traceback BrokenPipeError i kod 1. Logowanie FastMCP na poziomie WARNING (OpenCode przekierowuje stderr serwera do potoku, którego nie czyta).
+- README, sekcja "Harbor run log": jedna linia o EPIPE.
+
+**Komendy**
+- `docker build -t cadfix-epipe scripts/epipe_repro && docker run --rm -v "$PWD":/app cadfix-epipe bash /app/scripts/epipe_repro/run.sh 20`
+- `docker run --rm -v "$PWD":/app cadfix-dev python scripts/epipe_repro/server_exit.py`
+
+**Wyniki**
+- `harbor_tasks` przebudowane (judge + L1-L3 seedy 0-9; w judge zmienia się tylko `server.py`).
+- `pytest -q -m "not slow"`: **74 passed, 57.7 s**; `tests/test_mcp.py` w całości 5/5 (3 testy zamykania z podprocesem oznaczone `slow`, test odroczenia sygnału w szybkim przebiegu).
+- Harbor na judge: **oracle 3/3 = 1.000, nop 0.000**, 0 wyjątków (`harbor_runs/oracle_2026-11-15__07-37-23`, `harbor_runs/nop_2026-11-15__07-38-15`).
+
+**Otwarte problemy**
+- Źródło EPIPE w OpenCode nieustalone (kandydaci: inne potoki procesów potomnych, np. migawki git). Pełne `pytest -q` nie było uruchamiane dla tej poprawki.
