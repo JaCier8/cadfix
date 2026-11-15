@@ -25,7 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc")
 # the 3D viewer export is for humans only: it ships with the verifier (tests/), never to the agent's container
-IGNORE_AGENT = shutil.ignore_patterns("__pycache__", "*.pyc", "viz.py", "playback.py", "show.py")
+IGNORE_AGENT = shutil.ignore_patterns("__pycache__", "*.pyc", "viz.py", "playback.py", "show.py", "show_index.py")
 
 TASK_TOML = """schema_version = "1.4"
 artifacts = ["/output"]

@@ -1,6 +1,6 @@
 """Look at any run with one command: opens (building if needed) the 3D viewer of a run.
 
-  python -m cadfix.show [PATH|latest] [--rebuild] [--no-open] [--print] [--task T]
+  python -m cadfix.show [PATH|latest] [--rebuild] [--no-build] [--no-open] [--print] [--task T]
 
 PATH: a run_eval result dir (results/<agent>/<L>/seed_NNNN), a Harbor trial dir (jobs/<job>/<trial>, or its
 verifier/), a dir of several runs (jobs/<job>, results/<agent>: an index.html is written and opened), a viz dir
@@ -186,38 +186,122 @@ def _playback_status(info) -> str:
     return str(pb)
 
 
-def write_index(base: Path, runs: list[Path], rebuild=False, task_override=None) -> Path:
-    rows = []
+def _parse_ts(x):
+    from datetime import datetime
+    try:
+        return datetime.fromisoformat(str(x).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def _seconds(d):
+    if not isinstance(d, dict):
+        return None
+    a, b = _parse_ts(d.get("started_at")), _parse_ts(d.get("finished_at"))
+    return (b - a).total_seconds() if a and b else None
+
+
+def _strip(pb: dict | None) -> tuple[str, int, int, int]:
+    """(per-step codes e=edit ok, f=failed edit, c=check, o=other; steps; edits; failed edits) from playback.json."""
+    steps = (pb or {}).get("steps")
+    if not isinstance(steps, list):
+        return "", 0, 0, 0
+    codes = []
+    for s in steps:
+        if not isinstance(s, dict):
+            continue
+        if s.get("is_edit"):
+            codes.append("f" if s.get("edit_ok") is False else "e")
+        else:
+            codes.append("c" if s.get("tool") == "run_check" else "o")
+    return "".join(codes), len(codes), codes.count("e") + codes.count("f"), codes.count("f")
+
+
+def run_record(base: Path, r: Path, viewer: Path | None, err: str = "") -> dict:
+    """One JSON-able record per run for the index page (every field degrades gracefully when data is missing)."""
+    trial = _is_trial(r)
+    rb = r / "verifier" if trial else r
+    vdir = viz_dir_of(r)
+    info = _load(vdir / "viz.json") or {}
+    g = _load(rb / "grade.json") or {}
+    cfg = (_load(r / "config.json") or {}) if trial else {}
+    res = (_load(r / "result.json") or {}) if trial else {}
+    rel = r.relative_to(base) if r != base else Path(r.name)
+    group = ("/".join(rel.parts[:-1]) if trial else "/".join(rel.parts[:-2])) or base.name
+    task = (cfg.get("task") or {}).get("path") or ""
+    task = Path(task).name if task else ""
+    ag = cfg.get("agent") or res.get("agent_info") or {}
+    agent = ag.get("name") or ""
+    if agent and ag.get("model_name"):
+        agent += f" ({ag['model_name']})"
+    if not agent and not trial:
+        agent = group.split("/")[0]
+    level = info.get("level") or g.get("level") or ""
+    if not level:
+        m = re.search(r"\bL(\d+)\b|-l(\d+)-", f"{task} {r}")
+        level = f"L{m.group(1) or m.group(2)}" if m else ""
+    seed = info.get("seed") if info.get("seed") is not None else g.get("seed", "")
+    if seed in ("", None):
+        m = re.search(r"seed_?(\d+)", f"{task} {r.name}")
+        seed = int(m.group(1)) if m else ""
+    pbi = info.get("playback")
+    pbj = _load(vdir / "playback" / "playback.json") if isinstance(pbi, dict) else None
+    strip, nsteps, nedits, nfail = _strip(pbj)
+    if not nsteps and isinstance(pbi, dict) and isinstance(pbi.get("steps"), int):
+        nsteps = pbi["steps"]
+    s1 = (g.get("checks") or {}).get("S1_opening")
+    s1 = s1 if isinstance(s1, dict) else None
+    editable = [(n, p) for n, p in (info.get("parts") or {}).items() if isinstance(p, dict) and p.get("editable")]
+    parts = [{"name": n, "removed": p.get("removed") or 0, "added": p.get("added") or 0}
+             for n, p in editable if (p.get("removed") or p.get("added"))]
+    gp = rb / "grade.json"
+    rec = {
+        "id": str(rel).replace(os.sep, "/"), "group": group,
+        "name": f"{task or group}/{r.name}" if trial else f"{group}/{level}/{r.name}",
+        "level": str(level), "seed": seed, "task": task, "agent": agent, "reward": reward_of(r),
+        "gates_ok": g.get("gates_ok") if isinstance(g.get("gates_ok"), bool) else None,
+        "failed_gates": g.get("failed_gates") or [],
+        "s1": s1.get("passed") if s1 and isinstance(s1.get("passed"), bool) else None,
+        "s1_deg": (s1.get("metrics") or {}).get("ok_until") if s1 else None,
+        "playback": _playback_status(info), "steps": nsteps if (nsteps or pbi) else None,
+        "edits": nedits, "edit_fail": nfail, "strip": strip, "parts": parts, "hasparts": bool(editable),
+        "seconds": _seconds(res.get("agent_execution")) if trial else None,
+        "href": os.path.relpath(viewer, base).replace(os.sep, "/") if viewer else None,
+        "grade_href": os.path.relpath(gp, base).replace(os.sep, "/") if gp.exists() else None,
+    }
+    if err:
+        rec["error"] = err.splitlines()[0][:200]
+    elif viewer is None:
+        rec["missing"] = f"viewer missing - run scripts/view.sh {os.path.relpath(r, ROOT) if r.is_relative_to(ROOT) else r}"
+    return rec
+
+
+def write_index(base: Path, runs: list[Path], rebuild=False, task_override=None, build_missing=True) -> Path:
+    """Write base/index.html: a single-file dashboard of all runs (cards, grouped by job / agent)."""
+    from datetime import datetime
+
+    from cadfix import show_index
+    recs = []
     for r in runs:
-        err = ""
-        try:
-            viewer = ensure_viewer(r, rebuild, task_override)
-        except Exception as e:  # noqa: BLE001 - one broken run must not hide the others
-            viewer, err = None, f"{type(e).__name__}: {e}"
-            _log(f"warning: {r}: {err}")
-        info = _load(viz_dir_of(r) / "viz.json") or {}
-        g = _load((r / "verifier" if _is_trial(r) else r) / "grade.json") or {}
-        level = info.get("level") or g.get("level") or ""
-        seed = info.get("seed") if info.get("seed") is not None else g.get("seed", "")
-        rw = reward_of(r)
-        link = (f'<a href="{html.escape(os.path.relpath(viewer, base).replace(os.sep, "/"))}">open</a>'
-                if viewer else f"<span class=err>{html.escape(err or 'no viewer')}</span>")
-        rows.append(f"<tr><td>{html.escape(str(r.relative_to(base)))}</td><td>{html.escape(str(level))}</td>"
-                    f"<td>{html.escape(str(seed))}</td><td class=num>{'' if rw is None else f'{rw:.3f}'}</td>"
-                    f"<td>{html.escape(_playback_status(info))}</td><td>{link}</td></tr>")
-    doc = ("<!doctype html><meta charset=utf-8><title>cadfix runs</title>"
-           "<style>body{font:14px system-ui;margin:2em}table{border-collapse:collapse}"
-           "td,th{border:1px solid #8884;padding:4px 10px;text-align:left}.num{text-align:right}.err{color:#c33}"
-           "</style>"
-           f"<h1>{html.escape(base.name)}</h1><table><tr><th>run</th><th>level</th><th>seed</th><th>reward</th>"
-           "<th>playback</th><th>viewer</th></tr>" + "".join(rows) + "</table>")
+        err, viewer = "", None
+        if build_missing or rebuild:
+            try:
+                viewer = ensure_viewer(r, rebuild, task_override)
+            except Exception as e:  # noqa: BLE001 - one broken run must not hide the others
+                err = f"{type(e).__name__}: {e}"
+                _log(f"warning: {r}: {err}")
+        elif (viz_dir_of(r) / "viewer.html").exists():
+            viewer = viz_dir_of(r) / "viewer.html"
+        recs.append(run_record(base, r, viewer, err))
+    src = os.path.relpath(base, ROOT) if base.is_relative_to(ROOT) else str(base)
+    doc = show_index.render(recs, src, datetime.now().strftime("%Y-%m-%d %H:%M"), f"cadfix runs - {base.name}")
     out = base / "index.html"
     out.write_text(doc)
     return out
 
 
 # ---------------------------------------------------------------- resolve
-def resolve(path: str | None, rebuild=False, task_override=None) -> Path:
+def resolve(path: str | None, rebuild=False, task_override=None, build_missing=True) -> Path:
     """Return the html file to show (viewer.html or index.html), building when needed."""
     if path in (None, "", "latest"):
         p = latest_run()
@@ -248,7 +332,7 @@ def resolve(path: str | None, rebuild=False, task_override=None) -> Path:
         raise ShowError(f"{p}: no runs found (expected grade.json next to parts/ or in verifier/)")
     if len(runs) == 1 and runs[0] != p:
         return ensure_viewer(runs[0], rebuild, task_override)
-    return write_index(p, runs, rebuild, task_override)
+    return write_index(p, runs, rebuild, task_override, build_missing)
 
 
 def in_docker() -> bool:
@@ -261,10 +345,11 @@ def main(argv=None) -> int:
     ap.add_argument("--rebuild", action="store_true", help="rebuild the viewer even if it exists")
     ap.add_argument("--no-open", action="store_true", help="do not launch a browser")
     ap.add_argument("--print", dest="print_", action="store_true", help="print the path of the html file (stdout)")
+    ap.add_argument("--no-build", action="store_true", help="index only: do not build missing viewers (cards say so)")
     ap.add_argument("--task", help="dir with task/ and pristine/ (override automatic lookup)")
     a = ap.parse_args(argv)
     try:
-        f = resolve(a.path, a.rebuild, a.task)
+        f = resolve(a.path, a.rebuild, a.task, not a.no_build)
     except ShowError as e:
         print(f"error: {e}", file=sys.stderr)
         return 2

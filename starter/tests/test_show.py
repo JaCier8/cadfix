@@ -102,28 +102,108 @@ def test_result_rebuild_uses_output_tasks(root, fake_viz):
     assert fake_viz[0]["files"] == ["grade.json", "parts"]
 
 
+def _data(idx):
+    """The JSON embedded in an index.html."""
+    t = Path(idx).read_text()
+    i = t.index('<script id="data" type="application/json">') + len('<script id="data" type="application/json">')
+    return json.loads(t[i:t.index("</script>", i)])
+
+
+def _index(root, rel, **kw):
+    """Force the index even for a dir holding a single run."""
+    base = root / rel
+    return show.write_index(base, show.find_runs(base), **kw)
+
+
 def test_job_dir_index(root):
     _trial(root, name="a", reward=1.0)
     _trial(root, name="b", reward=0.0, task=False)
     idx = show.resolve("jobs/job")
     assert idx == root / "jobs/job/index.html"
+    runs = {r["id"]: r for r in _data(idx)["runs"]}
+    assert runs["a"]["href"] == "a/verifier/viz/viewer.html" and runs["b"]["href"] == "b/verifier/viz/viewer.html"
+    assert runs["a"]["reward"] == 1.0 and runs["b"]["reward"] == 0.0 and runs["a"]["level"] == "L1"
+    assert runs["a"]["grade_href"] == "a/verifier/grade.json"
+    assert runs["a"]["group"] == "job" and runs["a"]["task"] == "x"
     t = idx.read_text()
-    assert 'href="a/verifier/viz/viewer.html"' in t and 'href="b/verifier/viz/viewer.html"' in t
-    assert "1.000" in t and "0.000" in t and "L1" in t
+    assert 'href="a/verifier/viz/viewer.html"' in t  # noscript fallback
+    assert "http://" not in t.split("<script id=")[0].replace("http://www.w3.org", "")  # self-contained, no CDN
 
 
 def test_results_agent_index_with_playback(root):
     _result(root, seed=0)
     _result(root, seed=1, reward=0.2)
-    t = show.resolve("results/ref").read_text()
-    assert "L1/seed_0000/viz/viewer.html" in t and "ok" in t and "0.200" in t
+    d = _data(show.resolve("results/ref"))
+    runs = {r["id"]: r for r in d["runs"]}
+    assert runs["L1/seed_0001"]["href"] == "L1/seed_0001/viz/viewer.html" and runs["L1/seed_0001"]["reward"] == 0.2
+    assert runs["L1/seed_0000"]["playback"] == "ok" and runs["L1/seed_0000"]["agent"] == "ref"
+    assert {r["group"] for r in d["runs"]} == {"ref"}
+
+
+def test_index_fields_from_viz_playback_grade(root):
+    d = _result(root)
+    g = json.loads((d / "grade.json").read_text())
+    g.update(gates_ok=False, failed_gates=["G3_keep_in"], checks={"S1_opening": {"passed": False, "metrics": {"ok_until": 45.0}}})
+    (d / "grade.json").write_text(json.dumps(g))
+    _viz(d / "viz", level="L1", seed=0, playback={"status": "mismatch", "steps": 3, "dir": "playback"},
+         parts={"lid": {"editable": True, "removed": 2.5, "added": 0.0}, "pin": {"editable": False, "removed": 9, "added": 9}})
+    (d / "viz" / "playback").mkdir()
+    steps = [{"tool": "get_task", "is_edit": False}, {"tool": "extrude_cut", "is_edit": True, "edit_ok": False},
+             {"tool": "extrude_cut", "is_edit": True, "edit_ok": True}, {"tool": "run_check", "is_edit": False}]
+    (d / "viz" / "playback" / "playback.json").write_text(json.dumps({"steps": steps}))
+    r = _data(show.resolve("results/ref/L1/seed_0000/..").parent / "index.html")["runs"][0] if False else \
+        _data(_index(root, "results/ref"))["runs"][0]
+    assert (r["gates_ok"], r["failed_gates"], r["s1"], r["s1_deg"]) == (False, ["G3_keep_in"], False, 45.0)
+    assert r["playback"] == "mismatch" and (r["steps"], r["edits"], r["edit_fail"]) == (4, 2, 1)
+    assert r["strip"] == "ofec"
+    assert r["parts"] == [{"name": "lid", "removed": 2.5, "added": 0.0}]
+
+
+def test_multi_job_and_multi_agent_grouping(root):
+    _trial(root, job="j1", name="a")
+    _trial(root, job="j2", name="a", task=False)
+    runs = _data(show.resolve("jobs"))["runs"]
+    assert {r["group"] for r in runs} == {"j1", "j2"}
+    assert {r["href"] for r in runs} == {"j1/a/verifier/viz/viewer.html", "j2/a/verifier/viz/viewer.html"}
+    _result(root, agent="A", seed=0)
+    _result(root, agent="B", L="L2", seed=1)
+    runs = _data(show.resolve("results"))["runs"]
+    assert {(r["group"], r["level"]) for r in runs} == {("A", "L1"), ("B", "L2")}
+    assert {r["href"] for r in runs} == {"A/L1/seed_0000/viz/viewer.html", "B/L2/seed_0001/viz/viewer.html"}
 
 
 def test_index_survives_broken_run(root):
     _trial(root, name="a")
     _trial(root, name="b", viz=False, task=False)
-    t = show.resolve("jobs/job").read_text()
-    assert "class=err" in t and 'href="a/' in t
+    runs = {r["id"]: r for r in _data(show.resolve("jobs/job"))["runs"]}
+    assert runs["a"]["href"] and "error" not in runs["a"]
+    assert runs["b"]["href"] is None and runs["b"]["error"]
+    assert runs["b"]["reward"] == 0.5  # still a card with its grade
+
+
+def test_index_no_build_marks_missing_viewer(root, fake_viz):
+    _trial(root, name="a", viz=False)
+    _trial(root, name="b", task=False)
+    runs = {r["id"]: r for r in _data(show.resolve("jobs/job", build_missing=False))["runs"]}
+    assert fake_viz == [] and runs["a"]["href"] is None and "scripts/view.sh" in runs["a"]["missing"]
+    assert runs["b"]["href"] == "b/verifier/viz/viewer.html"
+    assert show.main(["jobs/job", "--no-build", "--print"]) == 0 and fake_viz == []
+
+
+def test_index_old_run_without_playback_or_config(root):
+    d = _result(root, viz=False)
+    _viz(d / "viz", level="L1", seed=0)  # old viz.json: no playback, no parts
+    r = _data(_index(root, "results/ref"))["runs"][0]
+    assert r["playback"] == "" and r["steps"] is None and r["strip"] == "" and r["parts"] == []
+
+
+def test_index_json_is_script_safe(root):
+    d = _result(root)
+    (d / "grade.json").write_text(json.dumps({"reward": 1.0, "level": "</script><b>", "seed": 0}))
+    (d / "viz" / "viz.json").write_text("{}")
+    t = _index(root, "results/ref").read_text()
+    assert t.count("</script>") == 2  # data + code, never closed early by run data
+    assert _data(root / "results/ref/index.html")["runs"][0]["level"] == "</script><b>"
 
 
 def test_latest(root):
