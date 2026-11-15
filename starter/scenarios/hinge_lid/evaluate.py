@@ -11,7 +11,7 @@ the prism between depth_from and depth_to along the normal is removed.
 
 --top/--side is a shortcut for one full-edge chamfer of the rear wall's outer top edge (d1 = top on the wall top).
 --hide-score prints what we paste to models: no reward line, minimal change only as removed volume and %.
-Gates are the dev approximations from devgrade.py; the real generic checks come in task 4.
+Checks are the real spec (devgrade.py -> cadfix/checks), the same code as the grader and the agent's tools.
 
 Run: python -m scenarios.hinge_lid.evaluate --level L2 --seed 0 --ops docs/examples/L2_seed0_reference.json
      python -m scenarios.hinge_lid.evaluate --level L1 --seed 0 --top 0.9 --side 2.15 [--hide-score]
@@ -69,15 +69,18 @@ def report(level: str, seed: int, ops, out_dir, hide_score: bool = False) -> str
     w(f"                  min clearance 10..110 deg: {s1['min_clearance']:.3f} mm at {s1['min_clearance_at']} deg"
       f"{'  (capped at the search radius)' if s1['min_clearance'] >= spec['S1']['search_mm'] else ''}")
     w(f"seal              width {v['seal_width']:.3f} mm, margin {v['seal_margin']:+.3f} mm over "
-      f"{generator.SEAL_MIN_WIDTH} -> gate {'ok' if v['gates']['seal'] else 'FAIL'}")
-    w(f"S2 printability   min wall {v['min_wall']:.3f} mm (need >= {generator.MIN_WALL}), new overhang "
-      f"{v['new_overhang_mm2']:.3f} mm2 -> {v['printability']:.0f}")
+      f"{generator.SEAL_MIN_WIDTH} -> gate {'ok' if v['gates']['G5_seal'] else 'FAIL'}")
+    w(f"S2 printability   {v['checks']['S2_min_wall']['details'][0]}; {v['checks']['S2_overhang']['details'][0]} "
+      f"-> {v['printability']:.0f}")
     vol = info["spec"]["S3"]["enclosure_volume_mm3"]
     s3_line = (f"S3 minimal change removed {v['removed_mm3']:.3f} mm3, added {v['added_mm3']:.3f} mm3 = "
                f"{v['changed_pct']:.4f} % of the enclosure ({vol:.3f} mm3)")
     w(s3_line if hide_score else s3_line + f" -> {v['s3']:.3f}")
-    gates = ", ".join(f"{k} {'ok' if ok else 'FAIL'}" for k, ok in v["gates"].items())
-    w(f"gates             {gates}  (brackets filled {100 * v['bracket_fill']:.2f} %)")
+    w("gates             " + ", ".join(f"{k} {'ok' if ok else 'FAIL'}" for k, ok in v["gates"].items()))
+    for k, ok in v["gates"].items():
+        if not ok:
+            for line in v["checks"][k]["details"][:3]:
+                w(f"                  {k}: {line}")
     if not hide_score:
         pw = generator.REWARD_POLICY.progress_weight
         w(f"REWARD            {v['reward']:.3f}"

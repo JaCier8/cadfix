@@ -48,5 +48,5 @@ def test_world_reference_ops_pass_s1_in_3d(level, seed, out_dir):
     v = devgrade.Grader(info, shapes).grade(ops)
     assert v["s1"]["met"] and v["s1"]["min_clearance"] >= 0.3
     assert all(v["gates"].values()) and v["printability"] == 1.0
-    assert v["seal_margin"] >= 0.3 - 1e-3 and v["min_wall"] >= 1.2
+    assert v["seal_margin"] >= 0.3 - 1e-3 and v["min_wall_ok"]
     assert v["changed_mm3"] == pytest.approx(info["feasibility"]["V_ref_mm3"], rel=2e-3)

@@ -97,6 +97,70 @@ expectations that encode the old numbers changed:
 - Choice: `L3_SCAN_CLEARANCE_MARGIN = 0.002` (2 x the snap grid), L3 only. The grader threshold stays 0.3.
   L1/L2 sit at the identity pose on the 0.001 grid, so their parts and numbers stay as they were.
 
+# Tasks 4-7 (docs/TASK_4-7.md, spec 0.7-levels-tuned)
+
+## D11. Public task vs private grader data
+- The agent's task dir holds task.json (parts, joint, zones, print directions; no generator parameters, no pose,
+  no feasibility data), spec.json (every check with its thresholds, the reward formula, the S3 rule) and the
+  STEP parts. V_ref is the only private number (scenario.json disclosure: "S3 RULE only"); it lives in
+  pristine/grader.json and is merged into the S3 check's params by the grader. The agent's tools run the same
+  S3 check without it: they report the changed volume and %, never a score.
+
+## D12. Zones (G3)
+- One gate per kind: G3_keep_in, G3_keep_out (spec G3 has both in one line; two ids make the agent's
+  run_check output clearer). Keep-in fill = material inside the zone now / originally >= 99 %.
+- Zones: enclosure knuckle brackets (as in 2c), lid knuckles (cylinder r_k about the axis per lid segment), lid
+  ribs (box per rib), module frame (box around the frame below the plate), seal band on the lid (lowest 0.5 mm of
+  the plate over each wall footprint) and on the enclosure (the INNER 1.5 mm ring of the wall tops, 0.5 mm deep:
+  the minimal seal width the spec asks for, away from the outer edge where a fix cuts; first try covered the rear
+  corners and failed every full-edge chamfer, fixed). Keep-out: the lid_module volume, no lid or enclosure
+  material may enter it.
+
+## D13. Frozen hinge interface (G2)
+- interface_frozen: inside a cylinder of radius r_bore + 0.6 mm around the pin axis, per knuckle segment of both
+  parts, the material is unchanged (symmetric difference <= 0.01 mm3). Covers diameter, position, axis and
+  filling the bore. The pin is a fixed part, so "pin does not collide" follows.
+
+## D14. Not rebuilt (G6)
+- Extents along the three box axes may move by <= 0.5 mm; changed volume (removed + added, not the net change,
+  so "gut and refill" is caught) <= 15 % per editable part. The box axes come from public data (hinge axis,
+  rear-wall normal, up) and are written into spec.json.
+
+## D15. Printability (S2): only NEW defects, 0.2 mm filter by thickness
+- min_wall: sections every 0.2 mm along the three box axes through the changed region (+ 1.5 mm); material
+  narrower than 1.2 mm (region minus its morphological opening) that the original section does not have counts.
+  The original part is the accepted design: its 1.2 mm knuckle walls and cylinder-tangent sections never count.
+- overhang: downward faces (> 45 deg from vertical in the part's print orientation) near the change that do not
+  lie on a downward face of the original.
+- Feature filter (spec 0.7 "features smaller than 0.2 mm are ignored"): a thin / overhanging patch counts if it
+  is >= 0.2 mm THICK (largest inscribed circle). First version used the short side of the minimum rotated
+  rectangle; bent rounding slivers on L3 (0.000-0.004 mm thick) passed it and failed printability. Known gap:
+  a wall thinned below 0.2 mm is ignored too; such a cut never helps S1 more than removing the material and
+  costs S3 (noted, exploit table).
+
+## D16. S1 sweep in the box frame
+- sweep_clearance takes an optional evaluation frame (the public box axes). Meshes and the axis are rotated
+  into it before the sweep: distances and volumes are unchanged, manifold's distance queries on axis-aligned
+  faces are ~10x faster (L3 sweep 1.6-2.7 s -> ~0.15 s).
+
+## D17. Seal contact (G5) on rotated parts
+- The wall-top plane point is on the 0.001 mm grid, so faces within 0.002 mm of the plane count. The contact
+  region gets a 0.002 mm closing before the ring test: on L3 seed 4 a zero-width slit between tessellation
+  triangles at a relief end "opened" the ring (width 0 instead of 2.09 mm).
+
+## D18. Submission and test_fit cost in the grader
+- Per editable part: a missing file -> its pristine original (did not edit it); an unreadable file -> pristine
+  too (so garbage scores like doing nothing). Fixed parts always from the verifier's pristine copy.
+- test_fit calls = max(episode.json counter, test_fit lines in actions.jsonl). Edited parts with no episode
+  record at all pay the full cap (0.1). Both files live in the agent's output dir, so an agent with a shell can
+  lower the count; the most it gains is the 0.1 cap (known limitation).
+
+## D19. Old dev grader replaced
+- devgrade.Grader now builds the in-memory Assembly + Spec and runs the generic checks (same code as the grader
+  CLI and the tools). Removed: dev seal / wall sections, bracket fill, overhang area. Kept as dev-only extras:
+  side_collisions over the sweep and the first-contact table in dev_sweep. Test changes: `min_wall` number ->
+  `min_wall_ok` (the check reports new thin walls only), gate names valid/seal/brackets/closed -> spec ids.
+
 ## Spec change proposals
 - P1. `levels.L1_easy.geometry` / `L2_medium.geometry` say "three identical ribs"; the task 2b geometry has 2 or 3
   (8/10 seeds: 2). Either reword to "two or three identical ribs" or force 7 knuckles (changes all L1 parts).

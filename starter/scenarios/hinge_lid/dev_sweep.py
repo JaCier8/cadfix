@@ -126,7 +126,7 @@ def _print_detail(r: dict):
         ff = v["s1"]["first_fail"]
         print(f"  {name:<12} S1 until {v['s1']['ok_until']}  first fail "
               f"{(ff['angle'], round(ff['gap'], 4), round(ff['overlap'], 4), ff['pair']) if ff else None}  "
-              f"bracket fill {v['bracket_fill']:.4f}  new overhang {v['new_overhang_mm2']:.4f} mm2  "
+              f"bracket fill {v['bracket_fill']:.4f}  thin {v['thinnest_new_wall']}  new overhang {v['new_overhang_mm2']:.4f} mm2  "
               f"side collisions {v.get('side_collisions')}")
 
 
@@ -215,12 +215,12 @@ def print_level(level: str, rows: list[dict]):
             side = "-" if sc is None else ("0" if max(sc.values()) == 0 else "HIT")
             print(f"{r['seed']:>4} {name:<12} {_sizes(v['ops']):<26} {('ok' if v['s1']['met'] else 'FAIL'):>4} "
                   f"{str(v['s1']['ok_until']):>5} {v['s1']['min_clearance']:>6.3f} {v['seal_margin']:>6.2f} "
-                  f"{v['min_wall']:>5.2f} {v['changed_pct']:>6.3f} {v['ratio_to_ref']:>6.2f} {v['s3']:>5.3f} "
+                  f"{('ok' if v['min_wall_ok'] else 'THIN'):>5} {v['changed_pct']:>6.3f} {v['ratio_to_ref']:>6.2f} {v['s3']:>5.3f} "
                   f"{('ok' if not failed else 'FAIL ' + ','.join(failed)):<12} {side:>4} {v['reward']:>6.3f}")
     print("\nS1 ok = no overlap 0..110 and clearance >= 0.3 mm from 10 deg; until = largest angle up to which S1 "
           "holds; minclr = min clearance 10..110 (capped at 0.35);\nseal = seal margin (ring width - 1.5); wall = "
-          "thinnest wall; vol% = changed volume % of the enclosure; x_ref = changed volume / V_ref;\ngates: valid "
-          "solid, seal >= 1.5, brackets >= 99 %, closed; side = max overlap over 0..110 of pin x enclosure/lid, "
+          "no new wall < 1.2 mm; vol% = changed volume % of the enclosure; x_ref = changed volume / V_ref;\ngates: G1-G6 "
+          "(cadfix/checks via scenarios/hinge_lid/spec.py); side = max overlap over 0..110 of pin x enclosure/lid, "
           "module x enclosure, lid x bracket material (0 = none).")
 
 

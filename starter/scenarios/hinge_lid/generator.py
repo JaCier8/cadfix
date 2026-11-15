@@ -719,6 +719,65 @@ def bracket_zones(p: HingeLidParams) -> list[dict]:
     return out
 
 
+SEAL_ZONE_DEPTH = 0.5      # seal band keep-in zones: this deep into the wall top / lid underside
+BORE_ZONE_MARGIN = 0.6     # frozen hinge interface: material within r_bore + this around the axis
+
+
+def _box_zone(m, name, kind, part, lo, hi, description, parts=None) -> dict:
+    lo, hi = [round(float(v), 3) for v in lo], [round(float(v), 3) for v in hi]
+    w = world_box(m, lo, hi)
+    z = {"name": name, "kind": kind, "part": part, "box": [lo, hi], "description": description,
+         "region": {"kind": "box", "origin": w["origin"], "edges": w["edges"]}}
+    if parts:
+        z["parts"] = parts
+    return z
+
+
+def _axis_cylinder(p: HingeLidParams, m, xs: float, xe: float, r: float) -> dict:
+    a, b = kernel.apply_points(m, [[xs, p.ya, p.za], [xe, p.ya, p.za]])
+    return {"kind": "cylinder", "p0": _snap(a), "p1": _snap(b), "radius": round(r, 3)}
+
+
+def zones(p: HingeLidParams) -> list[dict]:
+    """All keep-in zones (scenario.json protections.keep_in) and the keep-out zone, world regions at the closed
+    pose. `box` (local) is kept for internal use (brief, tests)."""
+    m = p.pose_matrix()
+    L, W, H, t, d = p.L, p.W, p.H, p.t, SEAL_ZONE_DEPTH
+    out = []
+    for z in bracket_zones(p):
+        out.append(_box_zone(m, z["name"], "keep_in", "enclosure", *z["box"], "enclosure knuckle bracket"))
+    for i, ((xs, xe), (q0, q1, dep)) in enumerate(zip(p.lid_segments(), p.rib_profiles())):
+        out.append({"name": f"lid_knuckle_{i}", "kind": "keep_in", "part": "lid", "description": "lid hinge knuckle",
+                    "region": _axis_cylinder(p, m, xs, xe, p.r_k)})
+        out.append(_box_zone(m, f"lid_rib_{i}", "keep_in", "lid", (xs, p.ya + q0, p.za - dep), (xe, p.ya + q1, p.za),
+                             "lid knuckle rib (structural)"))
+    (mx0, my0, mz0), (mx1, my1, mz1) = p.module_box()
+    c, ft = p.frame_clear, p.frame_t
+    out.append(_box_zone(m, "lid_module_frame", "keep_in", "lid", (mx0 - c - ft, my0 - c - ft, H - p.frame_h),
+                         (mx1 + c + ft, my1 + c + ft, H), "lid module frame"))
+    walls = {"front": ((0, 0), (L, t)), "rear": ((0, W - t), (L, W)), "left": ((0, 0), (t, W)), "right": ((L - t, 0), (L, W))}
+    for name, ((x0, y0), (x1, y1)) in walls.items():
+        out.append(_box_zone(m, f"seal_lid_{name}", "keep_in", "lid", (x0, y0, H), (x1, y1, H + d),
+                             "seal band, lid underside over the wall tops"))
+    s0, s1x, s1y = t - SEAL_MIN_WIDTH, L - t + SEAL_MIN_WIDTH, W - t + SEAL_MIN_WIDTH   # inner ring only
+    inner = {"front": ((s0, s0), (s1x, t)), "rear": ((s0, W - t), (s1x, s1y)),
+             "left": ((s0, s0), (t, s1y)), "right": ((L - t, s0), (s1x, s1y))}
+    for name, ((x0, y0), (x1, y1)) in inner.items():
+        out.append(_box_zone(m, f"seal_enclosure_{name}", "keep_in", "enclosure", (x0, y0, H - d), (x1, y1, H),
+                             f"seal band, inner {SEAL_MIN_WIDTH} mm of the wall top"))
+    out.append(_box_zone(m, "lid_module_volume", "keep_out", "lid_module", (mx0, my0, mz0), (mx1, my1, mz1),
+                         "volume occupied by lid_module (moves with the lid)", parts=["lid", "enclosure"]))
+    return out
+
+
+def interface_regions(p: HingeLidParams) -> list[dict]:
+    """Frozen hinge interface: the material around the pin axis (bore + wall, radius r_bore + BORE_ZONE_MARGIN)
+    in every knuckle segment of both parts."""
+    m = p.pose_matrix()
+    return [{"name": f"bore_{o}_{i}", "part": o, "region": _axis_cylinder(p, m, xs, xe, p.r_bore + BORE_ZONE_MARGIN)}
+            for i, (o, xs, xe) in enumerate(p.segments())]
+
+
 def describe(p: HingeLidParams) -> dict:
     """Derived facts needed by tools/checks later: joint, segments, the edge in question, zones, print
     orientation. Joint, edge endpoints, zone `world` boxes and print directions are in the world frame;
@@ -736,6 +795,11 @@ def describe(p: HingeLidParams) -> dict:
         "module_box": [list(v) for v in (lo, hi)],
         "module_box_world": world_box(m, lo, hi),
         "keep_in": bracket_zones(p),
+        "zones": zones(p),
+        "interface_regions": interface_regions(p),
+        "frame_axes": [_unit(kernel.apply_dirs(m, e)[0]) for e in np.eye(3)],
+        "wall_top_plane": {"point": _snap(kernel.apply_points(m, (0.0, 0.0, p.H))[0]),
+                           "normal": _unit(kernel.apply_dirs(m, (0.0, 0.0, 1.0))[0])},
         "print_orientation": {n: {"rule": PRINT_RULE[n], "build_up": _unit(kernel.apply_dirs(m, PRINT_UP_LOCAL[n])[0])}
                               for n in PRINT_RULE},
         "pose": None if p.pose is None else asdict(p.pose) | {"matrix": [_unit(r[:3]) + [round(r[3], 6)]

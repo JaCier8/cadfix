@@ -89,7 +89,7 @@ def test_full_edge_chamfer_works_l1_scores_by_ratio(seed, rows):
     v = r["variants"]["full_edge"]
     assert v["error"] is None                                   # the real chamfer operation works
     assert v["s1"]["met"] and v["s1"]["min_clearance"] >= 0.3
-    assert v["seal_margin"] >= 0.3 - 1e-3 and v["min_wall"] >= 1.2
+    assert v["seal_margin"] >= 0.3 - 1e-3 and v["min_wall_ok"]
     assert all(v["gates"].values()) and v["printability"] == 1.0
     k = ratio(r["info"], v)                                     # 3.2-4.7 x V_ref on seeds 0-9
     assert k < 5.0 and v["s3"] == 1.0                           # L1 S3 5x / 10x (scenario.json 0.7, P2)
@@ -123,7 +123,7 @@ def test_double_side_over_cut_loses_minimal_change_points(seed, out_dir):
     except devgrade.OpError as e:      # seeds 0, 2: 2 x side >= the free band, the chamfer tool refuses
         assert "failed in the CAD kernel" in str(e) and 2 * b["d_side"] >= info["params"]["free_band"]
         return
-    assert v["s1"]["met"] and v["gates"]["brackets"]
+    assert v["s1"]["met"] and v["gates"]["G3_keep_in"]
     k = ratio(info, v)                                          # 6.4-9.4 x V_ref
     assert v["s3"] == pytest.approx(linear_score(k, 5.0, 10.0), abs=1e-6) and v["s3"] < 1.0
     assert v["reward"] == pytest.approx(0.4 + 0.6 * v["s3"], abs=1e-6)
@@ -138,7 +138,7 @@ def test_symmetric_chamfer_eats_the_seal(seed, rows):
 
 @SLOW
 def test_symmetric_chamfer_fails_seal_gate_on_nine_of_ten(rows):
-    failed = [s for s in ALL_SEEDS if not rows(s)["variants"]["symmetric"]["gates"]["seal"]]
+    failed = [s for s in ALL_SEEDS if not rows(s)["variants"]["symmetric"]["gates"]["G5_seal"]]
     assert len(failed) == 9 and set(ALL_SEEDS) - set(failed) == {4}
 
 

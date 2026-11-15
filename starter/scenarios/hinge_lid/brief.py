@@ -148,8 +148,14 @@ def brief_axis_aligned(info: dict, shapes: dict, sc: dict, level: str, seed: int
 
     w("ZONES")
     w("  keep-in (filled >= 99 %): lid knuckles, knuckle ribs, lid module frame, seal band, enclosure knuckle brackets:")
-    for z in info["keep_in"]:
-        w(f"    {z['name']:<20} {z['part']}: {_pt(*z['box'][0])} .. {_pt(*z['box'][1])}")
+    for z in info["zones"]:
+        if z["kind"] != "keep_in":
+            continue
+        if "box" in z:
+            w(f"    {z['name']:<22} {z['part']:<9}: box {_pt(*z['box'][0])} .. {_pt(*z['box'][1])}")
+        else:
+            r = z["region"]
+            w(f"    {z['name']:<22} {z['part']:<9}: cylinder {_pt(*r['p0'])} -> {_pt(*r['p1'])}, radius {_f(r['radius'])}")
     lo, hi = info["module_box"]
     w(f"  keep-out (must stay empty): lid_module volume {_pt(*lo)} .. {_pt(*hi)} (moves with the lid)\n")
     return out + _spec_lines(sc, level) + _measured_lines(meas)
@@ -211,12 +217,17 @@ def brief_world(info: dict, shapes: dict, sc: dict, level: str, seed: int, meas:
     w(f"  knuckle: cylinder radius {_f(p.r_k)} about the axis; plate continues behind the wall up to "
       f"{_f(p.a + p.r_k)} past the rear wall's outer face\n")
 
-    w("ZONES (oriented boxes: corner + three edge vectors, world)")
+    w("ZONES (oriented boxes: corner + three edge vectors; cylinders: axis end points + radius; world)")
     w("  keep-in (filled >= 99 %): lid knuckles, knuckle ribs, lid module frame, seal band, enclosure knuckle brackets:")
-    for z in info["keep_in"]:
-        e = z["world"]["edges"]
-        w(f"    {z['name']:<20} {z['part']}: corner {_pt(*z['world']['origin'])}, edges {_pt(*e[0])} "
-          f"{_pt(*e[1])} {_pt(*e[2])}")
+    for z in info["zones"]:
+        if z["kind"] != "keep_in":
+            continue
+        r = z["region"]
+        if r["kind"] == "box":
+            e = r["edges"]
+            w(f"    {z['name']:<22} {z['part']:<9}: corner {_pt(*r['origin'])}, edges {_pt(*e[0])} {_pt(*e[1])} {_pt(*e[2])}")
+        else:
+            w(f"    {z['name']:<22} {z['part']:<9}: cylinder {_pt(*r['p0'])} -> {_pt(*r['p1'])}, radius {_f(r['radius'])}")
     mb = info["module_box_world"]
     w(f"  keep-out (must stay empty): lid_module volume, corner {_pt(*mb['origin'])}, edges "
       + " ".join(_pt(*e) for e in mb["edges"]) + " (moves with the lid)\n")

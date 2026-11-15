@@ -329,3 +329,16 @@ docker run --rm -u $(id -u):$(id -g) -e HOME=/tmp -v "$PWD":/app cadfix-dev pyth
 2. Seed 3 L3 potrzebuje 16 zastąpień przy limicie `max_replacements=20`. Warunek 1.4× faworyzuje próby z jednym dużym żebrem, które częściej jest nienaprawialne, a każda taka próba kończy seed (reguła ze spec). Przy większej liczbie seedów (Harbor) limit może zostać przekroczony. Propozycja P5: w L3 żebro bez podcięcia → nowe losowanie w obrębie seeda, nie zastąpienie seeda.
 3. Pełny `pytest -q` trwa 19 min, bo każdy moduł testów osobno generuje seedy L3. Pamięć podręczna generatora na sesję testów skróciłaby to kilkukrotnie (zadanie 4).
 4. Zapas 0.002 mm (D10) to łatka na dokładność przyciągania współrzędnych; właściwe rozwiązanie to tolerancja pomiaru albo przegląd S1 w układzie osi przegubu (zadanie 4, razem z problemem 2 z 2c).
+
+## Zadania 4-7 (praca autonomiczna, docs/TASK_4-7.md)
+
+Plan: `docs/PLAN_4-7.md`. Projekt rozwiązania wzorcowego (M0): `docs/SOLVER_DESIGN.md`. Decyzje D11+ w `docs/DECISIONS.md`.
+
+### M1 (zadanie 4): ogólne checki + nagroda z danych + grader CLI (2026-11-15)
+- `cadfix/core`: `assembly.py` (Region: oriented box / cylinder, Zone, Joint, Part z leniwą siatką, Assembly z task.json), `registry.py` (CheckResult, CheckContext z cache oryginału, rejestr), `spec.py` (checki i nagroda z spec.json, koszt test_fit).
+- `cadfix/checks`: valid_solid, interface_frozen, keep_in, keep_out, collision_free, sweep_clearance (opcjonalnie w układzie pudełka: L3 ~0.15 s zamiast 1.6-2.7 s), contact_width, min_wall i overhang (tylko NOWE wady względem oryginału, filtr 0.2 mm po grubości), volume_change, envelope.
+- Generator: wszystkie strefy keep-in (zawiasy i żebra pokrywy, rama modułu, pas uszczelki na obu częściach, wsporniki) i keep-out (moduł) jako regiony świata; walce interfejsu zawiasu; osie pudełka; płaszczyzna szczytów ścian. `scenarios/hinge_lid/spec.py` = spec jako dane; `task.py` = zadanie publiczne (`task/`) + prywatne (`pristine/` z V_ref).
+- `python -m cadfix.grade --task-dir T --pristine P --submitted S --level L --out report.json --reward-file reward.txt`: brak / śmieciowy plik -> oryginał (0), reward.txt zawsze, koszt test_fit z max(episode.json, actions.jsonl).
+- devgrade/evaluate/dev_sweep/brief przepięte na nowe checki (stare przybliżenia usunięte).
+- Akceptacja: `python -m scenarios.hinge_lid.acceptance --level L1,L2,L3 --seeds 0-9` -> `docs/acceptance_4.txt`, 203 s. **210 wariantów, 0 różnic** względem `docs/acceptance_2c.txt` (po dwóch poprawkach po drodze: pas uszczelki tylko jako wewnętrzny pierścień, D12; szczelina zerowej szerokości w kontakcie na L3 seed 4, D17; oraz filtr 0.2 mm po grubości zamiast po prostokącie, D15).
+- Testy: nowe `tests/test_checks.py` (9), `tests/test_grade.py` (5), `tests/test_task.py` (2). `pytest -q -m "not slow"`: 63 passed, 52 s.

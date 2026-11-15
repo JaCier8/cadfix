@@ -1,0 +1,249 @@
+# Task 4 acceptance: 2c/2d variants graded by the generic checks (cadfix/checks via
+# scenarios/hinge_lid/spec.py) vs the 2c dev grader (docs/acceptance_2c.txt).
+# new = reward now, old = reward in acceptance_2c.txt, failed = failed gates / S2 now.
+
+===== L1 =====
+seed variant         new    old    diff  S1    x_ref failed
+   0 original      0.000    0.0  +0.000  FAIL   0.00 
+   0 reference     1.000    1.0  +0.000  ok     1.00 
+   0 full_edge     1.000    1.0  +0.000  ok     3.20 
+   0 identical     1.000    1.0  +0.000  ok     1.00 
+   0 exact_length  0.000    0.0  +0.000  FAIL   0.92 
+   0 side_0.7x     0.052  0.052  -0.000  FAIL   0.70 
+   0 symmetric     0.000    0.0  +0.000  ok     5.36 G3_keep_in,G5_seal,S2_min_wall
+   1 original      0.000    0.0  +0.000  FAIL   0.00 
+   1 reference     1.000    1.0  +0.000  ok     1.00 
+   1 full_edge     1.000    1.0  +0.000  ok     3.51 
+   1 identical     1.000    1.0  +0.000  ok     1.00 
+   1 exact_length  0.000    0.0  +0.000  FAIL   0.94 
+   1 side_0.7x     0.054  0.054  +0.000  FAIL   0.70 
+   1 symmetric     0.000    0.0  +0.000  ok     7.11 G3_keep_in,G5_seal
+   2 original      0.000    0.0  +0.000  FAIL   0.00 
+   2 reference     1.000    1.0  +0.000  ok     1.00 
+   2 full_edge     1.000    1.0  +0.000  ok     3.75 
+   2 identical     1.000    1.0  +0.000  ok     1.00 
+   2 exact_length  0.000    0.0  +0.000  FAIL   0.93 
+   2 side_0.7x     0.081  0.081  +0.000  FAIL   0.70 
+   2 symmetric     0.000    0.0  +0.000  ok     6.01 G3_keep_in,G5_seal,S2_min_wall
+   3 original      0.000    0.0  +0.000  FAIL   0.00 
+   3 reference     1.000    1.0  +0.000  ok     1.00 
+   3 full_edge     1.000    1.0  +0.000  ok     4.16 
+   3 identical     1.000    1.0  +0.000  ok     1.00 
+   3 exact_length  0.000    0.0  +0.000  FAIL   0.93 
+   3 side_0.7x     0.055  0.055  +0.000  FAIL   0.70 
+   3 symmetric     0.000    0.0  +0.000  ok     8.16 G3_keep_in,G5_seal,S2_min_wall
+   4 original      0.000    0.0  +0.000  FAIL   0.00 
+   4 reference     1.000    1.0  +0.000  ok     1.00 
+   4 full_edge     1.000    1.0  +0.000  ok     3.34 
+   4 identical     1.000    1.0  +0.000  ok     1.00 
+   4 exact_length  0.000    0.0  +0.000  FAIL   0.95 
+   4 side_0.7x     0.062  0.062  -0.000  FAIL   0.70 
+   4 symmetric     0.877  0.877  -0.000  ok     6.03 
+   5 original      0.000    0.0  +0.000  FAIL   0.00 
+   5 reference     1.000    1.0  +0.000  ok     1.00 
+   5 full_edge     1.000    1.0  +0.000  ok     4.27 
+   5 identical     1.000    1.0  +0.000  ok     1.00 
+   5 exact_length  0.000    0.0  +0.000  FAIL   0.91 
+   5 side_0.7x     0.071  0.071  -0.000  FAIL   0.70 
+   5 symmetric     0.000    0.0  +0.000  ok     9.07 G5_seal
+   6 original      0.000    0.0  +0.000  FAIL   0.00 
+   6 reference     1.000    1.0  +0.000  ok     1.00 
+   6 full_edge     1.000    1.0  +0.000  ok     4.68 
+   6 identical     1.000    1.0  +0.000  ok     1.00 
+   6 exact_length  0.000    0.0  +0.000  FAIL   0.92 
+   6 side_0.7x     0.100    0.1  +0.000  FAIL   0.70 
+   6 symmetric     0.000    0.0  +0.000  ok     8.10 G3_keep_in,G5_seal
+   7 original      0.000    0.0  +0.000  FAIL   0.00 
+   7 reference     1.000    1.0  +0.000  ok     1.00 
+   7 full_edge     1.000    1.0  +0.000  ok     4.15 
+   7 identical     1.000    1.0  +0.000  ok     1.00 
+   7 exact_length  0.000    0.0  +0.000  FAIL   0.93 
+   7 side_0.7x     0.033  0.033  +0.000  FAIL   0.70 
+   7 symmetric     0.000    0.0  +0.000  ok     7.20 G3_keep_in,G5_seal
+   8 original      0.000    0.0  +0.000  FAIL   0.00 
+   8 reference     1.000    1.0  +0.000  ok     1.00 
+   8 full_edge     1.000    1.0  +0.000  ok     4.23 
+   8 identical     1.000    1.0  +0.000  ok     1.00 
+   8 exact_length  0.000    0.0  +0.000  FAIL   0.94 
+   8 side_0.7x     0.057  0.057  -0.000  FAIL   0.70 
+   8 symmetric     0.000    0.0  +0.000  ok     7.39 G3_keep_in,G5_seal,S2_min_wall
+   9 original      0.000    0.0  +0.000  FAIL   0.00 
+   9 reference     1.000    1.0  +0.000  ok     1.00 
+   9 full_edge     1.000    1.0  +0.000  ok     3.67 
+   9 identical     1.000    1.0  +0.000  ok     1.00 
+   9 exact_length  0.000    0.0  +0.000  FAIL   0.95 
+   9 side_0.7x     0.053  0.053  +0.000  FAIL   0.70 
+   9 symmetric     0.000    0.0  +0.000  ok     7.45 G3_keep_in,G5_seal,S2_min_wall
+
+===== L2 =====
+seed variant         new    old    diff  S1    x_ref failed
+   0 original      0.000    0.0  +0.000  FAIL   0.00 
+   0 reference     1.000    1.0  +0.000  ok     1.00 
+   0 full_edge     0.400    0.4  +0.000  ok     3.20 
+   0 identical     1.000    1.0  +0.000  ok     1.00 
+   0 exact_length  0.000    0.0  +0.000  FAIL   0.92 
+   0 side_0.7x     0.052  0.052  -0.000  FAIL   0.70 
+   0 symmetric     0.000    0.0  +0.000  ok     5.36 G3_keep_in,G5_seal,S2_min_wall
+   1 original      0.000    0.0  +0.000  FAIL   0.00 
+   1 reference     1.000    1.0  +0.000  ok     1.00 
+   1 full_edge     0.400    0.4  +0.000  ok     3.51 
+   1 identical     1.000    1.0  +0.000  ok     1.00 
+   1 exact_length  0.000    0.0  +0.000  FAIL   0.94 
+   1 side_0.7x     0.054  0.054  +0.000  FAIL   0.70 
+   1 symmetric     0.000    0.0  +0.000  ok     7.11 G3_keep_in,G5_seal
+   2 original      0.000    0.0  +0.000  FAIL   0.00 
+   2 reference     1.000    1.0  +0.000  ok     1.00 
+   2 full_edge     0.400    0.4  +0.000  ok     3.75 
+   2 identical     1.000    1.0  +0.000  ok     1.00 
+   2 exact_length  0.000    0.0  +0.000  FAIL   0.93 
+   2 side_0.7x     0.081  0.081  +0.000  FAIL   0.70 
+   2 symmetric     0.000    0.0  +0.000  ok     6.01 G3_keep_in,G5_seal,S2_min_wall
+   3 original      0.000    0.0  +0.000  FAIL   0.00 
+   3 reference     1.000    1.0  +0.000  ok     1.00 
+   3 full_edge     0.400    0.4  +0.000  ok     4.16 
+   3 identical     1.000    1.0  +0.000  ok     1.00 
+   3 exact_length  0.000    0.0  +0.000  FAIL   0.93 
+   3 side_0.7x     0.055  0.055  +0.000  FAIL   0.70 
+   3 symmetric     0.000    0.0  +0.000  ok     8.16 G3_keep_in,G5_seal,S2_min_wall
+   4 original      0.000    0.0  +0.000  FAIL   0.00 
+   4 reference     1.000    1.0  +0.000  ok     1.00 
+   4 full_edge     0.400    0.4  +0.000  ok     3.34 
+   4 identical     1.000    1.0  +0.000  ok     1.00 
+   4 exact_length  0.000    0.0  +0.000  FAIL   0.95 
+   4 side_0.7x     0.062  0.062  -0.000  FAIL   0.70 
+   4 symmetric     0.400    0.4  +0.000  ok     6.03 
+   5 original      0.000    0.0  +0.000  FAIL   0.00 
+   5 reference     1.000    1.0  +0.000  ok     1.00 
+   5 full_edge     0.400    0.4  +0.000  ok     4.27 
+   5 identical     1.000    1.0  +0.000  ok     1.00 
+   5 exact_length  0.000    0.0  +0.000  FAIL   0.91 
+   5 side_0.7x     0.071  0.071  -0.000  FAIL   0.70 
+   5 symmetric     0.000    0.0  +0.000  ok     9.07 G5_seal
+   6 original      0.000    0.0  +0.000  FAIL   0.00 
+   6 reference     1.000    1.0  +0.000  ok     1.00 
+   6 full_edge     0.400    0.4  +0.000  ok     4.68 
+   6 identical     1.000    1.0  +0.000  ok     1.00 
+   6 exact_length  0.000    0.0  +0.000  FAIL   0.92 
+   6 side_0.7x     0.100    0.1  +0.000  FAIL   0.70 
+   6 symmetric     0.000    0.0  +0.000  ok     8.10 G3_keep_in,G5_seal
+   7 original      0.000    0.0  +0.000  FAIL   0.00 
+   7 reference     1.000    1.0  +0.000  ok     1.00 
+   7 full_edge     0.400    0.4  +0.000  ok     4.15 
+   7 identical     1.000    1.0  +0.000  ok     1.00 
+   7 exact_length  0.000    0.0  +0.000  FAIL   0.93 
+   7 side_0.7x     0.033  0.033  +0.000  FAIL   0.70 
+   7 symmetric     0.000    0.0  +0.000  ok     7.20 G3_keep_in,G5_seal
+   8 original      0.000    0.0  +0.000  FAIL   0.00 
+   8 reference     1.000    1.0  +0.000  ok     1.00 
+   8 full_edge     0.400    0.4  +0.000  ok     4.23 
+   8 identical     1.000    1.0  +0.000  ok     1.00 
+   8 exact_length  0.000    0.0  +0.000  FAIL   0.94 
+   8 side_0.7x     0.057  0.057  -0.000  FAIL   0.70 
+   8 symmetric     0.000    0.0  +0.000  ok     7.39 G3_keep_in,G5_seal,S2_min_wall
+   9 original      0.000    0.0  +0.000  FAIL   0.00 
+   9 reference     1.000    1.0  +0.000  ok     1.00 
+   9 full_edge     0.400    0.4  +0.000  ok     3.67 
+   9 identical     1.000    1.0  +0.000  ok     1.00 
+   9 exact_length  0.000    0.0  +0.000  FAIL   0.95 
+   9 side_0.7x     0.053  0.053  +0.000  FAIL   0.70 
+   9 symmetric     0.000    0.0  +0.000  ok     7.45 G3_keep_in,G5_seal,S2_min_wall
+
+===== L3 =====
+seed variant         new    old    diff  S1    x_ref failed
+   0 original      0.000    0.0  +0.000  FAIL   0.00 
+   0 reference     1.000    1.0  +0.000  ok     1.00 
+   0 full_edge     0.400    0.4  +0.000  ok     5.81 
+   0 identical     0.778  0.778  -0.000  ok     1.46 
+   0 exact_length  0.000    0.0  +0.000  FAIL   0.91 
+   0 side_0.7x     0.059  0.059  +0.000  FAIL   0.70 
+   0 symmetric     0.000    0.0  +0.000  ok     8.15 G3_keep_in,G5_seal,S2_min_wall
+   1 original      0.000    0.0  +0.000  FAIL   0.00 
+   1 reference     1.000    1.0  +0.000  ok     1.00 
+   1 full_edge     0.400    0.4  +0.000  ok     5.71 
+   1 identical     0.778  0.778  +0.000  ok     1.46 
+   1 exact_length  0.000    0.0  +0.000  FAIL   0.91 
+   1 side_0.7x     0.070   0.07  +0.000  FAIL   0.70 
+   1 symmetric     0.000    0.0  +0.000  ok     7.80 G3_keep_in,G5_seal,S2_min_wall
+   2 original      0.000    0.0  +0.000  FAIL   0.00 
+   2 reference     1.000    1.0  +0.000  ok     1.00 
+   2 full_edge     0.400    0.4  +0.000  ok     4.92 
+   2 identical     0.821  0.821  -0.000  ok     1.40 
+   2 exact_length  0.000    0.0  +0.000  FAIL   0.92 
+   2 side_0.7x     0.037  0.037  +0.000  FAIL   0.70 
+   2 symmetric     0.000    0.0  +0.000  ok     8.44 G3_keep_in,G5_seal,S2_min_wall
+   3 original      0.000    0.0  +0.000  FAIL   0.00 
+   3 reference     1.000    1.0  +0.000  ok     1.00 
+   3 full_edge     0.400    0.4  +0.000  ok     5.82 
+   3 identical     0.791  0.791  -0.000  ok     1.45 
+   3 exact_length  0.000    0.0  +0.000  FAIL   0.90 
+   3 side_0.7x     0.068  0.068  +0.000  FAIL   0.70 
+   3 symmetric     0.000    0.0  +0.000  ok     7.93 G3_keep_in,G5_seal
+   4 original      0.000    0.0  +0.000  FAIL   0.00 
+   4 reference     1.000    1.0  +0.000  ok     1.00 
+   4 full_edge     0.400    0.4  +0.000  ok     5.17 
+   4 identical     0.801  0.801  -0.000  ok     1.43 
+   4 exact_length  0.000    0.0  +0.000  FAIL   0.92 
+   4 side_0.7x     0.057  0.057  +0.000  FAIL   0.70 
+   4 symmetric     0.000    0.0  +0.000  ok     8.49 G3_keep_in,G5_seal
+   5 original      0.000    0.0  +0.000  FAIL   0.00 
+   5 reference     1.000    1.0  +0.000  ok     1.00 
+   5 full_edge     0.400    0.4  +0.000  ok     4.35 
+   5 identical     0.816  0.816  -0.000  ok     1.41 
+   5 exact_length  0.000    0.0  +0.000  FAIL   0.93 
+   5 side_0.7x     0.045  0.045  -0.000  FAIL   0.70 
+   5 symmetric     0.000    0.0  +0.000  ok     7.40 G3_keep_in,G5_seal,S2_min_wall
+   6 original      0.000    0.0  +0.000  FAIL   0.00 
+   6 reference     1.000    1.0  +0.000  ok     1.00 
+   6 full_edge     0.400    0.4  +0.000  ok     5.35 
+   6 identical     0.782  0.782  -0.000  ok     1.46 
+   6 exact_length  0.000    0.0  +0.000  FAIL   0.92 
+   6 side_0.7x     0.049  0.049  -0.000  FAIL   0.70 
+   6 symmetric     0.000    0.0  +0.000  ok     9.76 G3_keep_in,G5_seal,S2_min_wall
+   7 original      0.000    0.0  +0.000  FAIL   0.00 
+   7 reference     1.000    1.0  +0.000  ok     1.00 
+   7 full_edge     0.400    0.4  +0.000  ok     5.42 
+   7 identical     0.803  0.803  -0.000  ok     1.43 
+   7 exact_length  0.000    0.0  +0.000  FAIL   0.92 
+   7 side_0.7x     0.066  0.066  +0.000  FAIL   0.70 
+   7 symmetric     0.000    0.0  +0.000  ok     8.26 G3_keep_in,G5_seal,S2_min_wall
+   8 original      0.000    0.0  +0.000  FAIL   0.00 
+   8 reference     1.000    1.0  +0.000  ok     1.00 
+   8 full_edge     0.400    0.4  +0.000  ok     5.00 
+   8 identical     0.791  0.791  +0.000  ok     1.45 
+   8 exact_length  0.000    0.0  +0.000  FAIL   0.90 
+   8 side_0.7x     0.053  0.053  +0.000  FAIL   0.70 
+   8 symmetric     0.000    0.0  +0.000  ok     9.01 G3_keep_in,G5_seal,S2_min_wall
+   9 original      0.000    0.0  +0.000  FAIL   0.00 
+   9 reference     1.000    1.0  +0.000  ok     1.00 
+   9 full_edge     0.400    0.4  +0.000  ok     4.44 
+   9 identical     0.754  0.754  +0.000  ok     1.50 
+   9 exact_length  0.000    0.0  +0.000  FAIL   0.91 
+   9 side_0.7x     0.060   0.06  -0.000  FAIL   0.70 
+   9 symmetric     0.000    0.0  +0.000  ok     6.30 G3_keep_in,G5_seal,S2_min_wall
+
+===== Summary per level x variant: new reward min / mean / max =====
+L1 original     0.000 / 0.000 / 0.000  (n=10)
+L1 reference    1.000 / 1.000 / 1.000  (n=10)
+L1 full_edge    1.000 / 1.000 / 1.000  (n=10)
+L1 identical    1.000 / 1.000 / 1.000  (n=10)
+L1 exact_length 0.000 / 0.000 / 0.000  (n=10)
+L1 side_0.7x    0.033 / 0.062 / 0.100  (n=10)
+L1 symmetric    0.000 / 0.088 / 0.877  (n=10)
+L2 original     0.000 / 0.000 / 0.000  (n=10)
+L2 reference    1.000 / 1.000 / 1.000  (n=10)
+L2 full_edge    0.400 / 0.400 / 0.400  (n=10)
+L2 identical    1.000 / 1.000 / 1.000  (n=10)
+L2 exact_length 0.000 / 0.000 / 0.000  (n=10)
+L2 side_0.7x    0.033 / 0.062 / 0.100  (n=10)
+L2 symmetric    0.000 / 0.040 / 0.400  (n=10)
+L3 original     0.000 / 0.000 / 0.000  (n=10)
+L3 reference    1.000 / 1.000 / 1.000  (n=10)
+L3 full_edge    0.400 / 0.400 / 0.400  (n=10)
+L3 identical    0.754 / 0.791 / 0.821  (n=10)
+L3 exact_length 0.000 / 0.000 / 0.000  (n=10)
+L3 side_0.7x    0.037 / 0.057 / 0.070  (n=10)
+L3 symmetric    0.000 / 0.000 / 0.000  (n=10)
+
+===== Differences > 0.0015 vs acceptance_2c.txt: 0 =====
+
+total 202.8 s

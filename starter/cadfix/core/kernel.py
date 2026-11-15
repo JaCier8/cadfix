@@ -135,15 +135,66 @@ def oriented_box(origin, edges) -> manifold3d.Manifold:
     return manifold3d.Manifold.cube([1.0, 1.0, 1.0]).transform(mat.tolist())
 
 
-# ---------------------------------------------------------------- planar regions
-def faces_region_at_z(m: manifold3d.Manifold, z: float, tol: float = 1e-4) -> Polygon:
-    """Union (in x, y) of the mesh triangles lying in the plane z = const and facing +z."""
+# ---------------------------------------------------------------- frames
+def unit(v) -> np.ndarray:
+    v = np.asarray(v, dtype=float).ravel()
+    return v / np.linalg.norm(v)
+
+
+def frame_matrix(axes, origin=(0.0, 0.0, 0.0)) -> np.ndarray:
+    """3x4 rigid matrix world -> frame coordinates for orthonormal `axes` (rows: the frame's x, y, z in world)
+    with the frame origin at `origin` (world)."""
+    r = np.asarray(axes, dtype=float).reshape(3, 3)
+    return np.hstack([r, (-r @ np.asarray(origin, dtype=float)).reshape(3, 1)])
+
+
+def orthonormal_axes(z_dir, x_hint=None) -> np.ndarray:
+    """Rows (x, y, z) of a right-handed orthonormal frame with z along z_dir and x as close to x_hint as possible
+    (default: the world axis least parallel to z). Deterministic."""
+    z = unit(z_dir)
+    if x_hint is None:
+        x_hint = np.eye(3)[int(np.argmin(np.abs(z)))]
+    x = np.asarray(x_hint, dtype=float) - (np.asarray(x_hint, dtype=float) @ z) * z
+    if np.linalg.norm(x) < 1e-9:
+        raise ValueError("x_hint is parallel to z_dir")
+    x = x / np.linalg.norm(x)
+    return np.vstack([x, np.cross(z, x), z])
+
+
+def mesh_arrays(m: manifold3d.Manifold) -> tuple[np.ndarray, np.ndarray]:
     mesh = m.to_mesh()
-    v = np.asarray(mesh.vert_properties)[:, :3]
-    t = np.asarray(mesh.tri_verts, dtype=np.int64)
+    return np.asarray(mesh.vert_properties)[:, :3].astype(float), np.asarray(mesh.tri_verts, dtype=np.int64)
+
+
+def centroid(m: manifold3d.Manifold) -> list[float] | None:
+    """Volume centroid of a closed mesh (divergence theorem); None for an empty mesh."""
+    v, t = mesh_arrays(m)
+    if len(t) == 0:
+        return None
+    a, b, c = v[t[:, 0]], v[t[:, 1]], v[t[:, 2]]
+    vol = np.einsum("ij,ij->i", a, np.cross(b, c)) / 6.0
+    total = vol.sum()
+    if abs(total) < 1e-12:
+        return [float(x) for x in v.mean(axis=0)]
+    return [float(x) for x in ((a + b + c) / 4.0 * vol[:, None]).sum(axis=0) / total]
+
+
+# ---------------------------------------------------------------- planar regions
+def faces_region_at_z(m: manifold3d.Manifold, z: float, tol: float = 1e-4, facing: int = 1) -> Polygon:
+    """Union (in x, y) of the mesh triangles lying in the plane z = const and facing +z (facing=1) or -z
+    (facing=-1)."""
+    v, t = mesh_arrays(m)
     n = np.cross(v[t[:, 1]] - v[t[:, 0]], v[t[:, 2]] - v[t[:, 0]])
-    on = (np.abs(v[t][:, :, 2] - z) < tol).all(axis=1) & (n[:, 2] > 0)
+    on = (np.abs(v[t][:, :, 2] - z) < tol).all(axis=1) & (facing * n[:, 2] > 0)
     return unary_union([Polygon(v[tri][:, :2]) for tri in t[on]]).buffer(0)
+
+
+def plane_faces_region(m: manifold3d.Manifold, point, normal, facing: int = 1, tol: float = 1e-4,
+                       x_hint=None) -> tuple[Polygon, np.ndarray]:
+    """Faces of m lying in the plane (point, normal) and facing along +normal (facing=1) or -normal, as a
+    polygon in plane coordinates. Returns (region, world->plane 3x4 matrix)."""
+    mat = frame_matrix(orthonormal_axes(normal, x_hint), point)
+    return faces_region_at_z(transform_mesh(m, mat), 0.0, tol, facing), mat
 
 
 def slice_region(m: manifold3d.Manifold, z: float):
