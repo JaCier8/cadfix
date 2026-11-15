@@ -1,0 +1,418 @@
+{
+    "schema_version": 3,
+    "created_at": "2026-11-15T05:48:24.775977Z",
+    "harbor": {
+        "version": "0.26.0",
+        "is_editable": false
+    },
+    "n_concurrent_trials": 4,
+    "retry": {
+        "max_retries": 0,
+        "exclude_exceptions": [
+            "APIResponseValidationError",
+            "AgentAuthenticationError",
+            "AgentSafetyRefusalError",
+            "AgentTimeoutError",
+            "ApiProviderResourceNotFoundError",
+            "AuthenticationError",
+            "BadRequestError",
+            "BudgetExceededError",
+            "CancelledError",
+            "ContentPolicyViolationError",
+            "ContextLengthExceededError",
+            "ContextWindowExceededError",
+            "DspyImportError",
+            "MissingExtraError",
+            "ModelNotFoundError",
+            "NonZeroAgentExitCodeError",
+            "NotFoundError",
+            "OutputLengthExceededError",
+            "OutputTokenExceededError",
+            "PermissionDeniedError",
+            "RegradeError",
+            "RewardFileEmptyError",
+            "RewardFileNotFoundError",
+            "ServiceOperationsUnsupportedError",
+            "UnprocessableEntityError",
+            "UnsupportedModelParametersError",
+            "UnsupportedParamsError",
+            "VercelScopeError",
+            "VerifierOutputParseError",
+            "VerifierTimeoutError"
+        ],
+        "wait_multiplier": 1.0,
+        "min_wait_sec": 1.0,
+        "max_wait_sec": 60.0
+    },
+    "trials": [
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l1-seed0",
+                "type": "local",
+                "digest": "sha256:e951d611c75459049885cb6a1b81a8ad1b44ea1fe89dcbb00dbee175ef40e457",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l1-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l2-seed0",
+                "type": "local",
+                "digest": "sha256:ade4ea8ccef185c7ecef7702bb95e4688a969f48c6345b93ee6d512012863ade",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l2-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l3-seed0",
+                "type": "local",
+                "digest": "sha256:4201082806d84b1c408e192ed39283373f1eba4fab45c70ef7414e1a695b81a3",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l3-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l1-seed0",
+                "type": "local",
+                "digest": "sha256:e951d611c75459049885cb6a1b81a8ad1b44ea1fe89dcbb00dbee175ef40e457",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l1-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l2-seed0",
+                "type": "local",
+                "digest": "sha256:ade4ea8ccef185c7ecef7702bb95e4688a969f48c6345b93ee6d512012863ade",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l2-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l3-seed0",
+                "type": "local",
+                "digest": "sha256:4201082806d84b1c408e192ed39283373f1eba4fab45c70ef7414e1a695b81a3",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l3-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l1-seed0",
+                "type": "local",
+                "digest": "sha256:e951d611c75459049885cb6a1b81a8ad1b44ea1fe89dcbb00dbee175ef40e457",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l1-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l2-seed0",
+                "type": "local",
+                "digest": "sha256:ade4ea8ccef185c7ecef7702bb95e4688a969f48c6345b93ee6d512012863ade",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l2-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "hinge-lid-l3-seed0",
+                "type": "local",
+                "digest": "sha256:4201082806d84b1c408e192ed39283373f1eba4fab45c70ef7414e1a695b81a3",
+                "source": "judge",
+                "path": "harbor_tasks/judge/hinge-lid-l3-seed0"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "opencode",
+                "model_name": "anthropic/claude-sonnet-5-5",
+                "skip_model_parsing": false,
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {},
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "stream": false,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "separate"
+            },
+            "artifacts": [],
+            "override_error_policy": {}
+        }
+    ]
+}

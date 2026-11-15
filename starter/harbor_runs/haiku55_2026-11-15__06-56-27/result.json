@@ -1,0 +1,44 @@
+{
+    "schema_version": 1,
+    "id": "0285a4d4-4f12-4707-9b19-d81d229ae1d6",
+    "started_at": "2026-11-15T06:56:30.129072",
+    "updated_at": "2026-11-15T07:00:43.208032",
+    "finished_at": "2026-11-15T07:00:43.208032",
+    "n_total_trials": 1,
+    "stats": {
+        "n_completed_trials": 1,
+        "n_errored_trials": 1,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "opencode__claude-haiku-5-5__adhoc": {
+                "n_trials": 1,
+                "n_errors": 1,
+                "metrics": [
+                    {
+                        "mean": 0.4
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.4": [
+                            "hinge-lid-l2-seed0__A4VXNqx"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "NonZeroAgentExitCodeError": [
+                        "hinge-lid-l2-seed0__A4VXNqx"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 752999,
+        "n_cache_tokens": 752973,
+        "n_output_tokens": 2831,
+        "cost_usd": 0.026970955000000008
+    }
+}

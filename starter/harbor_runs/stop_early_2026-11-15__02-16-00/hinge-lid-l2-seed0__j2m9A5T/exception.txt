@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-jappa-junction/59402e72-3764-4d23-b68c-70a7e941e2e9/scratchpad/harbor-venv/lib/python3.12/site-packages/harbor/trial/trial.py", line 613, in run
+    await self._prepare()
+  File "/tmp/claude-1000/-home-jappa-junction/59402e72-3764-4d23-b68c-70a7e941e2e9/scratchpad/harbor-venv/lib/python3.12/site-packages/harbor/trial/trial.py", line 651, in _prepare
+    self._validate_agent_capabilities()
+  File "/tmp/claude-1000/-home-jappa-junction/59402e72-3764-4d23-b68c-70a7e941e2e9/scratchpad/harbor-venv/lib/python3.12/site-packages/harbor/trial/trial.py", line 1812, in _validate_agent_capabilities
+    raise ValueError(
+ValueError: Agent 'cadfix-stop-early' does not support MCP servers; configured MCP servers require capabilities.mcp_servers = True.

@@ -1,0 +1,36 @@
+{
+    "schema_version": 1,
+    "id": "889c0852-2b39-45eb-b00d-507a7cdc5449",
+    "started_at": "2026-11-15T02:16:00.835213",
+    "updated_at": "2026-11-15T02:16:01.680331",
+    "finished_at": "2026-11-15T02:16:01.680331",
+    "n_total_trials": 3,
+    "stats": {
+        "n_completed_trials": 3,
+        "n_errored_trials": 3,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "cadfix-stop-early__judge": {
+                "n_trials": 0,
+                "n_errors": 3,
+                "metrics": [],
+                "pass_at_k": {},
+                "reward_stats": {},
+                "exception_stats": {
+                    "ValueError": [
+                        "hinge-lid-l1-seed0__TEK4UW8",
+                        "hinge-lid-l2-seed0__j2m9A5T",
+                        "hinge-lid-l3-seed0__paXmsci"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null
+    }
+}

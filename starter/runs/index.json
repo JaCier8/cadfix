@@ -1,0 +1,1700 @@
+{
+  "schema": 1,
+  "description": "Every evaluation run of cadfix/hinge_lid. Written by scripts/record_run.py; docs/RUNS.md is rendered from it.",
+  "runs": [
+    {
+      "run_id": "hydrogen_gonogo_manual",
+      "kind": "manual",
+      "label": "hydrogen_gonogo",
+      "agent": "manual chat (no tools, ops as JSON)",
+      "model": "Hydrogen (weak model)",
+      "tasks_text": "L1 s0, L2 s0",
+      "started_at": "2026-11-15T00:39:39Z",
+      "finished_at": "2026-11-15T00:52:55Z",
+      "build": {
+        "commit": "pre-Harbor (scripts/try.sh -> scenarios.hinge_lid.evaluate --hide-score)"
+      },
+      "source": "gonogo_log.csv (gitignored, private), gonogo/, docs/scenario.json stage_4 and decision_log 0.6",
+      "summary": {
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 0.4,
+            "rewards": [
+              0.4
+            ]
+          }
+        },
+        "mean": null
+      },
+      "notes": "Go/no-go by hand: the model got the brief (`scripts/brief.sh`), answered with a JSON list of ops, we pasted back the `--hide-score` test_fit report; at most 3 attempts. Level mean = the final attempt. L1 seed 0 was on the 0.5 design, before the log existed (source: docs/scenario.json). On L2 it tuned a full-edge chamfer every time and never tried a local relief.",
+      "tables": [
+        {
+          "title": "Attempts",
+          "columns": [
+            "Level",
+            "Attempt",
+            "Reward",
+            "S1",
+            "Vol / V_ref",
+            "Fix"
+          ],
+          "rows": [
+            [
+              "L1 s0",
+              "1",
+              "0.115",
+              "–",
+              "–",
+              "full-edge chamfer"
+            ],
+            [
+              "L1 s0",
+              "2",
+              "1.000",
+              "PASS",
+              "–",
+              "full-edge chamfer"
+            ],
+            [
+              "L2 s0",
+              "1",
+              "0.103",
+              "FAIL",
+              "1.99",
+              "full-edge chamfer"
+            ],
+            [
+              "L2 s0",
+              "2",
+              "0.400",
+              "PASS",
+              "3.31",
+              "full-edge chamfer"
+            ],
+            [
+              "L2 s0",
+              "3",
+              "0.400",
+              "PASS",
+              "3.21",
+              "full-edge chamfer"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": "run_eval_20261115_011537",
+      "kind": "local",
+      "label": "run_eval",
+      "agent": "reference / do_nothing / stop_early (scripted, tools only)",
+      "tasks_text": "L1-L3 seeds 0-9",
+      "started_at": "2026-11-15T01:15:37Z",
+      "build": {
+        "commit": "working tree between 7a054b8 (02:07 +01:00) and 97295c2 (02:19 +01:00); the run_eval/reference code is committed in 97295c2"
+      },
+      "source": "results/run_eval_20261115_011537.csv (= results/latest.csv), per-episode outputs in results/<agent>/<L>/seed_NNNN/",
+      "summary": {
+        "mean": null,
+        "per_level": {
+          "L1": {
+            "n": 10,
+            "mean": 1.0,
+            "rewards": []
+          },
+          "L2": {
+            "n": 10,
+            "mean": 1.0,
+            "rewards": []
+          },
+          "L3": {
+            "n": 10,
+            "mean": 1.0,
+            "rewards": []
+          }
+        }
+      },
+      "notes": "`python run_eval.py --agent reference,do_nothing,stop_early --level L1,L2,L3 --seeds 0-9`, no Harbor. Per-level means in the summary table are the reference solver's. 90 episodes.",
+      "tables": [
+        {
+          "title": "Mean reward per agent and level",
+          "columns": [
+            "Agent",
+            "L1",
+            "L2",
+            "L3",
+            "Vol / V_ref",
+            "Tool calls"
+          ],
+          "rows": [
+            [
+              "reference",
+              "1.000 (10/10 at 1.0)",
+              "1.000 (10/10 at 1.0)",
+              "1.000 (10/10 at 1.0)",
+              "1.00-1.03",
+              "27-33"
+            ],
+            [
+              "do_nothing",
+              "0.000 (0/10 at 1.0)",
+              "0.000 (0/10 at 1.0)",
+              "0.000 (0/10 at 1.0)",
+              "0.00-0.00",
+              "1-1"
+            ],
+            [
+              "stop_early",
+              "0.000 (0/10 at 1.0)",
+              "0.000 (0/10 at 1.0)",
+              "0.000 (0/10 at 1.0)",
+              "0.00-0.00",
+              "2-2"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": "oracle_2026-11-15__02-14-01",
+      "kind": "harbor",
+      "label": "oracle",
+      "notes": "First Harbor smoke test of harbor_tasks/judge with the reference solution (solution/). Build before the M4 commit (no tag).",
+      "recorded_at": "2026-11-15T07:00:35+00:00",
+      "job_name": "2026-11-15__02-14-01",
+      "source": "jobs/2026-11-15__02-14-01",
+      "archive": "harbor_runs/oracle_2026-11-15__02-14-01",
+      "harbor_version": "0.26.0",
+      "agent": "oracle",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T02:14:02.427962",
+      "finished_at": "2026-11-15T02:14:52.268124",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "193968d2fedb",
+          "hinge-lid-l2-seed0": "4f7bb7a6abce",
+          "hinge-lid-l3-seed0": "43deefd8ff6b"
+        },
+        "matched_tags": [],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 3,
+        "n_exceptions": 0,
+        "mean": 1.0,
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          },
+          "L3": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          }
+        },
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__GEPan3r",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 25.8322,
+          "ratio_to_ref": 0.99999,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:14:02.868389Z",
+          "finished_at": "2026-11-15T01:14:47.641455Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__cLCvBQU",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 25.8322,
+          "ratio_to_ref": 0.99999,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:14:03.183843Z",
+          "finished_at": "2026-11-15T01:14:47.526736Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__SrSCvPT",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 16.3146,
+          "ratio_to_ref": 1.02528,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:14:03.425173Z",
+          "finished_at": "2026-11-15T01:14:52.265047Z"
+        }
+      ]
+    },
+    {
+      "run_id": "nop_2026-11-15__02-15-26",
+      "kind": "harbor",
+      "label": "nop",
+      "notes": "Harbor's do-nothing agent. Build before the M4 commit (no tag).",
+      "recorded_at": "2026-11-15T07:00:36+00:00",
+      "job_name": "2026-11-15__02-15-26",
+      "source": "jobs/2026-11-15__02-15-26",
+      "archive": "harbor_runs/nop_2026-11-15__02-15-26",
+      "harbor_version": "0.26.0",
+      "agent": "nop",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T02:15:26.318820",
+      "finished_at": "2026-11-15T02:15:57.218019",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "193968d2fedb",
+          "hinge-lid-l2-seed0": "4f7bb7a6abce",
+          "hinge-lid-l3-seed0": "43deefd8ff6b"
+        },
+        "matched_tags": [],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 3,
+        "n_exceptions": 0,
+        "mean": 0.0,
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L3": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          }
+        },
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__FKm3ddG",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:15:26.582704Z",
+          "finished_at": "2026-11-15T01:15:56.524273Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__68RZ4Es",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:15:26.737327Z",
+          "finished_at": "2026-11-15T01:15:56.831239Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__kYt2iGr",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:15:26.870928Z",
+          "finished_at": "2026-11-15T01:15:57.213177Z"
+        }
+      ]
+    },
+    {
+      "run_id": "stop_early_2026-11-15__02-16-00",
+      "kind": "harbor",
+      "label": "stop_early",
+      "notes": "Failed set-up, no reward: Harbor refused the custom agent ('does not support MCP servers; configured MCP servers require capabilities.mcp_servers = True'). Fixed in the agent class and re-run as stop_early_2026-11-15__02-16-21.",
+      "recorded_at": "2026-11-15T07:00:36+00:00",
+      "job_name": "2026-11-15__02-16-00",
+      "source": "jobs/2026-11-15__02-16-00",
+      "archive": "harbor_runs/stop_early_2026-11-15__02-16-00",
+      "harbor_version": "0.26.0",
+      "agent": "cadfix.harbor.agents:StopEarlyAgent",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T02:16:00.835213",
+      "finished_at": "2026-11-15T02:16:01.680331",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "193968d2fedb",
+          "hinge-lid-l2-seed0": "4f7bb7a6abce",
+          "hinge-lid-l3-seed0": "43deefd8ff6b"
+        },
+        "matched_tags": [],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 0,
+        "n_exceptions": 3,
+        "mean": null,
+        "per_level": {},
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__TEK4UW8",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": null,
+          "exception": "ValueError",
+          "gates_ok": null,
+          "failed_gates": null,
+          "s1_met": null,
+          "scores": null,
+          "changed_mm3": null,
+          "ratio_to_ref": null,
+          "test_fit_calls": null,
+          "test_fit_cost": null,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:16:01.072277Z",
+          "finished_at": "2026-11-15T01:16:01.677990Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__j2m9A5T",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": null,
+          "exception": "ValueError",
+          "gates_ok": null,
+          "failed_gates": null,
+          "s1_met": null,
+          "scores": null,
+          "changed_mm3": null,
+          "ratio_to_ref": null,
+          "test_fit_calls": null,
+          "test_fit_cost": null,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:16:01.207139Z",
+          "finished_at": "2026-11-15T01:16:01.678213Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__paXmsci",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": null,
+          "exception": "ValueError",
+          "gates_ok": null,
+          "failed_gates": null,
+          "s1_met": null,
+          "scores": null,
+          "changed_mm3": null,
+          "ratio_to_ref": null,
+          "test_fit_calls": null,
+          "test_fit_cost": null,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:16:01.328931Z",
+          "finished_at": "2026-11-15T01:16:01.677277Z"
+        }
+      ]
+    },
+    {
+      "run_id": "stop_early_2026-11-15__02-16-21",
+      "kind": "harbor",
+      "label": "stop_early",
+      "notes": "StopEarlyAgent (cadfix.harbor.agents): get_task, then submit without editing. Build before the M4 commit (no tag).",
+      "recorded_at": "2026-11-15T07:00:36+00:00",
+      "job_name": "2026-11-15__02-16-21",
+      "source": "jobs/2026-11-15__02-16-21",
+      "archive": "harbor_runs/stop_early_2026-11-15__02-16-21",
+      "harbor_version": "0.26.0",
+      "agent": "cadfix.harbor.agents:StopEarlyAgent",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T02:16:21.979355",
+      "finished_at": "2026-11-15T02:16:56.568560",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "193968d2fedb",
+          "hinge-lid-l2-seed0": "4f7bb7a6abce",
+          "hinge-lid-l3-seed0": "43deefd8ff6b"
+        },
+        "matched_tags": [],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 3,
+        "n_exceptions": 0,
+        "mean": 0.0,
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L3": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          }
+        },
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__pU4uV8x",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": 0,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 2,
+          "edits": 0,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:16:22.212856Z",
+          "finished_at": "2026-11-15T01:16:54.913779Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__WHvyxDL",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": 0,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 2,
+          "edits": 0,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:16:22.345602Z",
+          "finished_at": "2026-11-15T01:16:54.561703Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__LuVyQuV",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": 0,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 2,
+          "edits": 0,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:16:22.464115Z",
+          "finished_at": "2026-11-15T01:16:56.565709Z"
+        }
+      ]
+    },
+    {
+      "run_id": "nop_2026-11-15__02-21-12",
+      "kind": "harbor",
+      "label": "nop",
+      "notes": "Re-run after the M4 task rebuild.",
+      "recorded_at": "2026-11-15T07:00:37+00:00",
+      "job_name": "2026-11-15__02-21-12",
+      "source": "jobs/2026-11-15__02-21-12",
+      "archive": "harbor_runs/nop_2026-11-15__02-21-12",
+      "harbor_version": "0.26.0",
+      "agent": "nop",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T02:21:12.285831",
+      "finished_at": "2026-11-15T02:21:46.768264",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "e951d611c754",
+          "hinge-lid-l2-seed0": "ade4ea8ccef1",
+          "hinge-lid-l3-seed0": "4201082806d8"
+        },
+        "matched_tags": [
+          "build-sonnet-run"
+        ],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 3,
+        "n_exceptions": 0,
+        "mean": 0.0,
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L3": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          }
+        },
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__L2pm5Fu",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:21:12.532826Z",
+          "finished_at": "2026-11-15T01:21:46.764454Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__BBWi9F3",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:21:12.681390Z",
+          "finished_at": "2026-11-15T01:21:46.671699Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__aRDcgev",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:21:12.810556Z",
+          "finished_at": "2026-11-15T01:21:46.159712Z"
+        }
+      ]
+    },
+    {
+      "run_id": "oracle_2026-11-15__02-21-57",
+      "kind": "harbor",
+      "label": "oracle",
+      "notes": "Re-run after the M4 task rebuild. The README's oracle line.",
+      "recorded_at": "2026-11-15T07:00:37+00:00",
+      "job_name": "2026-11-15__02-21-57",
+      "source": "jobs/2026-11-15__02-21-57",
+      "archive": "harbor_runs/oracle_2026-11-15__02-21-57",
+      "harbor_version": "0.26.0",
+      "agent": "oracle",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T02:21:58.217781",
+      "finished_at": "2026-11-15T02:22:39.634847",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "e951d611c754",
+          "hinge-lid-l2-seed0": "ade4ea8ccef1",
+          "hinge-lid-l3-seed0": "4201082806d8"
+        },
+        "matched_tags": [
+          "build-sonnet-run"
+        ],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 3,
+        "n_exceptions": 0,
+        "mean": 1.0,
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          },
+          "L3": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          }
+        },
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__cYiDUJp",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 25.8322,
+          "ratio_to_ref": 0.99999,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:21:58.517843Z",
+          "finished_at": "2026-11-15T01:22:35.545995Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__n7fNhUG",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 25.8322,
+          "ratio_to_ref": 0.99999,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:21:58.716152Z",
+          "finished_at": "2026-11-15T01:22:35.785577Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__KotJEQc",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 16.3146,
+          "ratio_to_ref": 1.02528,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:21:58.894234Z",
+          "finished_at": "2026-11-15T01:22:39.631551Z"
+        }
+      ]
+    },
+    {
+      "run_id": "stop_early_2026-11-15__02-22-43",
+      "kind": "harbor",
+      "label": "stop_early",
+      "notes": "Re-run after the M4 task rebuild.",
+      "recorded_at": "2026-11-15T07:00:38+00:00",
+      "job_name": "2026-11-15__02-22-43",
+      "source": "jobs/2026-11-15__02-22-43",
+      "archive": "harbor_runs/stop_early_2026-11-15__02-22-43",
+      "harbor_version": "0.26.0",
+      "agent": "cadfix.harbor.agents:StopEarlyAgent",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T02:22:43.867426",
+      "finished_at": "2026-11-15T02:23:19.927019",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "e951d611c754",
+          "hinge-lid-l2-seed0": "ade4ea8ccef1",
+          "hinge-lid-l3-seed0": "4201082806d8"
+        },
+        "matched_tags": [
+          "build-sonnet-run"
+        ],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 3,
+        "n_exceptions": 0,
+        "mean": 0.0,
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L3": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          }
+        },
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__SNwVDES",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": 0,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 2,
+          "edits": 0,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:22:44.111669Z",
+          "finished_at": "2026-11-15T01:23:17.359805Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__fUqRuxu",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": 0,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 2,
+          "edits": 0,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:22:44.250855Z",
+          "finished_at": "2026-11-15T01:23:17.866360Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__BkYDPMH",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": 0,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 2,
+          "edits": 0,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T01:22:44.373147Z",
+          "finished_at": "2026-11-15T01:23:19.924577Z"
+        }
+      ]
+    },
+    {
+      "run_id": "sonnet55_2026-11-15__06-48-21",
+      "kind": "harbor",
+      "label": "sonnet55",
+      "notes": "First real agent run: OpenCode + Claude Sonnet 5.5 on the judge set, k=3. 9/9 legit (no exploit), S1 met and all gates passed in 9/9; every agent called test_fit once and submitted the first passing fix. 4 trials end with OpenCode's own EPIPE crash at shutdown, after submit; their rewards are valid. Analysis: docs/RUN_ANALYSIS_sonnet55.md.",
+      "recorded_at": "2026-11-15T07:00:38+00:00",
+      "job_name": "2026-11-15__06-48-21",
+      "source": "jobs/2026-11-15__06-48-21",
+      "archive": "harbor_runs/sonnet55_2026-11-15__06-48-21",
+      "harbor_version": "0.26.0",
+      "agent": "opencode",
+      "agent_version": "1.19.5",
+      "model": "anthropic/claude-sonnet-5-5",
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 3,
+      "started_at": "2026-11-15T06:48:24.466615",
+      "finished_at": "2026-11-15T07:05:05.118701",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "e951d611c754",
+          "hinge-lid-l2-seed0": "ade4ea8ccef1",
+          "hinge-lid-l3-seed0": "4201082806d8"
+        },
+        "matched_tags": [
+          "build-sonnet-run"
+        ],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 9,
+        "n_rewarded": 9,
+        "n_exceptions": 4,
+        "mean": 0.8399,
+        "per_level": {
+          "L1": {
+            "n": 3,
+            "mean": 1.0,
+            "rewards": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "L2": {
+            "n": 3,
+            "mean": 0.8352,
+            "rewards": [
+              1.0,
+              0.621,
+              0.884
+            ]
+          },
+          "L3": {
+            "n": 3,
+            "mean": 0.6846,
+            "rewards": [
+              0.85,
+              0.804,
+              0.4
+            ]
+          }
+        },
+        "cost_usd": 4.2309
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__QjRN4co",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 49.368,
+          "ratio_to_ref": 1.91109,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 19,
+          "edits": 6,
+          "submitted": true,
+          "cost_usd": 0.45003049999999994,
+          "started_at": "2026-11-15T05:48:25.257530Z",
+          "finished_at": "2026-11-15T05:53:50.733398Z"
+        },
+        {
+          "trial": "hinge-lid-l1-seed0__QofdJZK",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 48.6,
+          "ratio_to_ref": 1.88136,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 24,
+          "edits": 9,
+          "submitted": true,
+          "cost_usd": 0.49821940000000003,
+          "started_at": "2026-11-15T05:55:39.331441Z",
+          "finished_at": "2026-11-15T06:00:37.191915Z"
+        },
+        {
+          "trial": "hinge-lid-l1-seed0__u2d86jU",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 53.9987,
+          "ratio_to_ref": 2.09035,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 24,
+          "edits": 6,
+          "submitted": true,
+          "cost_usd": 0.6337725000000001,
+          "started_at": "2026-11-15T05:48:24.878359Z",
+          "finished_at": "2026-11-15T05:55:39.191276Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__AXwNsaV",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 1.0,
+          "exception": "NonZeroAgentExitCodeError",
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 27.6717,
+          "ratio_to_ref": 1.0712,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 15,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": 0.24803419999999998,
+          "started_at": "2026-11-15T05:57:49.176045Z",
+          "finished_at": "2026-11-15T06:01:54.204055Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__gJP7UPj",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 0.621371,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 0.368952
+          },
+          "changed_mm3": 43.5635,
+          "ratio_to_ref": 1.68639,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 15,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": 0.34529920000000003,
+          "started_at": "2026-11-15T05:48:25.023917Z",
+          "finished_at": "2026-11-15T05:53:24.458561Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__znT7Qc9",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 0.884136,
+          "exception": "NonZeroAgentExitCodeError",
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 0.806894
+          },
+          "changed_mm3": 33.9474,
+          "ratio_to_ref": 1.31414,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 14,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": 0.24386069999999999,
+          "started_at": "2026-11-15T05:53:24.559149Z",
+          "finished_at": "2026-11-15T05:57:49.034605Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__Vs6f6U7",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 0.850176,
+          "exception": "NonZeroAgentExitCodeError",
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 0.750293
+          },
+          "changed_mm3": 21.6765,
+          "ratio_to_ref": 1.36225,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 17,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": 0.32416480000000003,
+          "started_at": "2026-11-15T05:53:50.898019Z",
+          "finished_at": "2026-11-15T05:58:56.041930Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__vtetXAU",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 0.803676,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 0.672793
+          },
+          "changed_mm3": 22.7248,
+          "ratio_to_ref": 1.42813,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 18,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": 0.7148798,
+          "started_at": "2026-11-15T05:48:25.140462Z",
+          "finished_at": "2026-11-15T06:04:00.436180Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__yUegVYW",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 0.4,
+          "exception": "NonZeroAgentExitCodeError",
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 0.0
+          },
+          "changed_mm3": 37.6378,
+          "ratio_to_ref": 2.36533,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 28,
+          "edits": 9,
+          "submitted": true,
+          "cost_usd": 0.7726327,
+          "started_at": "2026-11-15T05:58:56.158669Z",
+          "finished_at": "2026-11-15T06:05:05.103603Z"
+        }
+      ]
+    },
+    {
+      "run_id": "haiku55_2026-11-15__06-56-27",
+      "kind": "harbor",
+      "label": "haiku55",
+      "notes": "Side check, one trial on L2 only (not a judge-set run): OpenCode + Claude Haiku 5.5. Not analysed. Ends with the same OpenCode EPIPE after submit.",
+      "recorded_at": "2026-11-15T07:00:39+00:00",
+      "job_name": "2026-11-15__06-56-27",
+      "source": "jobs/2026-11-15__06-56-27",
+      "archive": "harbor_runs/haiku55_2026-11-15__06-56-27",
+      "harbor_version": "0.26.0",
+      "agent": "opencode",
+      "agent_version": "1.19.5",
+      "model": "anthropic/claude-haiku-5-5",
+      "dataset": [
+        "harbor_tasks/judge/hinge-lid-l2-seed0"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T06:56:30.129072",
+      "finished_at": "2026-11-15T07:00:43.208032",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l2-seed0": "ade4ea8ccef1"
+        },
+        "matched_tags": [
+          "build-sonnet-run"
+        ],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 1,
+        "n_rewarded": 1,
+        "n_exceptions": 1,
+        "mean": 0.4,
+        "per_level": {
+          "L2": {
+            "n": 1,
+            "mean": 0.4,
+            "rewards": [
+              0.4
+            ]
+          }
+        },
+        "cost_usd": 0.027
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l2-seed0__A4VXNqx",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 0.4,
+          "exception": "NonZeroAgentExitCodeError",
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 0.0
+          },
+          "changed_mm3": 230.85,
+          "ratio_to_ref": 8.93645,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 32,
+          "edits": 5,
+          "submitted": true,
+          "cost_usd": 0.026970955000000008,
+          "started_at": "2026-11-15T05:56:30.291242Z",
+          "finished_at": "2026-11-15T06:00:43.197172Z"
+        }
+      ]
+    },
+    {
+      "run_id": "oracle_2026-11-15__07-37-23",
+      "kind": "harbor",
+      "label": "oracle",
+      "notes": "After the graceful MCP shutdown commit (build-final): reference solution 3/3.",
+      "recorded_at": "2026-11-15T07:00:39+00:00",
+      "job_name": "2026-11-15__07-37-23",
+      "source": "jobs/2026-11-15__07-37-23",
+      "archive": "harbor_runs/oracle_2026-11-15__07-37-23",
+      "harbor_version": "0.26.0",
+      "agent": "oracle",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T07:37:23.825570",
+      "finished_at": "2026-11-15T07:38:06.862289",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "0dbce51b5c09",
+          "hinge-lid-l2-seed0": "489f3c48d6b7",
+          "hinge-lid-l3-seed0": "32a8da3aacb3"
+        },
+        "matched_tags": [
+          "build-final"
+        ],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 3,
+        "n_exceptions": 0,
+        "mean": 1.0,
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          },
+          "L3": {
+            "n": 1,
+            "mean": 1.0,
+            "rewards": [
+              1.0
+            ]
+          }
+        },
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__xqgXxuT",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 25.8322,
+          "ratio_to_ref": 0.99999,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T06:37:24.149034Z",
+          "finished_at": "2026-11-15T06:38:03.828235Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__BWzQZ2o",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 25.8322,
+          "ratio_to_ref": 0.99999,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T06:37:24.375165Z",
+          "finished_at": "2026-11-15T06:38:03.956178Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__faNSh9v",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 1.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": true,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 16.3146,
+          "ratio_to_ref": 1.02528,
+          "test_fit_calls": 1,
+          "test_fit_cost": 0.0,
+          "mcp_calls": 33,
+          "edits": 3,
+          "submitted": true,
+          "cost_usd": null,
+          "started_at": "2026-11-15T06:37:24.570296Z",
+          "finished_at": "2026-11-15T06:38:06.857545Z"
+        }
+      ]
+    },
+    {
+      "run_id": "nop_2026-11-15__07-38-15",
+      "kind": "harbor",
+      "label": "nop",
+      "notes": "After the graceful MCP shutdown commit (build-final).",
+      "recorded_at": "2026-11-15T07:00:39+00:00",
+      "job_name": "2026-11-15__07-38-15",
+      "source": "jobs/2026-11-15__07-38-15",
+      "archive": "harbor_runs/nop_2026-11-15__07-38-15",
+      "harbor_version": "0.26.0",
+      "agent": "nop",
+      "agent_version": "1.0.0",
+      "model": null,
+      "dataset": [
+        "harbor_tasks/judge"
+      ],
+      "n_attempts": 1,
+      "started_at": "2026-11-15T07:38:16.182390",
+      "finished_at": "2026-11-15T07:38:46.630478",
+      "build": {
+        "task_digests": {
+          "hinge-lid-l1-seed0": "0dbce51b5c09",
+          "hinge-lid-l2-seed0": "489f3c48d6b7",
+          "hinge-lid-l3-seed0": "32a8da3aacb3"
+        },
+        "matched_tags": [
+          "build-final"
+        ],
+        "match_method": "Harbor Packager.compute_content_hash of harbor_tasks/judge at each git tag"
+      },
+      "summary": {
+        "n_trials": 3,
+        "n_rewarded": 3,
+        "n_exceptions": 0,
+        "mean": 0.0,
+        "per_level": {
+          "L1": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L2": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          },
+          "L3": {
+            "n": 1,
+            "mean": 0.0,
+            "rewards": [
+              0.0
+            ]
+          }
+        },
+        "cost_usd": null
+      },
+      "trials": [
+        {
+          "trial": "hinge-lid-l1-seed0__cysPhab",
+          "task": "hinge-lid-l1-seed0",
+          "level": "L1",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T06:38:16.426185Z",
+          "finished_at": "2026-11-15T06:38:46.627434Z"
+        },
+        {
+          "trial": "hinge-lid-l2-seed0__rmTzz8n",
+          "task": "hinge-lid-l2-seed0",
+          "level": "L2",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T06:38:16.584921Z",
+          "finished_at": "2026-11-15T06:38:46.009941Z"
+        },
+        {
+          "trial": "hinge-lid-l3-seed0__vP7RD9c",
+          "task": "hinge-lid-l3-seed0",
+          "level": "L3",
+          "reward": 0.0,
+          "exception": null,
+          "gates_ok": true,
+          "failed_gates": [],
+          "s1_met": false,
+          "scores": {
+            "printability": 1.0,
+            "minimal_change": 1.0
+          },
+          "changed_mm3": 0.0,
+          "ratio_to_ref": 0.0,
+          "test_fit_calls": null,
+          "test_fit_cost": 0.0,
+          "mcp_calls": null,
+          "edits": null,
+          "submitted": null,
+          "cost_usd": null,
+          "started_at": "2026-11-15T06:38:16.707229Z",
+          "finished_at": "2026-11-15T06:38:46.545736Z"
+        }
+      ]
+    }
+  ],
+  "time_note": "Harbor times are as Harbor writes them (local time, +01:00, no zone); manual/local entries are UTC (Z)."
+}

@@ -1,0 +1,4 @@
+/usr/local/lib/python3.11/site-packages/shapely/constructive.py:245: RuntimeWarning: divide by zero encountered in buffer
+  return lib.buffer(
+/usr/local/lib/python3.11/site-packages/shapely/constructive.py:245: RuntimeWarning: invalid value encountered in buffer
+  return lib.buffer(

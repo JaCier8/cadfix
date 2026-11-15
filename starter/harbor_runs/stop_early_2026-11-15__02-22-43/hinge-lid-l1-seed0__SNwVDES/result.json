@@ -1,0 +1,124 @@
+{
+    "schema_version": 1,
+    "id": "b358d49f-aea0-4f75-b95d-677257c1f65a",
+    "task_name": "hinge-lid-l1-seed0",
+    "trial_name": "hinge-lid-l1-seed0__SNwVDES",
+    "trial_uri": "file:///home/jappa/junction/cadfix-starter/starter/jobs/2026-11-15__02-22-43/hinge-lid-l1-seed0__SNwVDES",
+    "task_id": {
+        "path": "harbor_tasks/judge/hinge-lid-l1-seed0"
+    },
+    "source": "judge",
+    "task_checksum": "91704ba70d86c77e3a8499cf23fa00cd4fd5d698adc7e9855f57065ab1c1bae6",
+    "config": {
+        "schema_version": 1,
+        "task": {
+            "path": "harbor_tasks/judge/hinge-lid-l1-seed0",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "judge"
+        },
+        "trial_name": "hinge-lid-l1-seed0__SNwVDES",
+        "trials_dir": "jobs/2026-11-15__02-22-43",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "cadfix.harbor.agents:StopEarlyAgent",
+            "import_path": null,
+            "model_name": null,
+            "base_url": null,
+            "model_api_key_name": null,
+            "model_api_format": null,
+            "skip_model_parsing": false,
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "stream": false,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "override_error_policy": {},
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "b1536d50-2a58-4817-ba5e-1ce9aab7ebe3",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "cadfix-stop-early",
+        "version": "1.0.0",
+        "model_info": null
+    },
+    "agent_result": {
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null,
+        "model_usage": null,
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "verifier_environment_mode": "separate",
+    "exception_info": null,
+    "started_at": "2026-11-15T01:22:44.111669Z",
+    "finished_at": "2026-11-15T01:23:17.359805Z",
+    "environment_setup": {
+        "started_at": "2026-11-15T01:22:44.404258Z",
+        "finished_at": "2026-11-15T01:22:46.617612Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-11-15T01:22:46.617670Z",
+        "finished_at": "2026-11-15T01:22:46.617732Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-11-15T01:22:46.617811Z",
+        "finished_at": "2026-11-15T01:22:49.713008Z"
+    },
+    "verifier": {
+        "started_at": "2026-11-15T01:23:00.658107Z",
+        "finished_at": "2026-11-15T01:23:17.359789Z"
+    },
+    "step_results": null,
+    "reward_valid": true
+}
