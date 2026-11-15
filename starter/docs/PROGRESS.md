@@ -400,3 +400,14 @@ Plan: `docs/PLAN_4-7.md`. Projekt rozwiązania wzorcowego (M0): `docs/SOLVER_DES
 - `README.md` (co robi agent, dlaczego trudne, punktacja, tabela exploitów, wyniki run_eval i Harbora, pięć komend, sekcja na log OpenCode). Komendy Harbora sprawdzone dokładnie w tej postaci (bez `-y`): oracle 1.000 (`harbor_runs/oracle_2026-11-15__02-21-57`), nop 0.000, stop-early 0.000. Różnica względem TASK_4-7: Harbor 0.26 nie ma `--agent-import-path`, własny agent to `-a moduł:Klasa` (D25).
 - CLAUDE.md: komendy zadań, gradera, serwera MCP, run_eval, exploitów, Harbora. Podsumowanie na górze tego pliku.
 - Testy: szybkie 73 passed / 58 s; pełne 309 passed + 1 poprawiony (patrz podsumowanie).
+
+### Wizualizacja przebiegów (gałąź feat/visualization, 2026-11-15)
+Tylko dla ludzi: kod podglądu (`viz.py`, `playback.py`, `show.py`, `show_index.py`) i model wzorcowy nie trafiają do kontenera agenta (`IGNORE_AGENT` w `cadfix/harbor/build.py`, sprawdzane w `tests/test_harbor_build.py`); podgląd powstaje w weryfikatorze dopiero po zapisaniu `reward.txt` (`timeout ... || true`), więc nie zmienia nagrody.
+- `cadfix/viz.py`: po ocenie warianty agent / wzorzec / oryginał (GLB, pozycja zamknięta i otwarta) + samodzielny `viewer.html` (three.js 0.160.0 z CDN). Tryb Compare: dwa panele (poprawka wzorcowa | wynik agenta), wspólna kamera, usunięty materiał na czerwono, dodany na zielono. Różnica liczona na B-rep (bez „zebry” z różnej tesselacji: L3 seed 0 – 138 zerowych kawałków -> 1 kawałek 15.9 mm3).
+- `scenarios/hinge_lid/task.py`: `pristine/reference/parts` = oryginał + ukryte `reference_ops` (tylko weryfikator).
+- `cadfix/playback.py`: odtworzenie edycji z `actions.jsonl` na nietkniętych częściach tym samym kodem `Env`, sprawdzenie zgodności z ocenionym zgłoszeniem (reproduced / mismatch / no_log / replay_error / truncated); migawki agenta tylko jako niezaufany fallback. Tryb Playback w przeglądarce: każdy krok z opisem, zmiana bieżącego kroku pulsuje na magenta/cyan, `#step=N`.
+- `cadfix/show.py` + `scripts/view.sh`: jedna komenda do otwarcia przebiegu, joba albo indeksu (dashboard z kartami, filtrami i paskiem kroków).
+- Poprawka: x-ray wymaga `material.needsUpdate` (bez tego panel rysował się nieprzezroczyście z brakującymi trójkątami).
+- Wyniki: Harbor judge – oracle 1.000 x3 (playback reproduced, 33 kroki, 4 klatki, ~5 s), nop 0.000 x3 (no_log). `run_eval` reference/do_nothing L1, L3: bez zmian (1.0 / 0.0).
+- Komendy: `scripts/view.sh [results/<agent>/<L>/seed_NNNN | jobs/<job> | jobs | results | latest]`, `python -m cadfix.viz ...`, `python -m cadfix.playback ...` (CLAUDE.md).
+- Otwarte: odtwarzanie w czasie (przycisk ▶) i banery mismatch/untrusted nie były sprawdzane na zrzutach (tylko statyczne kroki); długie opisy kroków ucinane w połowie współrzędnych; eksport MP4/GIF jeszcze nie zrobiony; brak przebiegu OpenCode z prawdziwym modelem.
