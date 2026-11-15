@@ -61,3 +61,9 @@ Goal levels: (1) after every run there is a model of what the agent made, openab
 - `pytest -q tests/test_viz.py` and the quick suite in Docker (see CLAUDE.md commands).
 - Open `viewer.html` in a real browser: model upright, edited region visible, ghosts translucent.
 - Harbor oracle/nop runs: rewards unchanged, `viz/` present in the host trial `verifier/` folder.
+
+## Playback mode (viewer.html)
+`viz.visualize(..., playback=True)` runs `cadfix/playback.py` (replay of the logged edits) and embeds `playback.json` +
+frame GLBs; viewer.html opens in Playback when there is more than one frame (Compare otherwise). Current-step change =
+`__step_removed` magenta / `__step_added` cyan (pulsing, ring + box marker), earlier = red/green. URL hash for
+screenshots: `#step=N` (1-based, no autoplay), `#mode=compare`. `--no-playback` / `playback=False` turns it off.

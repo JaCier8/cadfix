@@ -9,6 +9,8 @@ import trimesh
 
 from cadfix import viz
 from cadfix.core.assembly import Assembly
+from cadfix.env.env import Env
+from scenarios.hinge_lid import reference
 from scenarios.hinge_lid import task as hl_task
 
 
@@ -94,3 +96,45 @@ def test_diff_meshes_no_slivers(task):
     assert comps and all(c.volume() >= viz.MIN_DIFF_MM3 for c in comps)
     assert removed.volume() == pytest.approx(kernel.changed_volume(asm.parts[n].mesh, ref.parts[n].mesh)[0], rel=0.01)
     assert viz.diff_meshes(asm.parts[n].shape, asm.parts[n].shape) == (None, None)
+
+
+def _embedded(html):
+    pb = json.loads(re.search(r"^const PB = (.*);$", html, re.M).group(1))
+    frames = json.loads(re.search(r"^const PBGLB = (.*);$", html, re.M).group(1))
+    return pb, frames
+
+
+def test_playback_embedded(tmp_path_factory):
+    d = hl_task.write_task("L2", 0, gen_out=tmp_path_factory.mktemp("gen"), root=tmp_path_factory.mktemp("tasks"))
+    ep = tmp_path_factory.mktemp("episode")
+    client = reference.InProcessClient(Env(d / "task", ep))
+    reference.solve(client)
+    client.close()
+    out = tmp_path_factory.mktemp("viz")
+    info = viz.visualize(d / "task", d / "pristine", ep, out)
+    pb, frames = _embedded((out / "viewer.html").read_text(encoding="utf-8"))
+    assert pb["status"] == "reproduced" and len(frames) == len(pb["frames"]) > 1
+    assert len(pb["steps"]) == len((ep / "actions.jsonl").read_text().splitlines())
+    assert all(re.fullmatch(r"[A-Za-z0-9+/=]{1000,}", f) for f in frames)
+    assert info["playback"]["status"] == "reproduced" and info["playback"]["frames"] == len(frames)
+    assert (out / "playback" / "playback.json").exists()
+    assert "Playback" in (out / "viewer.html").read_text(encoding="utf-8")
+    off = viz.visualize(d / "task", d / "pristine", ep, tmp_path_factory.mktemp("off"), playback=False)
+    assert off["playback"] == {"status": "disabled"}
+
+
+def test_playback_no_log_and_failure(task, tmp_path, monkeypatch):
+    sub = tmp_path / "sub"
+    sub.mkdir()
+    out = tmp_path / "viz"
+    info = viz.visualize(task / "task", task / "pristine", sub, out)
+    pb, frames = _embedded((out / "viewer.html").read_text(encoding="utf-8"))
+    assert pb["status"] == "no_log" and frames == [] and info["playback"]["status"] == "no_log"
+    from cadfix import playback
+
+    def boom(*a, **k):
+        raise RuntimeError("boom")
+    monkeypatch.setattr(playback, "build_playback", boom)
+    info = viz.visualize(task / "task", task / "pristine", sub, tmp_path / "viz2")
+    pb, frames = _embedded((tmp_path / "viz2" / "viewer.html").read_text(encoding="utf-8"))
+    assert pb["status"] == "error" and "boom" in pb["message"] and frames == [] and info["playback"]["status"] == "error"

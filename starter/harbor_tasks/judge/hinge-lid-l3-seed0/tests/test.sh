@@ -11,7 +11,7 @@ PYTHONPATH=/tests python3 -m cadfix.grade --task-dir /tests/task --pristine /tes
 cp /output/actions.jsonl /output/episode.json /logs/verifier/ 2>/dev/null
 # 3D model for humans (best effort: after the reward is written, never changes it)
 mkdir -p /logs/verifier/submitted && cp -r /output/parts /logs/verifier/submitted/ 2>/dev/null
-PYTHONPATH=/tests timeout 300 python3 -m cadfix.viz --task-dir /tests/task --pristine /tests/pristine --submitted /output \
+PYTHONPATH=/tests timeout 600 python3 -m cadfix.viz --task-dir /tests/task --pristine /tests/pristine --submitted /output \
     --report /logs/verifier/grade.json --out /logs/verifier/viz > /logs/verifier/viz_stdout.txt 2>&1 || true
 echo "reward: $(cat /logs/verifier/reward.txt)"
 exit 0

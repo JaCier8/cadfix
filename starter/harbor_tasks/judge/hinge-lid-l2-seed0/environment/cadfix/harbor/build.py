@@ -25,7 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc")
 # the 3D viewer export is for humans only: it ships with the verifier (tests/), never to the agent's container
-IGNORE_AGENT = shutil.ignore_patterns("__pycache__", "*.pyc", "viz.py", "playback.py")
+IGNORE_AGENT = shutil.ignore_patterns("__pycache__", "*.pyc", "viz.py", "playback.py", "show.py")
 
 TASK_TOML = """schema_version = "1.4"
 artifacts = ["/output"]
@@ -98,7 +98,7 @@ PYTHONPATH=/tests python3 -m cadfix.grade --task-dir /tests/task --pristine /tes
 cp /output/actions.jsonl /output/episode.json /logs/verifier/ 2>/dev/null
 # 3D model for humans (best effort: after the reward is written, never changes it)
 mkdir -p /logs/verifier/submitted && cp -r /output/parts /logs/verifier/submitted/ 2>/dev/null
-PYTHONPATH=/tests timeout 300 python3 -m cadfix.viz --task-dir /tests/task --pristine /tests/pristine --submitted /output \\
+PYTHONPATH=/tests timeout 600 python3 -m cadfix.viz --task-dir /tests/task --pristine /tests/pristine --submitted /output \\
     --report /logs/verifier/grade.json --out /logs/verifier/viz > /logs/verifier/viz_stdout.txt 2>&1 || true
 echo "reward: $(cat /logs/verifier/reward.txt)"
 exit 0
