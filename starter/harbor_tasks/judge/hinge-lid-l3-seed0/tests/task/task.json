@@ -1,0 +1,790 @@
+{
+  "scenario": "hinge_lid",
+  "level": "L3",
+  "seed": 0,
+  "units": "mm, degrees",
+  "bug_report": "The lid jams while opening and cannot reach 110 deg. The closed position is fine.",
+  "parts": {
+    "enclosure": {
+      "editable": true,
+      "role": "printed box with rear wall, top edge carries the seal band",
+      "file": "parts/enclosure.step",
+      "print": {
+        "rule": "on its floor",
+        "build_up": [
+          0.05326,
+          0.007097,
+          0.998555
+        ]
+      }
+    },
+    "lid": {
+      "editable": true,
+      "role": "printed lid with hinge knuckles, a structural rib (lug) under each knuckle, and a module frame on its underside",
+      "file": "parts/lid.step",
+      "print": {
+        "rule": "top face down",
+        "build_up": [
+          -0.05326,
+          -0.007097,
+          -0.998555
+        ]
+      }
+    },
+    "hinge_pin": {
+      "editable": false,
+      "role": "defines the rotation axis; cannot move",
+      "file": "parts/hinge_pin.step"
+    },
+    "lid_module": {
+      "editable": false,
+      "role": "e.g. display or LED board mounted under the lid near the rear edge; moves with the lid",
+      "file": "parts/lid_module.step"
+    }
+  },
+  "joint": {
+    "name": "hinge",
+    "type": "revolute",
+    "moving": [
+      "lid",
+      "lid_module"
+    ],
+    "fixed": [
+      "enclosure",
+      "hinge_pin"
+    ],
+    "axis_point": [
+      -131.796,
+      27.308,
+      99.887
+    ],
+    "axis_direction": [
+      -0.847851,
+      -0.527968,
+      0.048974
+    ],
+    "range_deg": [
+      0.0,
+      110.0
+    ],
+    "step_deg": 1.0,
+    "description": "the lid (with lid_module) rotates about the hinge pin axis; positive angles open it (right-hand rule about axis_direction); 0 deg = closed"
+  },
+  "zones": [
+    {
+      "name": "bracket_0_bridge",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -113.936,
+          34.767,
+          86.233
+        ],
+        "edges": [
+          [
+            5.79,
+            3.605,
+            -0.334
+          ],
+          [
+            -2.949,
+            4.747,
+            0.124
+          ],
+          [
+            0.431,
+            0.057,
+            8.078
+          ]
+        ]
+      },
+      "description": "enclosure knuckle bracket"
+    },
+    {
+      "name": "bracket_0_knuckle",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -114.133,
+          35.835,
+          94.337
+        ],
+        "edges": [
+          [
+            5.79,
+            3.605,
+            -0.334
+          ],
+          [
+            -2.321,
+            3.737,
+            0.097
+          ],
+          [
+            0.359,
+            0.048,
+            6.73
+          ]
+        ]
+      },
+      "description": "enclosure knuckle bracket"
+    },
+    {
+      "name": "bracket_2_bridge",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -101.678,
+          42.4,
+          85.525
+        ],
+        "edges": [
+          [
+            5.79,
+            3.605,
+            -0.334
+          ],
+          [
+            -2.949,
+            4.747,
+            0.124
+          ],
+          [
+            0.431,
+            0.057,
+            8.078
+          ]
+        ]
+      },
+      "description": "enclosure knuckle bracket"
+    },
+    {
+      "name": "bracket_2_knuckle",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -101.875,
+          43.468,
+          93.629
+        ],
+        "edges": [
+          [
+            5.79,
+            3.605,
+            -0.334
+          ],
+          [
+            -2.321,
+            3.737,
+            0.097
+          ],
+          [
+            0.359,
+            0.048,
+            6.73
+          ]
+        ]
+      },
+      "description": "enclosure knuckle bracket"
+    },
+    {
+      "name": "bracket_4_bridge",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -89.421,
+          50.033,
+          84.817
+        ],
+        "edges": [
+          [
+            5.79,
+            3.605,
+            -0.334
+          ],
+          [
+            -2.949,
+            4.747,
+            0.124
+          ],
+          [
+            0.431,
+            0.057,
+            8.078
+          ]
+        ]
+      },
+      "description": "enclosure knuckle bracket"
+    },
+    {
+      "name": "bracket_4_knuckle",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -89.618,
+          51.101,
+          92.921
+        ],
+        "edges": [
+          [
+            5.79,
+            3.605,
+            -0.334
+          ],
+          [
+            -2.321,
+            3.737,
+            0.097
+          ],
+          [
+            0.359,
+            0.048,
+            6.73
+          ]
+        ]
+      },
+      "description": "enclosure knuckle bracket"
+    },
+    {
+      "name": "bracket_6_bridge",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -77.164,
+          57.666,
+          84.109
+        ],
+        "edges": [
+          [
+            5.79,
+            3.605,
+            -0.334
+          ],
+          [
+            -2.949,
+            4.747,
+            0.124
+          ],
+          [
+            0.431,
+            0.057,
+            8.078
+          ]
+        ]
+      },
+      "description": "enclosure knuckle bracket"
+    },
+    {
+      "name": "bracket_6_knuckle",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -77.36,
+          58.734,
+          92.213
+        ],
+        "edges": [
+          [
+            5.79,
+            3.605,
+            -0.334
+          ],
+          [
+            -2.321,
+            3.737,
+            0.097
+          ],
+          [
+            0.359,
+            0.048,
+            6.73
+          ]
+        ]
+      },
+      "description": "enclosure knuckle bracket"
+    },
+    {
+      "name": "lid_knuckle_0",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "cylinder",
+        "p0": [
+          -108.922,
+          41.552,
+          98.565
+        ],
+        "p1": [
+          -103.133,
+          45.157,
+          98.231
+        ],
+        "radius": 2.2
+      },
+      "description": "lid hinge knuckle"
+    },
+    {
+      "name": "lid_rib_0",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -108.718,
+          40.931,
+          95.404
+        ],
+        "edges": [
+          [
+            5.789,
+            3.605,
+            -0.334
+          ],
+          [
+            -0.976,
+            1.571,
+            0.041
+          ],
+          [
+            0.168,
+            0.022,
+            3.145
+          ]
+        ]
+      },
+      "description": "lid knuckle rib (structural)"
+    },
+    {
+      "name": "lid_knuckle_1",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "cylinder",
+        "p0": [
+          -96.665,
+          49.185,
+          97.857
+        ],
+        "p1": [
+          -90.876,
+          52.79,
+          97.523
+        ],
+        "radius": 2.2
+      },
+      "description": "lid hinge knuckle"
+    },
+    {
+      "name": "lid_rib_1",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -96.324,
+          48.357,
+          94.831
+        ],
+        "edges": [
+          [
+            5.789,
+            3.605,
+            -0.334
+          ],
+          [
+            -0.876,
+            1.41,
+            0.037
+          ],
+          [
+            0.16,
+            0.021,
+            3.006
+          ]
+        ]
+      },
+      "description": "lid knuckle rib (structural)"
+    },
+    {
+      "name": "lid_knuckle_2",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "cylinder",
+        "p0": [
+          -84.408,
+          56.818,
+          97.149
+        ],
+        "p1": [
+          -78.618,
+          60.423,
+          96.815
+        ],
+        "radius": 2.2
+      },
+      "description": "lid hinge knuckle"
+    },
+    {
+      "name": "lid_rib_2",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -84.359,
+          56.47,
+          94.235
+        ],
+        "edges": [
+          [
+            5.789,
+            3.605,
+            -0.334
+          ],
+          [
+            -0.934,
+            1.503,
+            0.039
+          ],
+          [
+            0.155,
+            0.021,
+            2.906
+          ]
+        ]
+      },
+      "description": "lid knuckle rib (structural)"
+    },
+    {
+      "name": "lid_module_frame",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -93.422,
+          25.775,
+          94.306
+        ],
+        "edges": [
+          [
+            21.79,
+            13.569,
+            -1.259
+          ],
+          [
+            -8.019,
+            12.908,
+            0.336
+          ],
+          [
+            0.16,
+            0.021,
+            2.996
+          ]
+        ]
+      },
+      "description": "lid module frame"
+    },
+    {
+      "name": "seal_lid_front",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -98.489,
+          -26.359,
+          97.951
+        ],
+        "edges": [
+          [
+            76.052,
+            47.359,
+            -4.393
+          ],
+          [
+            -1.361,
+            2.191,
+            0.057
+          ],
+          [
+            0.027,
+            0.004,
+            0.499
+          ]
+        ]
+      },
+      "description": "seal band, lid underside over the wall tops"
+    },
+    {
+      "name": "seal_lid_rear",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -128.94,
+          22.659,
+          99.227
+        ],
+        "edges": [
+          [
+            76.052,
+            47.359,
+            -4.393
+          ],
+          [
+            -1.361,
+            2.191,
+            0.057
+          ],
+          [
+            0.027,
+            0.004,
+            0.499
+          ]
+        ]
+      },
+      "description": "seal band, lid underside over the wall tops"
+    },
+    {
+      "name": "seal_lid_left",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -98.489,
+          -26.359,
+          97.951
+        ],
+        "edges": [
+          [
+            2.187,
+            1.362,
+            -0.126
+          ],
+          [
+            -31.811,
+            51.209,
+            1.333
+          ],
+          [
+            0.027,
+            0.004,
+            0.499
+          ]
+        ]
+      },
+      "description": "seal band, lid underside over the wall tops"
+    },
+    {
+      "name": "seal_lid_right",
+      "kind": "keep_in",
+      "part": "lid",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -24.624,
+          19.638,
+          93.684
+        ],
+        "edges": [
+          [
+            2.187,
+            1.362,
+            -0.126
+          ],
+          [
+            -31.811,
+            51.209,
+            1.333
+          ],
+          [
+            0.027,
+            0.004,
+            0.499
+          ]
+        ]
+      },
+      "description": "seal band, lid underside over the wall tops"
+    },
+    {
+      "name": "seal_enclosure_front",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -98.17,
+          -24.875,
+          97.423
+        ],
+        "edges": [
+          [
+            74.221,
+            46.218,
+            -4.287
+          ],
+          [
+            -0.791,
+            1.274,
+            0.033
+          ],
+          [
+            0.027,
+            0.004,
+            0.499
+          ]
+        ]
+      },
+      "description": "seal band, inner 1.5 mm of the wall top"
+    },
+    {
+      "name": "seal_enclosure_rear",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -128.05,
+          23.226,
+          98.674
+        ],
+        "edges": [
+          [
+            74.221,
+            46.218,
+            -4.287
+          ],
+          [
+            -0.791,
+            1.274,
+            0.033
+          ],
+          [
+            0.027,
+            0.004,
+            0.499
+          ]
+        ]
+      },
+      "description": "seal band, inner 1.5 mm of the wall top"
+    },
+    {
+      "name": "seal_enclosure_left",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -98.17,
+          -24.875,
+          97.423
+        ],
+        "edges": [
+          [
+            1.272,
+            0.792,
+            -0.073
+          ],
+          [
+            -30.672,
+            49.374,
+            1.285
+          ],
+          [
+            0.027,
+            0.004,
+            0.499
+          ]
+        ]
+      },
+      "description": "seal band, inner 1.5 mm of the wall top"
+    },
+    {
+      "name": "seal_enclosure_right",
+      "kind": "keep_in",
+      "part": "enclosure",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -25.221,
+          20.551,
+          93.209
+        ],
+        "edges": [
+          [
+            1.272,
+            0.792,
+            -0.073
+          ],
+          [
+            -30.672,
+            49.374,
+            1.285
+          ],
+          [
+            0.027,
+            0.004,
+            0.499
+          ]
+        ]
+      },
+      "description": "seal band, inner 1.5 mm of the wall top"
+    },
+    {
+      "name": "lid_module_volume",
+      "kind": "keep_out",
+      "part": "lid_module",
+      "region": {
+        "kind": "box",
+        "origin": [
+          -93.106,
+          27.686,
+          91.772
+        ],
+        "edges": [
+          [
+            19.416,
+            12.09,
+            -1.121
+          ],
+          [
+            -6.542,
+            10.531,
+            0.274
+          ],
+          [
+            0.293,
+            0.039,
+            5.492
+          ]
+        ]
+      },
+      "description": "volume occupied by lid_module (moves with the lid)",
+      "parts": [
+        "lid",
+        "enclosure"
+      ]
+    }
+  ]
+}

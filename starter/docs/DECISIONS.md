@@ -190,6 +190,28 @@ expectations that encode the old numbers changed:
   forbids fix words like "chamfer") and does not give the measured first-contact angle (scenario.json
   disclosure: the angle is measurable, not given).
 
+## D24. Harbor: verifier in a separate container
+- task.toml: `[verifier] environment_mode = "separate"` and `artifacts = ["/output"]` (Harbor 0.26, checked in its
+  source: trial.py `_run_separate_verifier`, artifact_handler.upload_artifacts). The verifier is a fresh container
+  from the same image; only /output is copied over (tar with the `data` filter: no symlinks, no special files).
+  So an agent with a shell cannot touch the verifier's Python, libraries, /tests or the pristine parts.
+  test.sh additionally runs the grader from /tests (PYTHONPATH=/tests) with /tests/task and /tests/pristine.
+- nop: Harbor never starts the MCP server, /output stays empty -> grader uses the pristine parts -> 0 (verified).
+
+## D25. Harbor CLI details found while running it
+- Harbor 0.26 has no `--agent-import-path`: a custom agent is `-a module.path:ClassName` (`harbor run --help`). The
+  README uses `-a cadfix.harbor.agents:StopEarlyAgent` with the repo on PYTHONPATH.
+- Agents on tasks with MCP servers must declare `capabilities = AgentCapabilities(mcp_servers=True)` (first
+  stop-early run failed with that error). StopEarlyAgent calls the tools in-process in the container
+  (`python3 -m cadfix.env.cli get_task submit`).
+
+## D26. What is committed
+- `harbor_tasks/judge/` (L1, L2, L3 seed 0; 3.8 MB) so every judging command works right after cloning;
+  `harbor_tasks/<L>/seed_N/` are built locally (`python -m cadfix.harbor.build`). Harbor job records of our runs
+  (without STEP / GLB snapshots) in `harbor_runs/`.
+- The task image repeats the dev image's first layers line for line (base digest, apt, ENV, lock, pip), so after
+  `docker build -t cadfix-dev .` Harbor builds each task image in seconds.
+
 ## Spec change proposals
 - P1. `levels.L1_easy.geometry` / `L2_medium.geometry` say "three identical ribs"; the task 2b geometry has 2 or 3
   (8/10 seeds: 2). Either reword to "two or three identical ribs" or force 7 knuckles (changes all L1 parts).

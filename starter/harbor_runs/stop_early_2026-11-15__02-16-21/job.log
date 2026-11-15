@@ -1,0 +1,12 @@
+Agent 'cadfix-stop-early' does not declare an options_model; leftover kwargs are ignored
+Agent 'cadfix-stop-early' does not declare an options_model; leftover kwargs are ignored
+Agent 'cadfix-stop-early' does not declare an options_model; leftover kwargs are ignored
+Skipping image OS validation for hb__11d1fb28757d6898b63cc1d87fe298f7: docker inspect returned 1
+Skipping image OS validation for hb__8976e67245e6cad0a40b26ad171a5f7b: docker inspect returned 1
+Skipping image OS validation for hb__20f993218d70a6c21efee3c2e77e76c7: docker inspect returned 1
+Collecting main service artifacts
+Collecting main service artifacts
+Collecting main service artifacts
+Skipping image OS validation for hb__8976e67245e6cad0a40b26ad171a5f7b: docker inspect returned 1
+Skipping image OS validation for hb__20f993218d70a6c21efee3c2e77e76c7: docker inspect returned 1
+Skipping image OS validation for hb__11d1fb28757d6898b63cc1d87fe298f7: docker inspect returned 1

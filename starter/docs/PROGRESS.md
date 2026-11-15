@@ -358,3 +358,12 @@ Plan: `docs/PLAN_4-7.md`. Projekt rozwiązania wzorcowego (M0): `docs/SOLVER_DES
 - **`python run_eval.py --agent reference,do_nothing,stop_early --level L1,L2,L3 --seeds 0-9`** (`results/run_eval_20261115_011537.csv`): reference **1.000 na 30/30** (1.00-1.03 x V_ref, 27-33 wywołań, 1.6-5 s), do_nothing 0 i stop_early 0 na 30/30.
 - `scenarios/hinge_lid/exploits.py` + `tests/test_exploits.py`, tabela `docs/exploits.txt`: 17 exploitów na L2 i L3 seed 0, **najgorszy 0.300** (wydrążenie tylnej ściany + fazowanie: działa, ale traci drukowalność i S3; reszta 0.000). Znane ograniczenie: ukrycie wywołań test_fit przez przepisanie własnego logu daje 1.0 zamiast 0.9 (max zysk 0.1, D18).
 - Uwaga: `output/tasks` trzeba odświeżyć po zmianie stref (`python -m scenarios.hinge_lid.task`); stare foldery dawały złe strefy uszczelki.
+
+### M4 (zadanie 7): Harbor (2026-11-15)
+- `cadfix/harbor/build.py`: level + seed -> `harbor_tasks/<L>/seed_N/` (instruction.md, task.toml, environment/ z tymi samymi ciężkimi warstwami co obraz dev + ostatni `COPY task /task`, tests/ z własnym graderem i danymi pristine, solution/ z rozwiązaniem wzorcowym przez MCP). `--judge` -> `harbor_tasks/judge/` (L1, L2, L3 seed 0). Wszystkie task.toml poprawne wg `harbor.models.task.config.TaskConfig` (harbor 0.26.0, `--validate`).
+- Weryfikator w osobnym kontenerze (D24), `cadfix/harbor/agents.py: StopEarlyAgent` (D25), `cadfix/env/cli.py`.
+- Przebiegi Harbora (Docker lokalnie, logi w `harbor_runs/`):
+  - `harbor run -p harbor_tasks/judge -a oracle -y`: **3/3 = 1.000**, 0 wyjątków, 49 s (`harbor_runs/oracle_2026-11-15__02-14-01`)
+  - `harbor run -p harbor_tasks/judge -a nop -y`: **0.000 x3** (`harbor_runs/nop_2026-11-15__02-15-26`)
+  - `PYTHONPATH=. harbor run -p harbor_tasks/judge -a cadfix.harbor.agents:StopEarlyAgent -y`: **0.000 x3**, 2 wywołania narzędzi w kontenerze (`harbor_runs/stop_early_2026-11-15__02-16-21`)
+- OpenCode nie był uruchamiany (płatny model; zostaje dla użytkownika).

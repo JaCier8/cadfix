@@ -1,0 +1,374 @@
+{
+  "scenario": "hinge_lid",
+  "level": "L1",
+  "checks": [
+    {
+      "id": "G1_valid_solids",
+      "type": "valid_solid",
+      "role": "gate",
+      "params": {
+        "parts": [
+          "enclosure",
+          "lid"
+        ]
+      },
+      "description": "both editable parts are valid closed solids (OpenCascade check)"
+    },
+    {
+      "id": "G2_hinge_interface",
+      "type": "interface_frozen",
+      "role": "gate",
+      "params": {
+        "regions": [
+          {
+            "name": "bore_enclosure_0",
+            "part": "enclosure",
+            "region": {
+              "kind": "cylinder",
+              "p0": [
+                12.85,
+                61.03,
+                31.92
+              ],
+              "p1": [
+                21.05,
+                61.03,
+                31.92
+              ],
+              "radius": 1.6
+            }
+          },
+          {
+            "name": "bore_lid_1",
+            "part": "lid",
+            "region": {
+              "kind": "cylinder",
+              "p0": [
+                21.45,
+                61.03,
+                31.92
+              ],
+              "p1": [
+                29.65,
+                61.03,
+                31.92
+              ],
+              "radius": 1.6
+            }
+          },
+          {
+            "name": "bore_enclosure_2",
+            "part": "enclosure",
+            "region": {
+              "kind": "cylinder",
+              "p0": [
+                30.05,
+                61.03,
+                31.92
+              ],
+              "p1": [
+                38.25,
+                61.03,
+                31.92
+              ],
+              "radius": 1.6
+            }
+          },
+          {
+            "name": "bore_lid_3",
+            "part": "lid",
+            "region": {
+              "kind": "cylinder",
+              "p0": [
+                38.65,
+                61.03,
+                31.92
+              ],
+              "p1": [
+                46.85,
+                61.03,
+                31.92
+              ],
+              "radius": 1.6
+            }
+          },
+          {
+            "name": "bore_enclosure_4",
+            "part": "enclosure",
+            "region": {
+              "kind": "cylinder",
+              "p0": [
+                47.25,
+                61.03,
+                31.92
+              ],
+              "p1": [
+                55.45,
+                61.03,
+                31.92
+              ],
+              "radius": 1.6
+            }
+          },
+          {
+            "name": "bore_lid_5",
+            "part": "lid",
+            "region": {
+              "kind": "cylinder",
+              "p0": [
+                55.85,
+                61.03,
+                31.92
+              ],
+              "p1": [
+                64.05,
+                61.03,
+                31.92
+              ],
+              "radius": 1.6
+            }
+          },
+          {
+            "name": "bore_enclosure_6",
+            "part": "enclosure",
+            "region": {
+              "kind": "cylinder",
+              "p0": [
+                64.45,
+                61.03,
+                31.92
+              ],
+              "p1": [
+                72.65,
+                61.03,
+                31.92
+              ],
+              "radius": 1.6
+            }
+          }
+        ],
+        "tol_mm3": 0.01
+      },
+      "description": "pin holes keep diameter, position and axis: the material within the given cylinders around the pin axis is unchanged on both parts"
+    },
+    {
+      "id": "G3_keep_in",
+      "type": "keep_in",
+      "role": "gate",
+      "params": {
+        "min_fill": 0.99
+      },
+      "description": "lid knuckles, knuckle ribs, enclosure knuckle brackets, module frame and seal band (zones in task.json) keep >= 99 % of their original material"
+    },
+    {
+      "id": "G3_keep_out",
+      "type": "keep_out",
+      "role": "gate",
+      "params": {
+        "tol_mm3": 0.001
+      },
+      "description": "no new lid or enclosure material in the volume of lid_module (closed position)"
+    },
+    {
+      "id": "G4_closed_position",
+      "type": "collision_free",
+      "role": "gate",
+      "params": {
+        "angle_deg": 0.0,
+        "moving": [
+          "lid",
+          "lid_module"
+        ],
+        "fixed": [
+          "enclosure",
+          "hinge_pin"
+        ]
+      },
+      "description": "at 0 deg no collision between lid (with module) and enclosure or pin"
+    },
+    {
+      "id": "G5_seal",
+      "type": "contact_width",
+      "role": "gate",
+      "params": {
+        "lower": "enclosure",
+        "upper": "lid",
+        "plane_point": [
+          0.0,
+          0.0,
+          31.5
+        ],
+        "plane_normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "min_width_mm": 1.5
+      },
+      "description": "at 0 deg the contact between lid and wall tops is >= 1.5 mm wide all around (eroded by 0.75 mm it still forms a closed ring)"
+    },
+    {
+      "id": "G6_not_rebuilt",
+      "type": "envelope",
+      "role": "gate",
+      "params": {
+        "parts": [
+          "enclosure",
+          "lid"
+        ],
+        "frame": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "tol_mm": 0.5,
+        "max_change_pct": 15.0
+      },
+      "description": "outer envelope of each editable part moves by <= 0.5 mm along the box axes; changed volume (removed + added) of each part <= 15 %"
+    },
+    {
+      "id": "S1_opening",
+      "type": "sweep_clearance",
+      "role": "objective",
+      "params": {
+        "moving": [
+          "lid",
+          "lid_module"
+        ],
+        "fixed": [
+          "enclosure"
+        ],
+        "range_deg": [
+          0.0,
+          110.0
+        ],
+        "step_deg": 1.0,
+        "overlap_eps_mm3": 0.001,
+        "clearance_mm": 0.3,
+        "clearance_from_deg": 10.0,
+        "search_mm": 0.35,
+        "frame": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "description": "rotate lid (with module) about the pin axis 0..110 deg in 1 deg steps: no overlap (> 1e-3 mm3) at any step, touching allowed; clearance lid(+module) vs enclosure >= 0.3 mm at every step from 10 deg (pin excluded). Score = progress: 0.5 * angle progress + 0.5 * clearance progress (see the reward)"
+    },
+    {
+      "id": "S2_min_wall",
+      "type": "min_wall",
+      "role": "score",
+      "params": {
+        "parts": [
+          "enclosure",
+          "lid"
+        ],
+        "frame": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "min_mm": 1.2,
+        "feature_mm": 0.2
+      },
+      "description": "no new wall thinner than 1.2 mm (features smaller than 0.2 mm are ignored)"
+    },
+    {
+      "id": "S2_overhang",
+      "type": "overhang",
+      "role": "score",
+      "params": {
+        "parts": [
+          "enclosure",
+          "lid"
+        ],
+        "max_angle_deg": 45.0,
+        "feature_mm": 0.2,
+        "tol_mm2": 0.01
+      },
+      "description": "no new overhang steeper than 45 deg in print orientation (enclosure on its floor, lid top face down); features smaller than 0.2 mm are ignored"
+    },
+    {
+      "id": "S3_minimal_change",
+      "type": "volume_change",
+      "role": "score",
+      "params": {
+        "parts": [
+          "enclosure",
+          "lid"
+        ],
+        "full_factor": 5.0,
+        "zero_factor": 10.0
+      },
+      "description": "changed volume (added + removed) vs the original parts; full points if the changed volume is within 5x of the best known fix for this task, zero at 10x (linear in between)"
+    }
+  ],
+  "reward": {
+    "objective": "S1_opening",
+    "progress_weight": 0.25,
+    "met_base": 0.3,
+    "scores": {
+      "printability": {
+        "weight": 0.1,
+        "checks": [
+          "S2_min_wall",
+          "S2_overhang"
+        ],
+        "combine": "all_passed"
+      },
+      "minimal_change": {
+        "weight": 0.6,
+        "checks": [
+          "S3_minimal_change"
+        ],
+        "combine": "score"
+      }
+    },
+    "formula": "any gate failed -> 0; S1 not met -> 0.25 * progress; S1 met -> 0.3 + 0.1 * printability + 0.6 * minimal_change; minus the test_fit cost"
+  },
+  "test_fit_cost": {
+    "free_calls": 2,
+    "per_call": 0.02,
+    "cap": 0.1
+  },
+  "rules": {
+    "S3": "full points if the changed volume is within 5x of the best known fix for this task, zero at 10x (linear in between)"
+  }
+}

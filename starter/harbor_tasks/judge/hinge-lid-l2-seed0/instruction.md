@@ -1,0 +1,79 @@
+# Fix the hinged lid
+
+**Bug report:** The lid jams while opening and cannot reach 110 deg. The closed position is fine.
+
+You get a 3D-printable assembly as B-rep solids and CAD tools. Change the editable parts so that the assembly meets every requirement below. The result is scored automatically when the episode ends.
+
+## Parts
+
+- `enclosure` (editable): printed box with rear wall, top edge carries the seal band. Printed on its floor (build direction (0.0000, 0.0000, 1.0000)).
+- `lid` (editable): printed lid with hinge knuckles, a structural rib (lug) under each knuckle, and a module frame on its underside. Printed top face down (build direction (0.0000, 0.0000, -1.0000)).
+- `hinge_pin` (fixed): defines the rotation axis; cannot move.
+- `lid_module` (fixed): e.g. display or LED board mounted under the lid near the rear edge; moves with the lid.
+
+## Coordinates and the hinge
+
+Units: mm, degrees. All coordinates are world coordinates.
+The `hinge` joint is revolute: lid, lid_module rotate together about the axis through (0, 61.03, 31.92) with direction (-1.0000, 0.0000, 0.0000); positive angles open the lid (right-hand rule), 0 deg = closed, range 0..110 deg. Fixed: enclosure, hinge_pin.
+
+## Protected zones
+
+Keep-in zones (each must keep >= 99 % of its original material):
+- `bracket_0_bridge` (enclosure; enclosure knuckle bracket): box, corner (12.85, 57.7, 19.47), edges (8.2, 0, 0) (0, 5.53, 0) (0, 0, 8.03)
+- `bracket_0_knuckle` (enclosure; enclosure knuckle bracket): box, corner (12.85, 58.83, 27.5), edges (8.2, 0, 0) (0, 4.4, 0) (0, 0, 6.62)
+- `bracket_2_bridge` (enclosure; enclosure knuckle bracket): box, corner (30.05, 57.7, 19.47), edges (8.2, 0, 0) (0, 5.53, 0) (0, 0, 8.03)
+- `bracket_2_knuckle` (enclosure; enclosure knuckle bracket): box, corner (30.05, 58.83, 27.5), edges (8.2, 0, 0) (0, 4.4, 0) (0, 0, 6.62)
+- `bracket_4_bridge` (enclosure; enclosure knuckle bracket): box, corner (47.25, 57.7, 19.47), edges (8.2, 0, 0) (0, 5.53, 0) (0, 0, 8.03)
+- `bracket_4_knuckle` (enclosure; enclosure knuckle bracket): box, corner (47.25, 58.83, 27.5), edges (8.2, 0, 0) (0, 4.4, 0) (0, 0, 6.62)
+- `bracket_6_bridge` (enclosure; enclosure knuckle bracket): box, corner (64.45, 57.7, 19.47), edges (8.2, 0, 0) (0, 5.53, 0) (0, 0, 8.03)
+- `bracket_6_knuckle` (enclosure; enclosure knuckle bracket): box, corner (64.45, 58.83, 27.5), edges (8.2, 0, 0) (0, 4.4, 0) (0, 0, 6.62)
+- `lid_knuckle_0` (lid; lid hinge knuckle): cylinder, axis (21.45, 61.03, 31.92) -> (29.65, 61.03, 31.92), radius 2.2
+- `lid_rib_0` (lid; lid knuckle rib (structural)): box, corner (21.45, 60.565, 28.83), edges (8.2, 0, 0) (0, 1.61, 0) (0, 0, 3.09)
+- `lid_knuckle_1` (lid; lid hinge knuckle): cylinder, axis (38.65, 61.03, 31.92) -> (46.85, 61.03, 31.92), radius 2.2
+- `lid_rib_1` (lid; lid knuckle rib (structural)): box, corner (38.65, 60.565, 28.83), edges (8.2, 0, 0) (0, 1.61, 0) (0, 0, 3.09)
+- `lid_knuckle_2` (lid; lid hinge knuckle): cylinder, axis (55.85, 61.03, 31.92) -> (64.05, 61.03, 31.92), radius 2.2
+- `lid_rib_2` (lid; lid knuckle rib (structural)): box, corner (55.85, 60.565, 28.83), edges (8.2, 0, 0) (0, 1.61, 0) (0, 0, 3.09)
+- `lid_module_frame` (lid; lid module frame): box, corner (31.3, 37.37, 28.5), edges (22.9, 0, 0) (0, 17.1, 0) (0, 0, 3)
+- `seal_lid_front` (lid; seal band, lid underside over the wall tops): box, corner (0, 0, 31.5), edges (85.5, 0, 0) (0, 2.73, 0) (0, 0, 0.5)
+- `seal_lid_rear` (lid; seal band, lid underside over the wall tops): box, corner (0, 55.47, 31.5), edges (85.5, 0, 0) (0, 2.73, 0) (0, 0, 0.5)
+- `seal_lid_left` (lid; seal band, lid underside over the wall tops): box, corner (0, 0, 31.5), edges (2.73, 0, 0) (0, 58.2, 0) (0, 0, 0.5)
+- `seal_lid_right` (lid; seal band, lid underside over the wall tops): box, corner (82.77, 0, 31.5), edges (2.73, 0, 0) (0, 58.2, 0) (0, 0, 0.5)
+- `seal_enclosure_front` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (1.23, 1.23, 31), edges (83.04, 0, 0) (0, 1.5, 0) (0, 0, 0.5)
+- `seal_enclosure_rear` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (1.23, 55.47, 31), edges (83.04, 0, 0) (0, 1.5, 0) (0, 0, 0.5)
+- `seal_enclosure_left` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (1.23, 1.23, 31), edges (1.5, 0, 0) (0, 55.74, 0) (0, 0, 0.5)
+- `seal_enclosure_right` (enclosure; seal band, inner 1.5 mm of the wall top): box, corner (82.77, 1.23, 31), edges (1.5, 0, 0) (0, 55.74, 0) (0, 0, 0.5)
+
+Keep-out zones (no new material may enter):
+- `lid_module_volume` (volume occupied by lid_module (moves with the lid); parts lid, enclosure): box, corner (32.7, 38.77, 27.4), edges (20.1, 0, 0) (0, 14.3, 0) (0, 0, 4.1)
+
+## Requirements and scoring
+
+Gates: if any gate fails, the reward is 0.
+- `G1_valid_solids`: both editable parts are valid closed solids (OpenCascade check)
+- `G2_hinge_interface`: pin holes keep diameter, position and axis: the material within the given cylinders around the pin axis is unchanged on both parts
+- `G3_keep_in`: lid knuckles, knuckle ribs, enclosure knuckle brackets, module frame and seal band (zones in task.json) keep >= 99 % of their original material
+- `G3_keep_out`: no new lid or enclosure material in the volume of lid_module (closed position)
+- `G4_closed_position`: at 0 deg no collision between lid (with module) and enclosure or pin
+- `G5_seal`: at 0 deg the contact between lid and wall tops is >= 1.5 mm wide all around (eroded by 0.75 mm it still forms a closed ring)
+- `G6_not_rebuilt`: outer envelope of each editable part moves by <= 0.5 mm along the box axes; changed volume (removed + added) of each part <= 15 %
+
+Objective:
+- `S1_opening`: rotate lid (with module) about the pin axis 0..110 deg in 1 deg steps: no overlap (> 1e-3 mm3) at any step, touching allowed; clearance lid(+module) vs enclosure >= 0.3 mm at every step from 10 deg (pin excluded). Score = progress: 0.5 * angle progress + 0.5 * clearance progress (see the reward)
+
+Scores:
+- `S2_min_wall`: no new wall thinner than 1.2 mm (features smaller than 0.2 mm are ignored)
+- `S2_overhang`: no new overhang steeper than 45 deg in print orientation (enclosure on its floor, lid top face down); features smaller than 0.2 mm are ignored
+- `S3_minimal_change`: changed volume (added + removed) vs the original parts; full points if the changed volume is within 1.15x of the best known fix for this task, zero at 2x (linear in between)
+
+Reward: any gate failed -> 0; S1 not met -> 0.25 * progress; S1 met -> 0.3 + 0.1 * printability + 0.6 * minimal_change; minus the test_fit cost. Printability = 1 if both S2 checks pass, else 0. Minimal change = the S3 score. Objective progress = 0.5 * angle progress + 0.5 * clearance progress, where angle progress = (largest angle up to which the S1 rules hold - the original's) / (110 - the original's) and clearance progress = min clearance from 10 deg / 0.3 (0 if anything overlaps).
+test_fit: the first 2 calls are free, then each call costs 0.02 reward, at most 0.1 in total. Single checks (run_check_<id>) are free.
+
+## Tools and the episode
+
+All tools are on the `cadfix` MCP server. Start with `get_task`: it returns the same information as data (parts, joint, zones with regions, every check with its parameters).
+- Inspect: `list_parts`, `part_info`, `list_edges`, `list_faces`, `find_edges_near`, `find_faces_near`, `measure` (gap and interference between two parts at any joint angle), `section` (a part cut by any plane).
+- Edit: the edit operations in the server's tool list work on the editable parts. Every edit returns the part's new edge and face lists; edge and face ids change after every edit. `undo` reverts the last edit.
+- Check: one `run_check_<id>` per requirement (free), `test_fit` = all of them.
+- `submit` ends the episode. Tool calls are capped at 150.
+
+The editable parts are saved to `/output/parts/` after every edit and are graded as saved when the episode ends. The public task files (the same data the tools use) are in `/task`.
