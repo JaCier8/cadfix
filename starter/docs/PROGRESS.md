@@ -351,3 +351,9 @@ Plan: `docs/PLAN_4-7.md`. Projekt rozwiązania wzorcowego (M0): `docs/SOLVER_DES
 - `scenarios/hinge_lid/instruction.py`: instruction.md z publicznych danych (D23); test wycieków jak dla briefu.
 - Test MCP z prawdziwym klientem stdio (`tests/test_mcp.py`): L2 seed 0, poprawka odniesienia przez narzędzia, test_fit przechodzi, grader 1.0, log ma każde wywołanie.
 - Testy: + `test_env.py` (4), `test_instruction.py` (6, w szybkim 2), `test_mcp.py` (1), `test_ops.py` +1. `pytest -q -m "not slow"`: 71 passed, 55 s.
+
+### M3 (zadanie 6): W TOKU, przerwane limitem użycia (2026-11-15)
+- Zrobione: `scenarios/hinge_lid/reference.py` (wg SOLVER_DESIGN.md, tylko narzędzia, klient in-process i MCP), `cadfix/agents.py` (do_nothing, stop_early), `run_eval.py`, `scenarios/hinge_lid/exploits.py` + `tests/test_exploits.py`.
+- run_eval (L1-L3 x seedy 0-9, przed ostatnią poprawką): reference 29/30 = 1.000 (1.00-1.03 x V_ref, 27-33 wywołań, ~3 s), L3 seed 4 = 0.039; do_nothing i stop_early = 0 wszędzie. Poprawka (pomijanie 0° i próg pola 1e-3/długość segmentu w modelu 2D): L3 seed 4 -> 1.000.
+- Exploity na L2 seed 0: wszystkie 17 = 0.000; znane ograniczenie: reset licznika test_fit daje 1.0 zamiast 0.9 (max zysk 0.1).
+- Do zrobienia: `output/tasks` było nieaktualne (strefy uszczelki sprzed poprawki D12) - usunięte, trzeba ponownie uruchomić `python run_eval.py` i `python -m scenarios.hinge_lid.exploits --level L2,L3`; test `test_gut_rear_wall_loses_printability` oczekuje 0.3 (sprawdzić po odświeżeniu zadań); pełny `pytest -q`; potem M4 (Harbor, tryb weryfikatora `separate`) i M5 (README).
